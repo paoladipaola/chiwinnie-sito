@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#7fae6e">
+<meta name="description" content="Sveglia il tuo Chiwinnie, arreda il Bosco Giardino e vivi le sue avventure.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icone/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icone/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Chiwinnie">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Chiwinnie – Il Bosco Giardino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/gioco.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ PAROLA D'ORDINE (solo sul sito pubblico) ============ -->
+  <section class="schermata imprinting" id="s-accesso">
+    <div class="carta centro">
+      <img src="img/chiwi/viola/fronte.png" alt="" class="chiwi-medio">
+      <h2>Il Bosco Giardino</h2>
+      <p>Per entrare serve la parola segreta. Chiedila a chi ti ha invitato!</p>
+      <input type="text" id="parola" placeholder="Parola segreta" maxlength="30" autocomplete="off" autocapitalize="none">
+      <button class="btn" id="btn-parola">Entra</button>
+    </div>
+  </section>
+
+  <!-- ============ IMPRINTING ============ -->
+  <section class="schermata imprinting" id="s-benvenuto">
+    <div class="carta centro">
+      <img src="img/chiwi/viola/fronte.png" alt="" class="chiwi-grande dorme" data-chiwi="fronte">
+      <h1>Chiwinnie</h1>
+      <p>Un Chiwinnie è arrivato dal Bosco Giardino e dorme profondamente.</p>
+      <button class="btn" id="btn-scan">Svegliamolo!</button>
+      <p class="nota">Prototipo: il chip NFC del peluche è simulato.</p>
+    </div>
+  </section>
+
+  <section class="schermata imprinting" id="s-colore">
+    <div class="carta centro">
+      <h2>Com'è il tuo Chiwinnie?</h2>
+      <p>Nel Bosco Giardino i Chiwinnie nascono in cinque colori. Scegli il tuo.</p>
+      <div class="scelta-colori" id="scelta-colori"></div>
+      <p class="nota" id="nota-colore"></p>
+      <button class="btn" id="btn-colore" disabled>È lui!</button>
+    </div>
+  </section>
+
+  <section class="schermata imprinting" id="s-risveglio">
+    <div class="carta centro">
+      <h2>Il Chiwinnie dorme…</h2>
+      <p>Abbraccialo forte: tieni premuto il cerchio finché non si sveglia.</p>
+      <div class="anello" id="anello">
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#fffaf2" stroke="#efe3d0" stroke-width="8"/><circle id="anello-prog" cx="50" cy="50" r="44" fill="none" stroke="#f3a6b6" stroke-width="8" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5"/></svg>
+        <div class="anello-testo" id="anello-testo">🤗<br>Tieni premuto</div>
+      </div>
+      <div class="fumetto" id="fumetto-risveglio">zzz… zzz…</div>
+    </div>
+  </section>
+
+  <section class="schermata imprinting" id="s-nome">
+    <div class="carta centro">
+      <img src="img/chiwi/viola/fronte.png" alt="" class="chiwi-medio" data-chiwi="fronte">
+      <div class="fumetto">Chiii… winni? Dove sono? Ciao! Come ti chiami?</div>
+      <input type="text" id="nome-bambino" placeholder="Il tuo nome" maxlength="16" autocomplete="off">
+      <button class="btn" id="btn-nome-bambino">Avanti</button>
+    </div>
+  </section>
+
+  <section class="schermata imprinting" id="s-patto">
+    <div class="carta centro">
+      <img src="img/chiwi/viola/fronte.png" alt="" class="chiwi-medio" data-chiwi="fronte">
+      <div class="fumetto" id="fumetto-patto"></div>
+      <p>Appoggia la mano sulla zampetta: è il patto delle zampette.</p>
+      <button class="btn zampa" id="btn-patto">🐾</button>
+    </div>
+  </section>
+
+  <section class="schermata imprinting" id="s-nome-chiwi">
+    <div class="carta centro">
+      <img src="img/chiwi/viola/fronte.png" alt="" class="chiwi-medio" data-chiwi="fronte">
+      <div class="fumetto">Pum-pum winni! Siamo amici! Come vuoi chiamarmi?</div>
+      <input type="text" id="nome-chiwi" placeholder="Il nome del tuo Chiwinnie" maxlength="14" autocomplete="off">
+      <button class="btn" id="btn-nome-chiwi">Questo è il mio nome!</button>
+    </div>
+  </section>
+
+  <section class="schermata imprinting" id="s-cuore">
+    <div class="carta centro">
+      <div class="chiwi-cuore">
+        <img src="img/chiwi/viola/fronte.png" alt="" class="chiwi-grande" data-chiwi="fronte">
+        <svg class="cuore" id="cuore-riv" viewBox="0 0 32 29"><path d="M16 28 C 6 20 0 14 0 8 A 8 8 0 0 1 16 5 A 8 8 0 0 1 32 8 C 32 14 26 20 16 28 Z" stroke="white" stroke-width="2"/></svg>
+      </div>
+      <div id="testo-cuore"><p>Guarda la sua pancia…</p></div>
+    </div>
+  </section>
+
+  <!-- ============ MONDO ============ -->
+  <section class="schermata" id="s-mondo">
+    <div id="mondo">
+      <div id="scena">
+        <img id="sfondo" alt="">
+        <div id="pezzi"></div>
+        <div id="chiwi" class="chiwi-mondo"><div class="fumetto-mondo" id="fumetto-mondo"></div><img src="img/chiwi/viola/fronte.png" alt="Il tuo Chiwinnie" id="chiwi-img"></div>
+        <div id="bolle"></div>
+      </div>
+    </div>
+
+    <header id="hud">
+      <div class="hud-riga">
+        <button class="avatar" id="btn-avatar" aria-label="Il tuo Chiwinnie"><img src="img/chiwi/viola/felice.jpg" id="avatar-img" alt=""></button>
+        <div class="hud-info">
+          <div class="hud-nome"><span id="hud-nome">Chiwinnie</span> <span class="liv">Liv. <b id="hud-livello">1</b> <button class="btn-audio" id="btn-audio" aria-label="Audio">🔊</button></span></div>
+          <div class="barra" title="Esperienza"><div id="barra-xp"></div></div>
+          <div class="barra energia" title="Energia"><div id="barra-energia"></div><span>⚡ energia</span></div>
+        </div>
+      </div>
+      <div class="risorse" id="risorse"></div>
+    </header>
+
+    <nav id="barra-sotto">
+      <button id="btn-costruisci"><img src="img/zona1/icone/casetta.png" alt="">Arreda</button>
+      <button id="btn-giochi"><img src="img/lucciola.png" alt="">Giochi</button>
+      <button id="btn-sfide"><img src="img/stella.png" alt="">Sfide<i class="pallino" id="pallino-sfide" hidden></i></button>
+      <button id="btn-nutri"><img src="img/spinaci.png" alt="">Nutri</button>
+    </nav>
+  </section>
+
+  <!-- Pannello a scomparsa (costruisci / giochi / sfide / scheda / oggetto) -->
+  <div id="velo" hidden></div>
+  <div id="pannello" class="pannello" hidden>
+    <div class="maniglia"></div>
+    <div id="pannello-corpo"></div>
+  </div>
+
+  <!-- ============ MINIGIOCO ============ -->
+  <section class="schermata" id="s-minigioco">
+    <div id="mg-hud">
+      <button class="btn piccolo bianco" id="mg-esci">✕</button>
+      <div id="mg-titolo"></div>
+      <div id="mg-info"></div>
+    </div>
+    <div id="mg-area"></div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="volanti"></div>
+
+<script src="js/dati.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/minigiochi.js"></script>
+<script src="js/arcade.js"></script>
+<script src="js/gioco.js"></script>
+</body>
+</html>
