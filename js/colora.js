@@ -7,12 +7,13 @@
     { id: "copertina", nome: "Chiwinnie" }, { id: "crescita", nome: "Le fasi della crescita" },
     { id: "colori", nome: "I colori della natura" }, { id: "bosco", nome: "Nel bosco" },
     { id: "amici", nome: "Amici per sempre" }, { id: "spinaci", nome: "La razione quotidiana" },
-    { id: "arrabbiato", nome: "Quando si arrabbia" }, { id: "volare", nome: "Volare nel cielo" }
+    { id: "volare", nome: "Volare nel cielo" }
+    // "Quando si arrabbia" tolta per ora: il pelo a punte lascia varchi e il colore usciva dal disegno
   ];
   // colori morbidi da acquerello, compresi quelli dei Chiwinnie
   var COLORI = ["#b9a7e0", "#8a74c9", "#f3b3c8", "#e2789a", "#ffffff", "#9fc6ea", "#5f8fd0", "#a8d8a0",
     "#5fa865", "#f6dc7a", "#f2a65a", "#e5604f", "#c9925e", "#8a5a3c", "#9aa0a8", "#3d3d4a"];
-  var CHIAVE = "chiwinnie-colora-";
+  var CHIAVE = "chiwinnie-colora2-"; // "2": tavole ridisegnate con contorni chiusi
   var SOGLIA_LINEA = 200; // sotto questa luminosità il pixel è una linea del disegno
 
   function carica(chiave) { try { return localStorage.getItem(chiave); } catch (e) { return null; } }
@@ -115,30 +116,78 @@
       function rgb(hex) { var n = parseInt(hex.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
 
       // riempimento a scansione di righe: si ferma sulle linee del disegno
-      function riempi(x0, y0) {
-        if (x0 < 0 || y0 < 0 || x0 >= W || y0 >= H) return;
-        var start = y0 * W + x0;
-        if (barriera[start]) return;
-        ricorda();
-        var img = cctx.getImageData(0, 0, W, H), d = img.data, c = rgb(colore);
-        var fatto = new Uint8Array(W * H), pila = [start];
-        function colora(i) { d[i * 4] = c[0]; d[i * 4 + 1] = c[1]; d[i * 4 + 2] = c[2]; d[i * 4 + 3] = 255; }
+      // linee ingrossate di n pixel (calcolate solo quando servono)
+      var muri = {};
+      function ingrossa(n) {
+        if (muri[n]) return muri[n];
+        var cur = barriera;
+        for (var giro = 0; giro < n; giro++) {
+          var nx = new Uint8Array(W * H);
+          for (var yy = 1; yy < H - 1; yy++) for (var xx = 1; xx < W - 1; xx++) {
+            var q = yy * W + xx;
+            if (cur[q] || cur[q - 1] || cur[q + 1] || cur[q - W] || cur[q + W] ||
+                cur[q - W - 1] || cur[q - W + 1] || cur[q + W - 1] || cur[q + W + 1]) nx[q] = 1;
+          }
+          cur = nx;
+        }
+        muri[n] = cur;
+        return cur;
+      }
+      // punto libero più vicino al tocco, rispetto a un certo muro
+      function puntoLibero(muro, x0, y0, maxR) {
+        if (!muro[y0 * W + x0]) return y0 * W + x0;
+        for (var raggio = 1; raggio <= maxR; raggio++)
+          for (var dy = -raggio; dy <= raggio; dy++)
+            for (var dx = -raggio; dx <= raggio; dx++) {
+              var xx = x0 + dx, yy = y0 + dy;
+              if (xx >= 0 && yy >= 0 && xx < W && yy < H && !muro[yy * W + xx]) return yy * W + xx;
+            }
+        return -1;
+      }
+      // zona raggiungibile senza attraversare il muro (riempimento a scansione di righe)
+      function zona(muro, start) {
+        var fatto = new Uint8Array(W * H), pila = [start], n = 0;
         while (pila.length) {
           var i = pila.pop(), y = (i / W) | 0, x = i - y * W;
-          while (x > 0 && !barriera[i - 1] && !fatto[i - 1]) { i--; x--; }
+          while (x > 0 && !muro[i - 1] && !fatto[i - 1]) { i--; x--; }
           var sopra = false, sotto = false;
-          while (x < W && !barriera[i] && !fatto[i]) {
-            fatto[i] = 1; colora(i);
-            if (y > 0) {
-              var su = i - W;
-              if (!barriera[su] && !fatto[su]) { if (!sopra) { pila.push(su); sopra = true; } } else sopra = false;
-            }
-            if (y < H - 1) {
-              var giu = i + W;
-              if (!barriera[giu] && !fatto[giu]) { if (!sotto) { pila.push(giu); sotto = true; } } else sotto = false;
-            }
+          while (x < W && !muro[i] && !fatto[i]) {
+            fatto[i] = 1; n++;
+            if (y > 0) { var su = i - W; if (!muro[su] && !fatto[su]) { if (!sopra) { pila.push(su); sopra = true; } } else sopra = false; }
+            if (y < H - 1) { var giu = i + W; if (!muro[giu] && !fatto[giu]) { if (!sotto) { pila.push(giu); sotto = true; } } else sotto = false; }
             i++; x++;
           }
+        }
+        return { fatto: fatto, n: n };
+      }
+
+      function riempi(x0, y0) {
+        if (x0 < 0 || y0 < 0 || x0 >= W || y0 >= H) return;
+        if (barriera[y0 * W + x0]) return;
+        var muro = ingrossa(1), start = puntoLibero(muro, x0, y0, 4);
+        if (start < 0) return;
+        var z = zona(muro, start), allarga = 2;
+        // se il colore sta per invadere più di un terzo del disegno, forse c'è un varco nel contorno:
+        // si riprova chiudendo varchi più larghi e si tiene la zona più piccola, se è molto più piccola
+        if (z.n > W * H * 0.33) {
+          var muro4 = ingrossa(4), s4 = puntoLibero(muro4, x0, y0, 10);
+          if (s4 >= 0) {
+            var z4 = zona(muro4, s4);
+            if (z4.n > W * H * 0.01 && z4.n < z.n * 0.6) { z = z4; allarga = 5; }
+          }
+        }
+        ricorda();
+        var img = cctx.getImageData(0, 0, W, H), d = img.data, c = rgb(colore), fatto = z.fatto;
+        function colora(i) { d[i * 4] = c[0]; d[i * 4 + 1] = c[1]; d[i * 4 + 2] = c[2]; d[i * 4 + 3] = 255; }
+        for (var i = 0; i < W * H; i++) if (fatto[i]) colora(i);
+        // il colore si allarga nello spazio libero fino a toccare le linee vere
+        for (var giro = 0; giro < allarga; giro++) {
+          var nuovi = [];
+          for (var p = W; p < W * H - W; p++) {
+            if (fatto[p] || barriera[p]) continue;
+            if (fatto[p - 1] || fatto[p + 1] || fatto[p - W] || fatto[p + W]) nuovi.push(p);
+          }
+          for (var nn = 0; nn < nuovi.length; nn++) { fatto[nuovi[nn]] = 1; colora(nuovi[nn]); }
         }
         // si colora anche un pixel sotto il bordo delle linee, così non restano aloni bianchi
         for (var k = W; k < W * H - W; k++) {
