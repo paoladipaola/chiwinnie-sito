@@ -629,7 +629,7 @@
       var chiusoZona = g.zona && !zonaAperta(iz), bloccato = stato.livello < g.livello || chiusoZona;
       html += "<button class='voce" + (bloccato ? " bloccata" : "") + "' data-azione='gioca' data-chiave='" + k + "'>" +
         "<img class='anteprima' src='" + g.img + "' alt=''><h3>" + esc(g.nome) + "</h3>" +
-        (chiusoZona ? "<div class='lucchetto'>Si apre con " + esc(ZONE[iz].nome) + "</div>" : bloccato ? "<div class='lucchetto'>Livello " + g.livello + "</div>" : "<div class='costo'><span>⚡ " + g.energia + "</span></div>") +
+        (chiusoZona ? "<div class='lucchetto'>Si apre con " + esc(ZONE[iz].nome) + "</div>" : bloccato ? "<div class='lucchetto'>Livello " + g.livello + "</div>" : "<div class='costo'><span>" + (g.energia ? "⚡ " + g.energia : "senza energia") + "</span></div>") +
         "</button>";
     });
     html += "</div>";
@@ -710,7 +710,7 @@
     aggiornaEnergia();
     if (stato.livello < g.livello) { avviso("Si sblocca al livello " + g.livello); return; }
     if (g.zona) { var izz = ZONE.map(function (x) { return x.id; }).indexOf(g.zona); if (!zonaAperta(izz)) { avviso("Si apre quando arrivi a " + ZONE[izz].nome); return; } }
-    if (brontolone() || stato.energia < g.energia) {
+    if (g.energia > 0 && (brontolone() || stato.energia < g.energia)) {
       avviso(stato.nome + " è troppo stanco e brontolone: dagli gli spinaci!", 3000);
       chiudiPannello(); parla("Grrr… prima gli spinaci!");
       return;
@@ -768,7 +768,8 @@
     box.innerHTML = "<h2>" + esc(ris.titolo || "Bravissimo!") + "</h2><p>" + esc(ris.messaggio || "") + "</p>" +
       "<div class='bottino'>" + (voci.length ? voci.map(function (m) { return "<span><img src='" + MATERIALI[m].img + "' alt=''>+" + ris.bottino[m] + "</span>"; }).join("") : "<span>Nessun materiale questa volta</span>") +
       "<span>✨ +" + xp + " esp.</span></div>" +
-      "<div class='azioni-pannello'>" + (stato.energia >= g.energia && !brontolone() ? "<button class='btn bianco' id='mg-ancora'>Ancora!</button>" : "") +
+      (ris.immagine ? "<p><a class='btn bianco piccolo' href='" + ris.immagine + "' download='" + esc(ris.nomeFile || "disegno.png") + "'>⬇ Scarica il disegno</a></p>" : "") +
+      "<div class='azioni-pannello'>" + ((g.energia === 0 || (stato.energia >= g.energia && !brontolone())) ? "<button class='btn bianco' id='mg-ancora'>Ancora!</button>" : "") +
       "<button class='btn verde' id='mg-torna'>Torna al giardino</button></div>";
     area.appendChild(box);
     if ($("mg-ancora")) $("mg-ancora").addEventListener("click", function () { avviaMinigioco(k); });

@@ -378,6 +378,10 @@ var MINIGIOCHI = {
     nome: "Avventura nel Cielo", img: "img/cielo/molla.png", livello: 1, zona: "cielo", energia: 20, arcade: true,
     descrizione: "Il Chiwinnie corre sulle nuvole! Salta sui ponti d'arcobaleno sopra il vuoto, rimbalza sulle molle a stella ed evita le nuvolette di tuono. In fondo ti aspetta la porta d'oro. Ci sono 3 stelle nascoste!"
   },
+  colora: {
+    nome: "Pagine da colorare", img: "img/colora/mini_copertina.png", livello: 1, energia: 0,
+    descrizione: "Scegli un disegno del Chiwinnie e coloralo: tocca una zona per riempirla di colore, oppure usa il pennello. Il disegno resta salvato e puoi continuarlo quando vuoi."
+  },
   raccolta: {
     nome: "Raccolta nel bosco", img: "img/spinaci.png", livello: 1, energia: 20,
     descrizione: "Prendi spinaci, legnetti e sassolini che cadono dagli alberi. Attento alle pigne!"
