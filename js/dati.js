@@ -21,7 +21,7 @@ var MATERIALI_INIZIALI = { spinaci: 6, petali: 4, legnetti: 11, sassolini: 3, st
 var MINUTO = 60 * 1000;
 var ZONE = [
   {
-    id: "radura", nome: "La Radura", sfondo: "img/zona1/vuota.jpg", cartella: "img/zona1/",
+    id: "radura", nome: "La Radura", musica: "radura", sfondo: "img/zona1/vuota.jpg", cartella: "img/zona1/",
     descrizione: "Una radura nel bosco, dove il tuo Chiwinnie ha deciso di vivere.",
     // zona dove il Chiwinnie passeggia
     prato: { x1: 18, x2: 82, y1: 54, y2: 80 },
@@ -113,7 +113,7 @@ var ZONE = [
     }
   },
   {
-    id: "ruscello", nome: "Il Ruscello", sfondo: "img/zona2/vuota.jpg", cartella: "img/zona2/",
+    id: "ruscello", nome: "Il Ruscello", musica: "riva", sfondo: "img/zona2/vuota.jpg", cartella: "img/zona2/",
     descrizione: "Oltre il ponticello, il ruscello scende tra i sassi verso una cascata.",
     // due rive: il Chiwinnie passeggia su quella di destra o su quella di sinistra
     prati: [{ x1: 62, x2: 90, y1: 45, y2: 72 }, { x1: 8, x2: 26, y1: 60, y2: 74 }],
@@ -195,7 +195,7 @@ var ZONE = [
     }
   },
   {
-    id: "collina", nome: "La Collina dei fiori", sfondo: "img/zona3/vuota.jpg", cartella: "img/zona3/",
+    id: "collina", nome: "La Collina dei fiori", musica: "prato", sfondo: "img/zona3/vuota.jpg", cartella: "img/zona3/",
     descrizione: "Un prato in salita pieno di fiori, dove soffia sempre il vento.",
     prati: [{ x1: 10, x2: 88, y1: 46, y2: 92 }],
     pezzi: {
@@ -276,7 +276,7 @@ var ZONE = [
     }
   },
   {
-    id: "cielo", nome: "Il Cielo del Celeste", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
+    id: "cielo", nome: "Il Cielo del Celeste", musica: "nuvole", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
     descrizione: "Sopra le nuvole, dove vola il rarissimo Chiwinnie Celeste.",
     prati: [{ x1: 14, x2: 86, y1: 47, y2: 94 }],
     pezzi: {

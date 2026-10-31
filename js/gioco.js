@@ -114,6 +114,7 @@
     coriandoli(window.innerWidth / 2, window.innerHeight / 2, "⭐", 10);
     vibra([40, 60, 40]);
     Suoni.sfx("livello");
+    setTimeout(function () { Suoni.dici("Wii-chu!"); }, 900);
   }
 
   // ---------- Imprinting ----------
@@ -155,7 +156,7 @@
       $("fumetto-risveglio").textContent = p > .75 ? "Tum-tum… tum-tum…" : p > .35 ? "Mmm…?" : "zzz… zzz…";
       if (p >= 1) {
         clearInterval(timer); fatto = true; testo.innerHTML = "✨<br>Si è svegliato!"; vibra([60, 80, 60]); Suoni.sfx("magia");
-        setTimeout(function () { mostra("s-nome"); Suoni.voce("Chiii winni dove sono"); }, 900);
+        setTimeout(function () { mostra("s-nome"); Suoni.dici("Chiii… winni?"); }, 900);
       }
     }
     anello.addEventListener("pointerdown", function (e) {
@@ -178,7 +179,7 @@
     mostra("s-patto");
   });
   $("btn-patto").addEventListener("click", function (e) {
-    vibra(120); coriandoli(e.clientX, e.clientY, "💗", 6); Suoni.sfx("coccola"); Suoni.voce("Pum pum winni");
+    vibra(120); coriandoli(e.clientX, e.clientY, "💗", 6); Suoni.sfx("coccola"); Suoni.dici("Pum-pum winni!");
     $("fumetto-patto").textContent = "Pum-pum winni! Adesso ci conosciamo!";
     setTimeout(function () { mostra("s-nome-chiwi"); }, 1100);
   });
@@ -258,9 +259,9 @@
 
   function apriMondo() {
     mostra("s-mondo");
-    Suoni.musica(new Date().getHours() >= 20 || new Date().getHours() < 7 ? "lucciole" : "radura");
-    aggiornaEnergia();
     var z = zonaCorrente();
+    Suoni.musica(new Date().getHours() >= 20 || new Date().getHours() < 7 ? "notte" : (z.musica || "radura"));
+    aggiornaEnergia();
     if ($("sfondo").getAttribute("src") !== z.sfondo) $("sfondo").setAttribute("src", z.sfondo);
     $("chiwi-img").src = immagineChiwi(stato.colore, "fronte");
     adattaScena();
@@ -357,7 +358,7 @@
     chiudiPannello();
     apriMondo();
     var z = zonaCorrente();
-    setTimeout(function () { parla(costruitiIn(z) ? "Che bello tornare qui!" : "Wii-chu! Un posto nuovo!", 3000); }, 700);
+    setTimeout(function () { esclama("Chirri-wà!", costruitiIn(z) ? "che bello tornare qui!" : "un posto nuovo!"); }, 700);
     salva();
   }
 
@@ -421,7 +422,7 @@
     setTimeout(function () { coriandoli(cx, cy - 20, "🌸", 6); }, 400);
     vibra(50);
     Suoni.sfx("costruisci");
-    setTimeout(function () { Suoni.sfx("magia"); parla(scegli(["Che bello!", "Wonni-wonni!", "Lo adoro!", "Pum-pum winni!", "Che magia!"])); }, 700);
+    setTimeout(function () { Suoni.sfx("magia"); esclama("Nimmi-nimmi!", "Che bello!"); }, 700);
     toast(p.nome + "! +" + p.xp + " esperienza");
     if (costruitiIn(z) === totalePezzi(z)) setTimeout(zonaCompletata, 2200);
   }
@@ -440,6 +441,7 @@
     );
     coriandoli(window.innerWidth / 2, window.innerHeight / 2, "⭐", 14);
     Suoni.sfx("livello");
+    setTimeout(function () { Suoni.dici("Wonni-wonni!"); }, 900);
   }
 
   // ---------- Il Chiwinnie nella radura ----------
@@ -471,6 +473,14 @@
     chiwi.style.left = x + "%"; chiwi.style.top = y + "%";
     chiwi.style.zIndex = Math.round(y * 10) + 1;
   }
+  // Il Chiwinnie dice ad alta voce una parola in chiwinnese; nel fumetto c'è anche la traduzione.
+  function esclama(chiwinnese, italiano, ms) {
+    var f = $("fumetto-mondo");
+    f.textContent = chiwinnese + (italiano ? " (" + italiano + ")" : ""); f.classList.add("su");
+    Suoni.dici(chiwinnese);
+    clearTimeout(timerFumetto); timerFumetto = setTimeout(function () { f.classList.remove("su"); }, ms || 3000);
+  }
+  var ESCLAMAZIONI = [["Wii-chu!", "Ciao!"], ["Nimmi-nimmi!", "Che bello!"], ["Wonni-wonni!", "Ho tanta energia!"], ["Pum-pum winni!", "Siamo amici!"]];
   function parla(testo, ms) {
     var f = $("fumetto-mondo");
     f.textContent = testo; f.classList.add("su");
@@ -488,7 +498,9 @@
       var p = { x: a.x1 + Math.random() * (a.x2 - a.x1), y: a.y1 + Math.random() * (a.y2 - a.y1) };
       if (puntoLibero(p)) { posizionaChiwi(p.x, p.y); break; }
     }
-    if (Math.random() < .3) setTimeout(function () { parla(scegli(FRASI.felice)); }, 2300);
+    if (Math.random() < .3) setTimeout(function () {
+      if (Math.random() < .4) { var e = scegli(ESCLAMAZIONI); esclama(e[0], e[1]); } else parla(scegli(FRASI.felice));
+    }, 2300);
   }
 
   function coccola(e) {
@@ -498,7 +510,7 @@
     vibra(25);
     Suoni.sfx("coccola");
     if (brontolone()) { parla("Le coccole mi piacciono… ma ho fame di spinaci!"); return; }
-    parla(scegli(FRASI.coccole));
+    if (stato.contatori.coccole % 3 === 0) esclama("Pum-pum winni!", "Siamo amici!"); else parla(scegli(FRASI.coccole));
     if (stato.contatori.coccole % 10 === 0) {
       aggiungi("petali", 1);
       setTimeout(function () { parla("Ti regalo un petalo!"); Suoni.sfx("raccogli"); volaVerso("petali", e.clientX, e.clientY); disegnaHud(); }, 700);
@@ -521,7 +533,8 @@
     Suoni.sfx("pasto");
     var r = chiwi.getBoundingClientRect();
     coriandoli(r.left + r.width / 2, r.top + r.height / 3, "🥬", 4);
-    parla(eraBrontolone && !brontolone() ? "Gnam! Ecco, sono tornato dolce come prima!" : scegli(FRASI.pasto));
+    if (eraBrontolone && !brontolone()) esclama("Gnam gnam! Wonni-wonni!", "sono tornato dolce come prima!");
+    else esclama("Gnam gnam! Wonni-wonni!", "che buoni gli spinaci!");
     vibra(30);
     disegnaTutto();
   }
@@ -731,6 +744,7 @@
     fermaMinigioco = null;
     Suoni.sfx("fine");
     var k = giocoCorrente, g0 = MINIGIOCHI[k];
+    if (ris.completato) setTimeout(function () { Suoni.dici("Wii-chu!"); }, 800);
     Object.keys(ris.bottino).forEach(function (m) { aggiungi(m, ris.bottino[m]); });
     var xp = Math.max(2, Math.round(ris.punti / 2));
     if (k === "raccolta") stato.record.raccolta = Math.max(stato.record.raccolta, ris.punti);

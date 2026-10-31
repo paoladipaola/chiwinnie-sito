@@ -103,49 +103,82 @@ var Suoni = (function () {
     s.connect(f); f.connect(g); g.connect(sfxGain); s.start(t); s.stop(t + dur);
   }
 
-  // ---------- Musica generativa ----------
-  // Ogni tema: tempo, accordi (note MIDI), bassi, scala per la melodia, densità delle note.
+  // ---------- Musica ----------
+  // Ogni tema ha un giro di accordi maggiore, un ritornello (motivo) che si ripete e un ritmo.
+  // giro: [distanza dalla tonica, "M" maggiore | "m" minore]; motivo: 16 ottavi, numeri = gradi della scala pentatonica.
+  var PENTA = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
+  var I_V_vi_IV = [[0, "M"], [7, "M"], [9, "m"], [5, "M"]];
   var TEMI = {
-    radura: {
-      bpm: 74, densita: 0.45, melodia: 0.22, ottava: 72,
-      accordi: [[53, 57, 60, 64], [55, 59, 62, 64], [52, 55, 59, 62], [57, 60, 64, 67], [50, 53, 57, 60], [55, 59, 62, 65], [48, 52, 55, 59], [48, 52, 55, 59]],
-      bassi: [41, 43, 40, 45, 38, 43, 36, 36],
-      scala: [0, 2, 4, 7, 9]
-    },
-    raccolta: {
-      bpm: 116, densita: 0.75, melodia: 0.35, ottava: 72,
-      accordi: [[48, 52, 55, 60], [55, 59, 62, 67], [57, 60, 64, 69], [53, 57, 60, 65]],
-      bassi: [36, 43, 45, 41],
-      scala: [0, 2, 4, 7, 9]
-    },
-    bosco: {
-      bpm: 108, densita: 0.7, melodia: 0.4, ottava: 72,
-      accordi: [[53, 57, 60, 65], [55, 59, 62, 67], [52, 55, 59, 64], [57, 60, 64, 69], [50, 53, 57, 62], [55, 59, 62, 67], [53, 57, 60, 64], [55, 59, 62, 65]],
-      bassi: [41, 43, 40, 45, 38, 43, 41, 43],
-      scala: [0, 2, 4, 7, 9]
-    },
-    memory: {
-      bpm: 92, densita: 0.55, melodia: 0.25, ottava: 74,
-      accordi: [[50, 53, 57, 62], [55, 59, 62, 67], [48, 52, 55, 60], [57, 60, 64, 69]],
-      bassi: [38, 43, 36, 45],
-      scala: [0, 2, 4, 7, 9]
-    },
-    lucciole: {
-      bpm: 58, densita: 0.3, melodia: 0.3, ottava: 79,
-      accordi: [[50, 53, 57, 64], [46, 50, 53, 57], [53, 57, 60, 64], [48, 52, 55, 62]],
-      bassi: [38, 34, 41, 36],
-      scala: [0, 2, 5, 7, 9]
-    }
+    // le zone (casa base): allegre ma tranquille
+    radura:   { bpm: 100, chiave: 60, giro: I_V_vi_IV, ritmo: "saltellante", shaker: 0.03,
+                motivo: [4, null, 3, 2, 3, 4, 6, null, 5, null, 4, 3, 4, null, null, null] },
+    riva:     { bpm: 92, chiave: 62, giro: [[0, "M"], [5, "M"], [0, "M"], [7, "M"]], ritmo: "fluido",
+                motivo: [2, 3, 4, null, 6, null, 5, 4, 3, null, 2, 3, 4, null, null, null] },
+    prato:    { bpm: 112, chiave: 55, giro: [[0, "M"], [5, "M"], [7, "M"], [0, "M"]], ritmo: "saltellante", shaker: 0.04,
+                motivo: [5, 5, 6, null, 5, 4, 3, null, 4, 4, 5, null, 3, null, null, null] },
+    nuvole:   { bpm: 90, chiave: 64, giro: [[0, "M"], [4, "m"], [5, "M"], [7, "M"]], ritmo: "fluido", brillio: true,
+                motivo: [5, null, 4, null, 3, 4, 5, null, 6, null, 5, null, 3, null, null, null] },
+    notte:    { bpm: 76, chiave: 65, giro: [[0, "M"], [9, "m"], [5, "M"], [7, "M"]], ritmo: "dolce", brillio: true,
+                motivo: [4, null, null, 5, 6, null, null, null, 5, null, 4, null, 3, null, null, null] },
+    // le avventure: vivaci, con il ritmo
+    bosco:    { bpm: 128, chiave: 55, giro: I_V_vi_IV, ritmo: "saltellante", batteria: true,
+                motivo: [5, null, 5, 6, 7, null, 6, 5, 4, null, 4, 5, 6, null, 5, null] },
+    ruscello: { bpm: 122, chiave: 62, giro: [[0, "M"], [7, "M"], [5, "M"], [7, "M"]], ritmo: "fluido", batteria: true,
+                motivo: [4, 5, 6, null, 6, 5, 4, null, 5, 6, 7, null, 6, null, null, null] },
+    collina:  { bpm: 132, chiave: 57, giro: [[0, "M"], [5, "M"], [7, "M"], [5, "M"]], ritmo: "saltellante", batteria: true,
+                motivo: [5, 6, 7, 6, 5, null, 3, null, 4, 5, 6, 5, 4, null, null, null] },
+    cielo:    { bpm: 118, chiave: 64, giro: [[0, "M"], [9, "m"], [5, "M"], [7, "M"]], ritmo: "fluido", batteria: true, brillio: true,
+                motivo: [5, null, 6, 5, 4, null, 3, null, 4, null, 5, 4, 3, null, null, null] },
+    raccolta: { bpm: 120, chiave: 60, giro: I_V_vi_IV, ritmo: "saltellante", batteria: true,
+                motivo: [4, 4, 5, null, 4, 3, 2, null, 3, 3, 4, null, 2, null, null, null] },
+    memory:   { bpm: 104, chiave: 65, giro: I_V_vi_IV, ritmo: "saltellante", shaker: 0.025,
+                motivo: [4, null, 5, null, 6, null, 5, 4, 3, null, 4, null, 2, null, null, null] }
   };
+  TEMI.lucciole = TEMI.notte;
   var temaVoluto = null, temaAttivo = null, passo = 0, prossimoTempo = 0, timer = null;
+
+  // marimba: legno morbido, nota breve e rotonda
+  function marimba(t, m, vol) {
+    var f = nota(m), g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+    [[1, 1], [4, 0.12]].forEach(function (p) {
+      var o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = f * p[0];
+      var og = ctx.createGain(); og.gain.value = p[1]; o.connect(og); og.connect(g); o.start(t); o.stop(t + 0.4);
+    });
+    g.connect(musicaGain);
+  }
+  // flauto: la voce della melodia, con un piccolo vibrato
+  function flauto(t, m, dur, vol) {
+    var o = ctx.createOscillator(), g = ctx.createGain(), vib = ctx.createOscillator(), vg = ctx.createGain(), lp = ctx.createBiquadFilter();
+    o.type = "triangle"; o.frequency.value = nota(m); lp.type = "lowpass"; lp.frequency.value = 2600;
+    vib.frequency.value = 5.5; vg.gain.value = nota(m) * 0.006; vib.connect(vg); vg.connect(o.frequency);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.03);
+    g.gain.setValueAtTime(vol, t + dur * 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(lp); lp.connect(g); g.connect(musicaGain);
+    o.start(t); vib.start(t); o.stop(t + dur + 0.05); vib.stop(t + dur + 0.05);
+  }
+  function cassa(t) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(48, t + 0.12);
+    g.gain.setValueAtTime(0.32, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+    o.connect(g); g.connect(musicaGain); o.start(t); o.stop(t + 0.18);
+  }
+  function maracas(t, vol) {
+    var len = Math.floor(ctx.sampleRate * 0.05), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = buf; f.type = "highpass"; f.frequency.value = 6000; g.gain.value = vol;
+    s.connect(f); f.connect(g); g.connect(musicaGain); s.start(t);
+  }
 
   function avviaTema(nome) {
     temaAttivo = TEMI[nome];
+    if (!temaAttivo) return;
     passo = 0;
     prossimoTempo = ctx.currentTime + 0.15;
     musicaGain.gain.cancelScheduledValues(ctx.currentTime);
     musicaGain.gain.setValueAtTime(0.0001, ctx.currentTime);
-    musicaGain.gain.linearRampToValueAtTime(0.32, ctx.currentTime + 1.5);
+    musicaGain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 1.2);
     clearInterval(timer);
     timer = setInterval(programma, 25);
   }
@@ -153,23 +186,39 @@ var Suoni = (function () {
     if (!temaAttivo || !ctx) return;
     var T = temaAttivo, ottavo = 60 / T.bpm / 2;
     while (prossimoTempo < ctx.currentTime + 0.12) {
-      var battuta = Math.floor(passo / 8) % T.accordi.length, dentro = passo % 8;
-      var accordo = T.accordi[battuta], t = prossimoTempo;
-      if (dentro === 0) {
-        tappeto(t, accordo, ottavo * 8.4, 0.05);
-        basso(t, T.bassi[battuta], ottavo * 6, 0.22);
+      var t = prossimoTempo, dentro = passo % 8, battuta = Math.floor(passo / 8);
+      var acc = T.giro[battuta % T.giro.length], radice = T.chiave + acc[0];
+      var triade = acc[1] === "m" ? [0, 3, 7] : [0, 4, 7];
+      // accordo morbido sotto, all'inizio di ogni battuta
+      if (dentro === 0) tappeto(t, triade.map(function (x) { return radice + x; }), ottavo * 8.2, T.ritmo === "dolce" ? 0.05 : 0.035);
+      // basso: tonica sui tempi forti, quinta in levare
+      if (dentro === 0 || dentro === 4) basso(t, radice - 12, ottavo * 3, 0.24);
+      if (T.ritmo === "saltellante" && dentro === 6) basso(t, radice - 5, ottavo * 1.5, 0.14);
+      // accompagnamento
+      if (T.ritmo === "saltellante") {
+        var alberti = [0, 2, 1, 2, 0, 2, 1, 2];
+        marimba(t, radice + 12 + triade[alberti[dentro]], dentro % 2 ? 0.07 : 0.09);
+      } else if (T.ritmo === "fluido") {
+        var su = [0, 1, 2, 3, 2, 1, 2, 3], note = [triade[0], triade[1], triade[2], 12];
+        pizzico(t, radice + 12 + note[su[dentro]], ottavo * 4, 0.06);
+      } else if (dentro % 2 === 0) {
+        pizzico(t, radice + 12 + triade[(dentro / 2) % 3], ottavo * 8, 0.05);
       }
-      if (dentro === 4 && Math.random() < 0.5) basso(t, T.bassi[battuta] + 7, ottavo * 3, 0.12);
-      // arpeggio: note dell'accordo un'ottava sopra, più fitte nei temi vivaci
-      if (Math.random() < T.densita) {
-        pizzico(t, accordo[(dentro + battuta) % accordo.length] + 12, ottavo * 6, 0.07);
+      // ritornello: si ripete ogni due battute; ogni tanto un'ottava sopra
+      var giro2 = Math.floor(passo / 16), mi = passo % 16, grado = T.motivo[mi];
+      if (grado !== null && grado !== undefined && giro2 % 4 !== 3) {
+        var lung = 1; while (mi + lung < 16 && (T.motivo[mi + lung] === null) && lung < 3) lung++;
+        var mn = T.chiave + 12 + PENTA[grado];
+        if (giro2 % 4 === 2 && mn < 80) mn += 12;   // la variazione un'ottava sopra, ma senza diventare stridula
+        flauto(t, mn, ottavo * lung * 0.95, T.ritmo === "dolce" ? 0.06 : 0.075);
       }
-      // melodia: note della scala pentatonica, a volte
-      if ((dentro === 0 || dentro === 3 || dentro === 6) && Math.random() < T.melodia) {
-        var radice = T.bassi[battuta] % 12;
-        var m = T.ottava + ((radice + caso(T.scala)) % 12);
-        pizzico(t, m, ottavo * 10, 0.09);
-      }
+      // ritmo delle avventure
+      if (T.batteria) {
+        if (dentro === 0 || dentro === 4) cassa(t);
+        if (dentro % 2 === 1) maracas(t, 0.05);
+      } else if (T.shaker && dentro % 2 === 1) maracas(t, T.shaker);
+      // scintille nel cielo e di sera
+      if (T.brillio && dentro === 7 && Math.random() < 0.5) pizzico(t, T.chiave + 36 + caso(PENTA.slice(0, 5)), 0.8, 0.035);
       prossimoTempo += ottavo;
       passo++;
     }
@@ -248,6 +297,41 @@ var Suoni = (function () {
     }
   }
 
+  // Parole in chiwinnese dette ad alta voce con una vocina acuta (voce sintetica del telefono).
+  // pron: come va letta perché la voce italiana la pronunci bene.
+  var PRONUNCIA = {
+    "Wii-chu!": "uìi ciù!", "Nimmi-nimmi!": "nìmmi nìmmi!", "Wonni-wonni!": "uònni uònni!",
+    "Pum-pum winni!": "pum pum uìnni!", "Chirri-wà!": "chìrri uà!", "Chiii… winni?": "ciìi... uìnni?",
+    "Gnam gnam! Wonni-wonni!": "gnam gnam! uònni uònni!", "Prrr… Pum-pum winni!": "prrr... pum pum uìnni!"
+  };
+  var vocina = null;
+  function scegliVoce() {
+    if (!("speechSynthesis" in window)) return null;
+    var voci = window.speechSynthesis.getVoices() || [];
+    var it = voci.filter(function (v) { return /^it/i.test(v.lang); });
+    // le voci più adatte a una vocina, se ci sono (Mac e iPhone); altrimenti la prima italiana
+    var preferite = ["Flo", "Sandy", "Shelley", "Alice"];
+    for (var i = 0; i < preferite.length; i++) {
+      var v = it.filter(function (x) { return x.name.indexOf(preferite[i]) === 0; })[0];
+      if (v) return v;
+    }
+    return it[0] || null;
+  }
+  if ("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = function () { vocina = scegliVoce(); };
+  function dici(parola) {
+    if (muto) return;
+    var testo = PRONUNCIA[parola] || parola;
+    if (!("speechSynthesis" in window) || !window.SpeechSynthesisUtterance) { voce(parola); return; }
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(testo);
+      vocina = vocina || scegliVoce();
+      if (vocina) u.voice = vocina;
+      u.lang = "it-IT"; u.pitch = 2; u.rate = 1.15; u.volume = 1;
+      window.speechSynthesis.speak(u);
+    } catch (e) { voce(parola); }
+  }
+
   function impostaMuto(v) {
     muto = v;
     try { localStorage.setItem(CHIAVE_MUTO, v ? "1" : "0"); } catch (e) {}
@@ -255,7 +339,7 @@ var Suoni = (function () {
   }
 
   return {
-    musica: musica, sfx: sfx, voce: voce,
+    musica: musica, sfx: sfx, voce: voce, dici: dici,
     muto: function () { return muto; },
     impostaMuto: impostaMuto
   };
