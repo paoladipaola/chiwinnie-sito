@@ -580,16 +580,19 @@
   $("btn-nutri").addEventListener("click", apriNutri);
 
   // ---------- Sfide ----------
+  // le prossime tre sfide ancora da completare (in ordine), da mostrare nel pannello
   function sfideVisibili() {
     var lista = [], ritirate = stato.ritirate || [];
-    for (var i = stato.sfideFatte; i < SFIDE.length && lista.length < 3; i++) {
-      if (ritirate.indexOf(i) === -1) lista.push(i);
+    for (var i = 0; i < SFIDE.length && lista.length < 3; i++) {
+      if (ritirate.indexOf(i) === -1 && stato.sfidaDaRitirare.indexOf(i) === -1) lista.push(i);
     }
     return lista;
   }
   function controllaSfide() {
-    // Le sfide si completano in ordine di lista, ma tre alla volta sono attive
-    sfideVisibili().forEach(function (i) {
+    // tutte le sfide si possono completare in qualunque momento, anche se non sono tra quelle in vista
+    var ritirate = stato.ritirate || [];
+    SFIDE.forEach(function (sf, i) {
+      if (ritirate.indexOf(i) !== -1) return;
       if (stato.sfidaDaRitirare.indexOf(i) === -1 && SFIDE[i].verifica(stato)) {
         stato.sfidaDaRitirare.push(i);
         toast("⭐ Sfida completata: " + SFIDE[i].testo, 3000);
@@ -607,7 +610,6 @@
     // Le sfide ritirate escono dalla lista: avanzano tutte quelle consecutive già fatte
     stato.ritirate = stato.ritirate || [];
     stato.ritirate.push(i);
-    while (stato.ritirate.indexOf(stato.sfideFatte) !== -1) stato.sfideFatte++;
     coriandoli(window.innerWidth / 2, window.innerHeight * .6, "⭐", 8);
     vibra(40);
     Suoni.sfx("magia");
@@ -677,7 +679,8 @@
 
   function apriSfide() {
     var html = "<h2>Sfide</h2><p>Completa le sfide per guadagnare stelle ed esperienza.</p>";
-    var vis = sfideVisibili();
+    // prima quelle completate da ritirare, poi le prossime tre da fare
+    var vis = stato.sfidaDaRitirare.slice().sort(function (a, b) { return a - b; }).concat(sfideVisibili());
     if (!vis.length) html += "<p><b>Hai completato tutte le sfide! Presto ne arriveranno di nuove.</b></p>";
     vis.forEach(function (i) {
       var s = SFIDE[i], fatta = stato.sfidaDaRitirare.indexOf(i) !== -1, ritirata = (stato.ritirate || []).indexOf(i) !== -1;
@@ -776,7 +779,8 @@
         info: function (t) { $("mg-info").textContent = t; },
         fine: fineMinigioco,
         livello: stato.livello,
-        colore: stato.colore
+        colore: stato.colore,
+        turbo: !!(g.arcade && fioriAttivi())   // con l'energia dei fiori l'avventura parte con la supervelocità
       });
     });
   }

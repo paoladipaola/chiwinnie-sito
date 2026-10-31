@@ -56,7 +56,7 @@
         L.oggetti.push({ x: x0 + t * larg, y: y - Math.sin(t * Math.PI) * alt, k: k });
       }
     }
-    function piatt(tipo, px, py, w) { L.piattaforme.push({ tipo: tipo, x: px, y: py, w: w || (tipo === "tronco" ? 230 : 200) }); }
+    function piatt(tipo, px, py, w) { L.piattaforme.push({ tipo: tipo, x: px, y: py, w: (w || (tipo === "tronco" ? 230 : 200)) + 30 }); }
 
     // 1. partenza tranquilla
     terra(1000); fila("spinaci", 5, 380, TERRA_Y - 50);
@@ -120,7 +120,7 @@
     function arco(k, n, x0, y, larg, alt) {
       for (var i = 0; i < n; i++) { var t = n === 1 ? .5 : i / (n - 1); L.oggetti.push({ x: x0 + t * larg, y: y - Math.sin(t * Math.PI) * alt, k: k }); }
     }
-    function piatt(tipo, px, py, w) { L.piattaforme.push({ tipo: tipo, x: px, y: py, w: w || (tipo === "ninfea" ? 200 : 170) }); }
+    function piatt(tipo, px, py, w) { L.piattaforme.push({ tipo: tipo, x: px, y: py, w: (w || (tipo === "ninfea" ? 200 : 170)) + 30 }); }
     function pesce(px, fase) { L.pesci.push({ x: px, fase: fase || 0 }); }
 
     // 1. la riva
@@ -176,7 +176,7 @@
     function arco(k, n, x0, y, larg, alt) {
       for (var i = 0; i < n; i++) { var t = n === 1 ? .5 : i / (n - 1); L.oggetti.push({ x: x0 + t * larg, y: y - Math.sin(t * Math.PI) * alt, k: k }); }
     }
-    function piatt(tipo, px, py, w) { L.piattaforme.push({ tipo: tipo, x: px, y: py, w: w || (tipo === "fieno" ? 130 : 200) }); }
+    function piatt(tipo, px, py, w) { L.piattaforme.push({ tipo: tipo, x: px, y: py, w: (w || (tipo === "fieno" ? 130 : 200)) + 30 }); }
 
     // 1. il prato in fiore
     terra(900); fila("petali", 5, 360, TERRA_Y - 50);
@@ -227,7 +227,7 @@
     function arco(k, n, x0, y, larg, alt) {
       for (var i = 0; i < n; i++) { var t = n === 1 ? .5 : i / (n - 1); L.oggetti.push({ x: x0 + t * larg, y: y - Math.sin(t * Math.PI) * alt, k: k }); }
     }
-    function piatt(tipo, px, py, w) { L.piattaforme.push({ tipo: tipo, x: px, y: py, w: w || (tipo === "nuvola" ? 190 : 230) }); }
+    function piatt(tipo, px, py, w) { L.piattaforme.push({ tipo: tipo, x: px, y: py, w: (w || (tipo === "nuvola" ? 190 : 230)) + 30 }); }
 
     // 1. sulle nuvole
     terra(900); fila("petali", 5, 360, TERRA_Y - 50);
@@ -258,7 +258,7 @@
     piatt("nuvola", p + 470, 230, 220); fila("sassolini", 3, p + 500, 190);
     L.stelle.push({ x: p + 820, y: 110 });
     piatt("arcobaleno", p + 760, 250, 200);
-    L.rovi.push({ x: p + 1150 });
+    L.rovi.push({ x: p + 1080 });
     fila("spinaci", 4, p + 900, TERRA_Y - 50);
     // 9. verso la porta d'oro
     b = x; vuoto(180);
@@ -279,9 +279,40 @@
     return L;
   }
 
+  // La seconda parte del livello: il percorso riparte poco prima del traguardo, più veloce.
+  // Le stelle nascoste restano solo nella prima parte.
+  function raddoppia(L) {
+    var off = L.traguardo - 300;
+    function sposta(arr) { return arr.map(function (e) { var c = {}; for (var k in e) c[k] = e[k]; c.x += off; c.seconda = true; return c; }); }
+    L.terreno = L.terreno.concat(L.terreno.map(function (s) { return [s[0] + off, s[1] + off]; }));
+    L.piattaforme = L.piattaforme.concat(sposta(L.piattaforme));
+    L.funghi = L.funghi.concat(sposta(L.funghi));
+    L.rovi = L.rovi.concat(sposta(L.rovi));
+    L.pigne = L.pigne.concat(sposta(L.pigne));
+    L.pesci = L.pesci.concat(sposta(L.pesci));
+    L.oggetti = L.oggetti.concat(sposta(L.oggetti));
+    L.meta = off;
+    L.traguardo += off;
+    unisciTerreno(L);
+    // bolle dei superpoteri, sempre sopra un tratto di terra
+    var tipi = ["super", "calamita", "ali", "super", "calamita"], posti = [0.16, 0.34, 0.52, 0.7, 0.86];
+    L.poteri = posti.map(function (f, i) {
+      var x = L.traguardo * f;
+      for (var t = 0; t < 40 && !L.terreno.some(function (s) { return x > s[0] + 60 && x < s[1] - 60; }); t++) x += 50;
+      return { x: x, y: TERRA_Y - 70, tipo: tipi[i] };   // all'altezza del Chiwinnie che corre: si prende senza saltare
+    });
+    return L;
+  }
+  var POTERI = {
+    super: { icona: "⚡", nome: "Supervelocità", durata: 9, colore: "#ffd23f" },
+    calamita: { icona: "🧲", nome: "Calamita", durata: 10, colore: "#ff7aa8" },
+    ali: { icona: "🪶", nome: "Doppio salto", durata: 12, colore: "#8fd3ff" }
+  };
+
   // ---------- Motore ----------
   function avventura(area, api, crea, T) {
-    var L = crea();
+    var L = raddoppia(crea());
+    L.poteri = L.poteri || [];
     var canvas = document.createElement("canvas");
     area.appendChild(canvas);
     var ctx = canvas.getContext("2d");
@@ -316,6 +347,15 @@
     var bottino = { spinaci: 0, legnetti: 0, sassolini: 0, petali: 0, stelle: 0 };
     var premuto = false, buffer = 0, finito = false, arrivato = 0, pausa = 0, raf, ultimo = performance.now(), tempo = 0;
     var scintille = [], scritte = [];
+    var potere = null;   // { tipo, fino }
+    function attivo(tipo) { return potere && potere.tipo === tipo && tempo < potere.fino; }
+    function attiva(tipo, durata) {
+      potere = { tipo: tipo, fino: tempo + (durata || POTERI[tipo].durata) };
+      chiwi.doppio = false;
+      Suoni.sfx("livello");
+      scritta(chiwi.x + 40, chiwi.y - 120, POTERI[tipo].icona + " " + POTERI[tipo].nome + "!", "#b5651d");
+      brilla(chiwi.x, chiwi.y - 40, 24, POTERI[tipo].colore);
+    }
     L.pigne.forEach(function (p) { p.y = TERRA_Y; p.vy = 0; p.attiva = false; p.rot = 0; });
     L.funghi.forEach(function (f) { f.boing = 0; });
     Object.keys(T.piatt).forEach(function (k) { I[k] = carica(T.cartella + T.piatt[k].img); });
@@ -332,8 +372,9 @@
 
     function suTerra(x) { return L.terreno.some(function (s) { return x >= s[0] && x <= s[1]; }); }
     function colpito() {
-      if (chiwi.invulnerabile > 0) return;
-      cuori--; chiwi.invulnerabile = 1.6; chiwi.vy = -500; chiwi.aTerra = false;
+      if (chiwi.invulnerabile > 0 || attivo("super")) return;
+      // un rimbalzo bello alto: dà il tempo di recuperare invece di far cadere nella buca
+      cuori--; chiwi.invulnerabile = 1.8; chiwi.vy = -720; chiwi.aTerra = false; chiwi.spinta = 1.25;
       Suoni.sfx("pigna");
       try { navigator.vibrate && navigator.vibrate(90); } catch (e) {}
       if (cuori <= 0) termina(false);
@@ -347,14 +388,20 @@
       tempo += dt;
       if (pausa > 0) { pausa -= dt; return; }
       if (arrivato) { chiwi.x += velocita * 0.5 * dt; arrivato += dt; if (arrivato > 1.6) termina(true); return; }
-      velocita = Math.min(345, 300 + chiwi.x / 400);
-      chiwi.x += velocita * chiwi.spinta * dt;
+      velocita = Math.min(chiwi.x > (L.meta || 1e9) ? 360 : 345, 300 + chiwi.x / 400);
+      var turbo = attivo("super") ? 1.7 : 1;
+      chiwi.x += velocita * chiwi.spinta * turbo * dt;
+      if (potere && tempo >= potere.fino) potere = null;
       buffer -= dt; chiwi.coyote -= dt; chiwi.invulnerabile -= dt; chiwi.schiaccia -= dt;
 
       // salto (con un piccolo margine sia prima sia dopo il bordo)
       if (buffer > 0 && (chiwi.aTerra || chiwi.coyote > 0)) {
         chiwi.vy = -SALTO; chiwi.aTerra = false; chiwi.coyote = 0; buffer = 0; chiwi.tenuto = 0;
         Suoni.sfx("tap");
+      } else if (buffer > 0 && attivo("ali") && !chiwi.doppio) {
+        // la piuma: un secondo salto in aria
+        chiwi.vy = -SALTO * 0.92; chiwi.doppio = true; buffer = 0; chiwi.tenuto = 0;
+        brilla(chiwi.x, chiwi.y, 10, "#cfeeff"); Suoni.sfx("tap");
       }
       var g = GRAVITA;
       if (premuto && chiwi.vy < 0 && chiwi.tenuto < 0.26) { g *= 0.42; chiwi.tenuto += dt; }
@@ -368,7 +415,8 @@
       if (chiwi.vy >= 0) {
         if (prima <= TERRA_Y && chiwi.y >= TERRA_Y && suTerra(chiwi.x)) { chiwi.y = TERRA_Y; chiwi.vy = 0; chiwi.aTerra = true; controllo = chiwi.x; }
         L.piattaforme.forEach(function (p) {
-          if (prima <= p.y && chiwi.y >= p.y && chiwi.x > p.x + 10 && chiwi.x < p.x + p.w - 10) { chiwi.y = p.y; chiwi.vy = 0; chiwi.aTerra = true; }
+          // si atterra anche appena oltre il bordo: i salti perdonano un po'
+          if (prima <= p.y && chiwi.y >= p.y && chiwi.x > p.x - 25 && chiwi.x < p.x + p.w + 25) { chiwi.y = p.y; chiwi.vy = 0; chiwi.aTerra = true; }
         });
       }
       // funghi: sono trampolini, basta toccarli per fare un salto altissimo
@@ -379,8 +427,14 @@
           Suoni.sfx("rimbalzo"); brilla(f.x, top, 8, "#ffc6dc");
         }
       });
+      // con la supervelocità si corre anche sopra le buche, su una scia d'arcobaleno
+      if (attivo("super") && chiwi.vy >= 0 && prima <= TERRA_Y + 2 && chiwi.y >= TERRA_Y) {
+        chiwi.y = TERRA_Y; chiwi.vy = 0; chiwi.aTerra = true;
+        if (!suTerra(chiwi.x)) chiwi.arcobaleno = 0.4;
+      }
       if (eraATerra && !chiwi.aTerra) chiwi.coyote = 0.1;
-      if (chiwi.aTerra) chiwi.spinta = 1;
+      if (chiwi.aTerra) { chiwi.spinta = 1; chiwi.doppio = false; }
+      if (chiwi.arcobaleno > 0) chiwi.arcobaleno -= dt;
 
       // caduto in una buca: si perde un cuore e si riparte dall'ultimo prato
       if (chiwi.y > ALTEZZA + 120) {
@@ -395,7 +449,9 @@
 
       // rovi
       L.rovi.forEach(function (r) {
-        if (Math.abs(chiwi.x - r.x) < 42 && chiwi.y > TERRA_Y - 55) colpito();
+        if (r.via || !(Math.abs(chiwi.x - r.x) < 42 && chiwi.y > TERRA_Y - 55)) return;
+        if (attivo("super")) { r.via = true; punti += 2; bottino.petali++; scritta(r.x, TERRA_Y - 90, "+2"); brilla(r.x, TERRA_Y - 40, 12, "#ffd23f"); Suoni.sfx("pigna"); }
+        else colpito();
       });
       // pigne: rotolano verso il Chiwinnie; saltandoci sopra si schiacciano
       L.pigne.forEach(function (p) {
@@ -406,7 +462,9 @@
         if (!suTerra(p.x)) { p.vy += GRAVITA * dt; p.y += p.vy * dt; if (p.y > ALTEZZA + 100) p.via = true; return; }
         var dx = Math.abs(chiwi.x - p.x), dy = (p.y - 24) - (chiwi.y - 30);
         if (dx < 46 && Math.abs(dy) < 50) {
-          if (chiwi.vy > 0 && chiwi.y < p.y - 20) {
+          if (attivo("super")) {
+            p.via = true; punti += 2; bottino.petali++; scritta(p.x, p.y - 60, "+2"); brilla(p.x, p.y - 20, 12, "#ffd23f"); Suoni.sfx("presa");
+          } else if (chiwi.vy > 0 && chiwi.y < p.y - 20) {
             p.via = true; chiwi.vy = -620; chiwi.schiaccia = 0.2;
             bottino.petali++; punti += 2; scritta(p.x, p.y - 60, "+2"); brilla(p.x, p.y - 20, 10, "#d9a066");
             Suoni.sfx("presa");
@@ -420,11 +478,24 @@
         if (p.via || p.alto < 30) return;
         var dx = Math.abs(chiwi.x - p.x), dy = p.y - (chiwi.y - 30);
         if (dx < 40 && Math.abs(dy) < 42) {
-          if (chiwi.vy > 0 && chiwi.y < p.y) {
-            chiwi.vy = -700; chiwi.schiaccia = 0.2; p.fase += 2; bottino.petali++; punti += 2;
+          if (attivo("super")) {
+            p.fase += 2; punti += 2; bottino.petali++; scritta(p.x, p.y - 50, "+2"); brilla(p.x, p.y, 10, "#ffd23f"); Suoni.sfx("rimbalzo");
+          } else {
+            // i pesci sono amici: toccarli fa sempre rimbalzare in avanti, oltre l'acqua
+            chiwi.vy = -700; chiwi.aTerra = false; chiwi.spinta = Math.max(chiwi.spinta, 1.3); chiwi.schiaccia = 0.2; p.fase += 2; bottino.petali++; punti += 2;
             scritta(p.x, p.y - 50, "+2"); brilla(p.x, p.y, 10, "#bfe3ff"); Suoni.sfx("rimbalzo");
-          } else colpito();
+          }
         }
+      });
+      // la calamita attira i materiali vicini
+      if (attivo("calamita")) L.oggetti.forEach(function (o) {
+        if (o.preso) return;
+        var dx = chiwi.x - o.x, dy = (chiwi.y - 35) - o.y;
+        if (dx * dx + dy * dy < 260 * 260) { o.x += dx * Math.min(1, dt * 7); o.y += dy * Math.min(1, dt * 7); }
+      });
+      L.poteri.forEach(function (pw) {
+        if (pw.preso) return;
+        if (Math.abs(chiwi.x - pw.x) < 50 && Math.abs((chiwi.y - 35) - pw.y) < 60) { pw.preso = true; attiva(pw.tipo); }
       });
       // oggetti da raccogliere
       L.oggetti.forEach(function (o) {
@@ -446,7 +517,7 @@
       if (chiwi.x >= L.traguardo - 40 && !arrivato) {
         arrivato = 0.001; Suoni.sfx("livello"); brilla(L.traguardo, TERRA_Y - 120, 30, "#ffd1e0");
       }
-      api.info("❤️".repeat(Math.max(0, cuori)) + "  ⭐ " + stelleTrovate + "/3  ·  " + punti);
+      api.info("❤️".repeat(Math.max(0, cuori)) + "  ⭐ " + stelleTrovate + "/3  ·  " + punti + (potere ? "  " + POTERI[potere.tipo].icona + " " + Math.ceil(potere.fino - tempo) : ""));
     }
 
     // ---------- Disegno ----------
@@ -521,7 +592,7 @@
         var h = T.trampolino.h / s, w = T.trampolino.w * s;
         img(I.fungo, f.x - w / 2, TERRA_Y + 8 - h, w, h);
       });
-      if (I.rovo) L.rovi.forEach(function (r) { img(I.rovo, r.x - T.ostacolo.w / 2, TERRA_Y + 8 - T.ostacolo.h, T.ostacolo.w, T.ostacolo.h); });
+      if (I.rovo) L.rovi.forEach(function (r) { if (!r.via) img(I.rovo, r.x - T.ostacolo.w / 2, TERRA_Y + 8 - T.ostacolo.h, T.ostacolo.w, T.ostacolo.h); });
       L.pesci.forEach(function (p) {
         if (p.alto < 8) return;
         ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.cos(tempo * 1.9 + p.fase) * -0.6);
@@ -542,14 +613,42 @@
         ctx.fillStyle = "#fff3a0"; ctx.beginPath(); ctx.arc(s.x, s.y + bob, 48, 0, Math.PI * 2); ctx.fill(); ctx.restore();
         img(I.stella, s.x - 32, s.y - 32 + bob, 64, 64);
       });
+      // bolle dei superpoteri
+      L.poteri.forEach(function (pw) {
+        if (pw.preso || pw.x < cam - 60 || pw.x > cam + vistaW + 60) return;
+        var py = pw.y + Math.sin(tempo * 3 + pw.x) * 8, P = POTERI[pw.tipo];
+        ctx.save();
+        ctx.globalAlpha = 0.85; ctx.fillStyle = "rgba(255,255,255,.75)"; ctx.strokeStyle = P.colore; ctx.lineWidth = 5;
+        ctx.shadowColor = P.colore; ctx.shadowBlur = 18;
+        ctx.beginPath(); ctx.arc(pw.x, py, 34, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.shadowBlur = 0; ctx.globalAlpha = 1; ctx.font = "38px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(P.icona, pw.x, py + 2);
+        ctx.restore();
+      });
       img(I.cestino, L.traguardo - T.traguardo.w / 2, TERRA_Y + 10 - T.traguardo.h, T.traguardo.w, T.traguardo.h);
 
       // il Chiwinnie
-      var posa = !chiwi.aTerra ? (chiwi.vy < 0 ? I.salto : I.caduta) : (Math.floor(tempo * 9) % 2 ? I.corsa1 : I.corsa2);
+      // scia d'arcobaleno sotto i piedi quando si corre sopra le buche
+      if (chiwi.arcobaleno > 0) {
+        ["#ff9aa2", "#ffd59a", "#fff3a0", "#b5ead7", "#a0c4ff", "#cdb4f6"].forEach(function (c, i) {
+          ctx.fillStyle = c; ctx.globalAlpha = 0.8; ctx.fillRect(chiwi.x - 160, TERRA_Y + 2 + i * 5, 200, 5);
+        });
+        ctx.globalAlpha = 1;
+      }
+      if (attivo("super")) {
+        brilla(chiwi.x - 30, chiwi.y - 30 - Math.random() * 40, 1, Math.random() < .5 ? "#ffd23f" : "#ffffff");
+        // lineette di velocità
+        ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.lineWidth = 3;
+        for (var li = 0; li < 4; li++) { var ly = chiwi.y - 20 - li * 18; ctx.beginPath(); ctx.moveTo(chiwi.x - 70 - li * 10, ly); ctx.lineTo(chiwi.x - 120 - li * 10, ly); ctx.stroke(); }
+      }
+      var posa = !chiwi.aTerra ? (chiwi.vy < 0 ? I.salto : I.caduta) : (Math.floor(tempo * (attivo("super") ? 16 : 9)) % 2 ? I.corsa1 : I.corsa2);
       if (!(chiwi.invulnerabile > 0 && Math.floor(tempo * 14) % 2)) {
         var ph = posa === I.corsa1 || posa === I.corsa2 ? 74 : 92, pw = larghezzaDa(posa, ph);
         var sq = chiwi.schiaccia > 0 ? 0.85 : 1;
+        if (potere) { ctx.save(); ctx.shadowColor = POTERI[potere.tipo].colore; ctx.shadowBlur = 28; }
         img(posa, chiwi.x - pw / 2, chiwi.y - ph * sq + 4, pw, ph * sq);
+        if (potere) ctx.restore();
+        if (attivo("ali")) { ctx.font = "30px sans-serif"; ctx.textAlign = "center"; ctx.fillText("🪶", chiwi.x - pw / 2, chiwi.y - ph + 10); }
       }
       // scintille e scritte
       scintille.forEach(function (p) {
@@ -569,6 +668,15 @@
       scritte = scritte.filter(function (s) { return s.t < 1; });
       ctx.restore();
 
+      // barra del superpotere attivo
+      if (potere) {
+        var P2 = POTERI[potere.tipo], rest = Math.max(0, (potere.fino - tempo) / P2.durata);
+        ctx.setTransform(dpr * scala, 0, 0, dpr * scala, 0, dpr * scala * alzo);
+        ctx.fillStyle = "rgba(255,250,242,.85)"; ctx.fillRect(20, 70 - alzo + 0, 220, 26);
+        ctx.fillStyle = P2.colore; ctx.fillRect(52, 78 - alzo, 180 * Math.min(1, rest), 10);
+        ctx.font = "20px sans-serif"; ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillStyle = "#4a3b30";
+        ctx.fillText(P2.icona, 26, 83 - alzo);
+      }
       // barra di avanzamento in basso
       ctx.setTransform(dpr * scala, 0, 0, dpr * scala, 0, dpr * scala * alzo);
       var prog = Math.min(1, chiwi.x / L.traguardo);
@@ -583,9 +691,10 @@
       if (!finito) disegna();
       raf = requestAnimationFrame(ciclo);
     }
+    if (api.turbo) attiva("super", 5);
     raf = requestAnimationFrame(ciclo);
     // per i test dalla console
-    window.chiwinnieArcade = { chiwi: chiwi, livello: L, info: function () { return { cuori: cuori, punti: punti, stelle: stelleTrovate, arrivato: !!arrivato }; }, premi: giu, lascia: su, passo: function (dt) { if (!finito) { aggiorna(dt); if (!finito) disegna(); } } };
+    window.chiwinnieArcade = { chiwi: chiwi, livello: L, info: function () { return { cuori: cuori, punti: punti, stelle: stelleTrovate, arrivato: !!arrivato }; }, premi: giu, lascia: su, potere: function () { return potere; }, passo: function (dt) { if (!finito) { aggiorna(dt); if (!finito) disegna(); } } };
 
     function pulisci() {
       finito = true; cancelAnimationFrame(raf);
