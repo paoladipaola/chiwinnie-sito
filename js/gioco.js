@@ -7,6 +7,8 @@
   var CALO_ENERGIA_ORA = 5;          // l'energia scende piano anche quando non si gioca
   var RICARICA_CESTINO_ORA = 8;      // con il cestino dei fiori l'energia risale da sola
   var ENERGIA_PER_SPINACIO = 15;
+  // i fiori sono il cibo speciale: meno energia, ma accendono l'energia dei fiori per un po'
+  var PETALI_PER_FIORE = 3, ENERGIA_PER_FIORE = 10, DURATA_FIORI = 10 * 60 * 1000;
 
   // ---------- Utilità ----------
   function $(id) { return document.getElementById(id); }
@@ -329,6 +331,11 @@
       return "<div class='risorsa' data-m='" + m + "'><img src='" + MATERIALI[m].img + "' alt='" + MATERIALI[m].nome + "'>" + (stato.materiali[m] || 0) + "</div>";
     }).join("");
     $("pallino-sfide").hidden = stato.sfidaDaRitirare.length === 0;
+    var fa = fioriAttivi();
+    chiwi.classList.toggle("radioso", !!fa);
+    $("btn-avatar").classList.toggle("radioso", !!fa);
+    $("hud-fiori").hidden = !fa;
+    if (fa) $("hud-fiori").textContent = "✨ " + formatoTempo(stato.fioriFino - Date.now());
   }
 
   // Coordinate del tocco in % del quadro
@@ -375,7 +382,8 @@
   function raccogli(k, e) {
     var p = zonaCorrente().pezzi[k], n = pronti(k);
     if (!n) return;
-    aggiungi(p.produce.materiale, n);
+    aggiungi(p.produce.materiale, fioriAttivi() ? n * 2 : n);
+    if (fioriAttivi()) toast("✨ Energia dei fiori: raccolto doppio!");
     // il tempo avanzato oltre l'ultimo pezzo non si perde, tranne quando la produzione era ferma al massimo
     stato.prod[k] = n >= p.produce.max ? Date.now() : stato.prod[k] + n * p.produce.ogni;
     stato.contatori.raccolti++;
@@ -518,6 +526,36 @@
     salva();
   }
 
+  function fioriAttivi() { return stato && stato.fioriFino && Date.now() < stato.fioriFino; }
+  function apriNutri() {
+    aggiornaEnergia();
+    var resto = fioriAttivi() ? formatoTempo(stato.fioriFino - Date.now()) : null;
+    apriPannello(
+      "<div class='centro'><h2>Che cosa gli dai?</h2><p>Energia di " + esc(stato.nome) + ": " + Math.round(stato.energia) + "/100</p></div>" +
+      "<div class='griglia'>" +
+      "<button class='voce' data-azione='mangia-spinaci'><img class='anteprima' src='img/spinaci.png' alt=''><h3>Spinaci</h3>" +
+      "<div class='lucchetto'>Il cibo di tutti i giorni: +" + ENERGIA_PER_SPINACIO + " energia</div><div class='costo'><span><img src='img/spinaci.png' alt=''>1</span></div></button>" +
+      "<button class='voce' data-azione='mangia-fiori'><img class='anteprima' src='img/petali.png' alt=''><h3>Fiori</h3>" +
+      "<div class='lucchetto'>Energia speciale per 10 minuti: raccolto doppio nel giardino e +50% nei giochi</div><div class='costo'><span><img src='img/petali.png' alt=''>" + PETALI_PER_FIORE + "</span></div></button>" +
+      "</div>" + (resto ? "<p class='nota centro'>✨ L'energia dei fiori è accesa ancora per " + resto + ".</p>" : "")
+    );
+  }
+  function nutriFiori() {
+    aggiornaEnergia();
+    if ((stato.materiali.petali || 0) < PETALI_PER_FIORE) { avviso("Servono " + PETALI_PER_FIORE + " petali: le aiuole e i giochi te li danno!", 3000); return; }
+    stato.materiali.petali -= PETALI_PER_FIORE;
+    stato.energia = Math.min(100, stato.energia + ENERGIA_PER_FIORE);
+    stato.fioriFino = Math.max(Date.now(), stato.fioriFino || 0) + DURATA_FIORI;
+    stato.contatori.fiori = (stato.contatori.fiori || 0) + 1;
+    chiudiPannello();
+    Suoni.sfx("magia");
+    var r = chiwi.getBoundingClientRect();
+    coriandoli(r.left + r.width / 2, r.top + r.height / 3, "🌸", 8);
+    setTimeout(function () { coriandoli(r.left + r.width / 2, r.top, "✨", 8); }, 300);
+    esclama("Nimmi-nimmi!", "che profumo, mi sento magico!");
+    vibra([30, 40, 30]);
+    disegnaTutto();
+  }
   function nutri() {
     aggiornaEnergia();
     if (stato.energia >= 98) { parla("Sono pienissimo! Wonni-wonni!"); return; }
@@ -536,9 +574,10 @@
     if (eraBrontolone && !brontolone()) esclama("Gnam gnam! Wonni-wonni!", "sono tornato dolce come prima!");
     else esclama("Gnam gnam! Wonni-wonni!", "che buoni gli spinaci!");
     vibra(30);
+    chiudiPannello();
     disegnaTutto();
   }
-  $("btn-nutri").addEventListener("click", nutri);
+  $("btn-nutri").addEventListener("click", apriNutri);
 
   // ---------- Sfide ----------
   function sfideVisibili() {
@@ -662,7 +701,7 @@
       "<h2>" + esc(stato.nome) + " <svg viewBox='0 0 32 29' width='24' style='vertical-align:middle'><path fill='" + stato.cuore.hex + "' d='M16 28 C 6 20 0 14 0 8 A 8 8 0 0 1 16 5 A 8 8 0 0 1 32 8 C 32 14 26 20 16 28 Z'/></svg></h2>" +
       "<p>Energia: " + Math.round(stato.energia) + "/100" + (brontolone() ? " — è brontolone, ha fame di spinaci!" : "") + "</p></div>" +
       "<div class='scheda'>" + righe.map(function (r) { return "<b>" + r[0] + "</b><span>" + esc(r[1]) + "</span>"; }).join("") + "</div>" +
-      "<div class='azioni-pannello'><button class='btn verde' data-azione='nutri'>🥬 Dai gli spinaci</button></div>" +
+      "<div class='azioni-pannello'><button class='btn verde' data-azione='apri-nutri'>🥬🌸 Dagli da mangiare</button></div>" +
       "<div class='azioni-pannello'><button class='btn piccolo bianco' data-azione='reset'>Area genitori: cancella tutto e ricomincia</button></div>"
     );
   }
@@ -689,7 +728,9 @@
     else if (a === "vai-zona") vaiZona(b.dataset.zona);
     else if (a === "gioca") avviaMinigioco(b.dataset.chiave);
     else if (a === "ritira") ritiraSfida(+b.dataset.i);
-    else if (a === "nutri") { nutri(); apriScheda(); }
+    else if (a === "apri-nutri") apriNutri();
+    else if (a === "mangia-spinaci") nutri();
+    else if (a === "mangia-fiori") nutriFiori();
     else if (a === "reset") {
       // la conferma è dentro il gioco: le finestre del browser non sempre sono disponibili
       apriPannello("<div class='centro'><h2>Cancellare tutto?</h2><p>" + esc(stato.nome) + ", la radura e tutti i progressi spariranno da questo dispositivo.</p>" +
@@ -744,6 +785,10 @@
     fermaMinigioco = null;
     Suoni.sfx("fine");
     var k = giocoCorrente, g0 = MINIGIOCHI[k];
+    if (fioriAttivi()) {
+      Object.keys(ris.bottino).forEach(function (m) { if (m !== "stelle" && ris.bottino[m] > 0) ris.bottino[m] = Math.ceil(ris.bottino[m] * 1.5); });
+      ris.messaggio = (ris.messaggio || "") + " ✨ Energia dei fiori: +50% di materiali!";
+    }
     if (ris.completato) setTimeout(function () { Suoni.dici("Wii-chu!"); }, 800);
     Object.keys(ris.bottino).forEach(function (m) { aggiungi(m, ris.bottino[m]); });
     var xp = Math.max(2, Math.round(ris.punti / 2));
