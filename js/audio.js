@@ -285,8 +285,10 @@ var Suoni = (function () {
   }
 
   // Il chiwinnese: una sillaba cantata per ogni pezzetto di frase, come un uccellino
+  // Cinguettii disattivati insieme alla voce. Per riattivarli: CINGUETTII_ATTIVI = true.
+  var CINGUETTII_ATTIVI = false;
   function voce(testo) {
-    if (!ctx || ctx.state !== "running" || muto) return;
+    if (!CINGUETTII_ATTIVI || !ctx || ctx.state !== "running" || muto) return;
     var sillabe = Math.min(10, Math.max(2, Math.round(String(testo).replace(/[^a-zàèéìòù]/gi, "").length / 3)));
     var base = caso([74, 76, 77]), t = ctx.currentTime + 0.02;
     for (var i = 0; i < sillabe; i++) {
