@@ -318,8 +318,10 @@ var Suoni = (function () {
     return it[0] || null;
   }
   if ("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = function () { vocina = scegliVoce(); };
+  // Voce sintetica disattivata: per ora risultava fastidiosa. Per riattivarla basta mettere VOCE_ATTIVA = true.
+  var VOCE_ATTIVA = false;
   function dici(parola) {
-    if (muto) return;
+    if (muto || !VOCE_ATTIVA) return;
     var testo = PRONUNCIA[parola] || parola;
     if (!("speechSynthesis" in window) || !window.SpeechSynthesisUtterance) { voce(parola); return; }
     try {
