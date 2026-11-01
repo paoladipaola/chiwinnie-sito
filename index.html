@@ -107,7 +107,7 @@
       <div id="scena">
         <img id="sfondo" alt="">
         <div id="pezzi"></div>
-        <div id="chiwi" class="chiwi-mondo"><div class="fumetto-mondo" id="fumetto-mondo"></div><img src="img/chiwi/viola/fronte.png" alt="Il tuo Chiwinnie" id="chiwi-img"></div>
+        <div id="chiwi" class="chiwi-mondo"><div class="fumetto-mondo" id="fumetto-mondo"></div><div class="vestito"><img src="img/chiwi/viola/fronte.png" alt="Il tuo Chiwinnie" id="chiwi-img"><div class="look" id="chiwi-look"></div></div></div>
         <div id="bolle"></div>
       </div>
     </div>
@@ -129,6 +129,7 @@
       <button id="btn-giochi"><img src="img/lucciola.png" alt="">Giochi</button>
       <button id="btn-sfide"><img src="img/stella.png" alt="">Sfide<i class="pallino" id="pallino-sfide" hidden></i></button>
       <button id="btn-nutri"><img src="img/spinaci.png" alt="">Nutri</button>
+      <button id="btn-casa" hidden><img src="img/zona1/icone/casetta.png" alt="">Casa</button>
     </nav>
   </section>
 
@@ -138,6 +139,26 @@
     <div class="maniglia"></div>
     <div id="pannello-corpo"></div>
   </div>
+
+  <!-- ============ CASETTA (dentro) ============ -->
+  <section class="schermata" id="s-casa">
+    <div id="casa-stanza">
+      <div id="casa-quadro"><div id="casa-tela">
+        <img src="img/casa/interno.jpg" alt="La casetta del Chiwinnie" id="casa-sfondo">
+        <button class="zona-casa" data-casa="letto" style="left:0;top:58%;width:38%;height:24%" aria-label="Letto"></button>
+        <button class="zona-casa" data-casa="tavolo" style="left:40%;top:62%;width:20%;height:13%" aria-label="Biscotti"></button>
+        <button class="zona-casa" data-casa="camino" style="left:61%;top:62%;width:9%;height:13%" aria-label="Camino"></button>
+        <button class="zona-casa" data-casa="armadio" style="left:71%;top:40%;width:29%;height:45%" aria-label="Guardaroba"></button>
+        <div id="casa-chiwi" class="chiwi-casa"><div class="fumetto-mondo" id="casa-fumetto"></div><div class="vestito"><img id="casa-chiwi-img" src="img/chiwi/viola/fronte.png" alt=""><div class="look" id="casa-look"></div></div></div>
+      </div></div>
+      <div id="casa-azioni">
+        <button data-casa="letto"><b>🛏️</b>Riposa</button>
+        <button data-casa="tavolo"><b>🍪</b>Biscotto</button>
+        <button data-casa="armadio"><b>👗</b>Guardaroba</button>
+      </div>
+    </div>
+    <button class="btn piccolo bianco" id="casa-esci">← Esci in giardino</button>
+  </section>
 
   <!-- ============ MINIGIOCO ============ -->
   <section class="schermata" id="s-minigioco">
@@ -160,6 +181,7 @@
 <script src="js/colora.js"></script>
 <script src="js/rompicapi.js"></script>
 <script src="js/aggiustatutto.js"></script>
+<script src="js/casa.js"></script>
 <script src="js/gioco.js"></script>
 </body>
 </html>

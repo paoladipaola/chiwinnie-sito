@@ -106,13 +106,19 @@ input[type=text] {
 @keyframes galleggia { 50% { transform: translateX(-50%) translateY(-6px); } }
 
 .chiwi-mondo { position: absolute; width: 12%; z-index: 800; transform: translate(-50%, -100%); transition: left 2.2s ease-in-out, top 2.2s ease-in-out; }
-.chiwi-mondo img { width: 100%; display: block; filter: drop-shadow(0 6px 4px rgba(40, 60, 20, .3)); transition: transform .2s; }
-.chiwi-mondo.cammina img { animation: passetti .28s ease-in-out infinite; }
+/* .vestito = il Chiwinnie con i suoi accessori sopra: si muove e si gira tutto insieme */
+.vestito { position: relative; transition: transform .2s; }
+.vestito > img { width: 100%; display: block; filter: drop-shadow(0 6px 4px rgba(40, 60, 20, .3)); }
+.chiwi-mondo.cammina .vestito, .chiwi-casa.cammina .vestito { animation: passetti .28s ease-in-out infinite; }
 @keyframes passetti { 50% { transform: translateY(-4%); } }
-.chiwi-mondo.sinistra img { transform: scaleX(-1); }
-.chiwi-mondo.sinistra.cammina img { animation: passetti-s .28s ease-in-out infinite; }
+.chiwi-mondo.sinistra .vestito, .chiwi-casa.sinistra .vestito { transform: scaleX(-1); }
+.chiwi-mondo.sinistra.cammina .vestito, .chiwi-casa.sinistra.cammina .vestito { animation: passetti-s .28s ease-in-out infinite; }
 @keyframes passetti-s { 0%, 100% { transform: scaleX(-1); } 50% { transform: scaleX(-1) translateY(-4%); } }
-.chiwi-mondo.salta img { animation: salto .5s ease; }
+.chiwi-mondo.salta .vestito, .chiwi-casa.salta .vestito { animation: salto .5s ease; }
+.look { position: absolute; inset: 0; pointer-events: none; }
+.look .acc { position: absolute; left: var(--fx); top: var(--fy); width: var(--fw); transform: translate(-50%, -50%) rotate(var(--r)) scaleY(var(--sc)); filter: drop-shadow(0 2px 2px rgba(40, 30, 20, .25)); }
+.cammina .look .acc { left: var(--sx); top: var(--sy); width: var(--sw); }
+.cammina .look .acc.viso { display: none; }
 
 @keyframes dondola { 50% { transform: rotate(3deg) translateY(-3px); } }
 @keyframes salto { 40% { transform: translateY(-22%) scale(1.05, .95); } }
@@ -295,6 +301,29 @@ input[type=text] {
 .aggiusta .oops, .aggiusta .evviva { background: var(--carta); border-radius: 18px; padding: 14px 16px; max-width: 360px; text-align: center; font-weight: 700; box-shadow: var(--ombra); border: 3px solid #fbd9de; }
 .aggiusta .evviva { border-color: var(--oro); background: #fff8e2; font-size: 18px; }
 
+/* Casetta (dentro) */
+#s-casa { background: #f3dcc0; }
+#casa-stanza { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; }
+/* il quadro riempie l'altezza disponibile; sui telefoni stretti si tagliano un po' i lati */
+#casa-quadro { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+#casa-tela { position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 900 / 1257; transform: translateX(-50%); }
+#casa-sfondo { width: 100%; height: 100%; object-fit: cover; display: block; }
+#casa-tela::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 8%; background: linear-gradient(transparent, #f3dcc0); pointer-events: none; }
+#casa-stanza.sera #casa-tela::before { content: ""; position: absolute; inset: 0; background: rgba(40, 40, 90, .45); z-index: 5; pointer-events: none; transition: opacity 1s; }
+.zona-casa { position: absolute; background: transparent; border: 0; border-radius: 20px; cursor: pointer; z-index: 2; }
+.zona-casa:active { background: rgba(255, 255, 255, .25); }
+.chiwi-casa { position: absolute; width: 24%; z-index: 6; transform: translate(-50%, -100%); transition: left 1.5s ease-in-out, top 1.5s ease-in-out; pointer-events: none; }
+.chiwi-casa.dorme .vestito { transform: rotate(-80deg) translate(-10%, 10%); transition: transform .8s; }
+#casa-fumetto { z-index: 7; }
+#casa-azioni { flex: none; display: flex; gap: 10px; justify-content: center; padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+#casa-azioni button { flex: 1; max-width: 130px; display: flex; flex-direction: column; align-items: center; gap: 2px; border: 3px solid #fff; border-radius: 20px; background: var(--carta); box-shadow: var(--ombra); padding: 10px 6px; font: 700 15px var(--font); color: var(--testo); cursor: pointer; }
+#casa-azioni button b { font-size: 30px; line-height: 1.1; }
+#casa-esci { position: absolute; left: 12px; top: max(12px, env(safe-area-inset-top, 0px)); z-index: 8; }
+.armadio-anteprima { display: flex; justify-content: center; margin: 4px 0 10px; }
+.armadio-anteprima .vestito { width: 130px; }
+.griglia.armadio .voce .anteprima { object-fit: contain; }
+.griglia.armadio .voce.addosso { border-color: var(--verde); background: #eef7e6; }
+
 /* Memory */
 .memory { position: absolute; left: 12px; right: 12px; top: 80px; bottom: 20px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 10px; }
 .carta-mem { perspective: 600px; cursor: pointer; }
@@ -329,6 +358,6 @@ input[type=text] {
 @keyframes vola { to { transform: translateY(-90px) scale(1.3); opacity: 0; } }
 
 /* Energia dei fiori */
-.chiwi-mondo.radioso img { filter: drop-shadow(0 0 8px #fff3a0) drop-shadow(0 0 16px #ffd1e8); }
+.chiwi-mondo.radioso .vestito > img { filter: drop-shadow(0 0 8px #fff3a0) drop-shadow(0 0 16px #ffd1e8); }
 .avatar.radioso { box-shadow: 0 0 0 3px #ffe27a, 0 0 14px #ffd1e8; }
 .hud-fiori { background: #fff3cf; color: #9a6a00; border-radius: 99px; padding: 0 7px; font-size: 12px; font-weight: 800; }

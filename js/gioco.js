@@ -266,6 +266,7 @@
     aggiornaEnergia();
     if ($("sfondo").getAttribute("src") !== z.sfondo) $("sfondo").setAttribute("src", z.sfondo);
     $("chiwi-img").src = immagineChiwi(stato.colore, "fronte");
+    Casa.aggiornaLook();
     adattaScena();
     disegnaTutto();
     if (!chiwiPos) { var pr = prati()[0]; chiwiPos = { x: (pr.x1 + pr.x2) / 2, y: (pr.y1 + pr.y2) / 2 }; }
@@ -321,6 +322,7 @@
   function disegnaHud() {
     $("hud-nome").textContent = stato.nome;
     $("hud-livello").textContent = stato.livello;
+    $("btn-casa").hidden = stato.costruiti.indexOf("casetta") === -1;
     var base = LIVELLI_XP[stato.livello], prossimo = LIVELLI_XP[stato.livello + 1] || (base + 400);
     $("barra-xp").style.width = Math.min(100, (stato.xp - base) / (prossimo - base) * 100) + "%";
     var en = $("barra-energia");
@@ -402,7 +404,8 @@
         Math.round(p.produce.ogni / MINUTO) + " minuti (massimo " + p.produce.max + "). Il prossimo tra " + formatoTempo(resto) + ".</p>";
     }
     if (p.ricarica) html += "<p><b>Ricarica:</b> " + esc(stato.nome) + " recupera energia da solo, anche quando non giochi.</p>";
-    html += "<div class='azioni-pannello'><button class='btn' data-azione='chiudi'>Che bello!</button></div></div>";
+    html += "<div class='azioni-pannello'>" + (k === "casetta" ? "<button class='btn verde' data-azione='entra-casa'>🏠 Entra in casa</button>" : "") +
+      "<button class='btn' data-azione='chiudi'>Che bello!</button></div></div>";
     apriPannello(html);
   }
   function formatoTempo(ms) {
@@ -741,6 +744,7 @@
   $("btn-giochi").addEventListener("click", apriGiochi);
   $("btn-sfide").addEventListener("click", apriSfide);
   $("btn-avatar").addEventListener("click", apriScheda);
+  $("btn-casa").addEventListener("click", function () { Casa.apri(); });
 
   $("pannello").addEventListener("click", function (e) {
     var b = e.target.closest("[data-azione]");
@@ -752,6 +756,7 @@
     else if (a === "gioca") avviaMinigioco(b.dataset.chiave);
     else if (a === "ritira") ritiraSfida(+b.dataset.i);
     else if (a === "salta") saltaSfida(+b.dataset.i);
+    else if (a === "entra-casa") Casa.apri();
     else if (a === "apri-nutri") apriNutri();
     else if (a === "mangia-spinaci") nutri();
     else if (a === "mangia-fiori") nutriFiori();
@@ -842,6 +847,7 @@
     }
     guadagnaXp(xp);
     controllaSfide();
+    Casa.controllaPremi();
     salva();
     var g = MINIGIOCHI[k];
     var voci = Object.keys(ris.bottino).filter(function (m) { return ris.bottino[m] > 0; });
@@ -907,6 +913,13 @@
   if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol) && !/claude\.ai|claudeusercontent/.test(location.hostname)) {
     try { navigator.serviceWorker.register("sw.js"); } catch (e) {}
   }
+
+  // la casetta e il guardaroba (js/casa.js) usano queste funzioni del gioco
+  Casa.avvia({
+    stato: function () { return stato; }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
+    mostra: mostra, apriPannello: apriPannello, chiudiPannello: chiudiPannello, apriMondo: apriMondo, aggiornaEnergia: aggiornaEnergia,
+    disegnaHud: function () { disegnaTutto(); }
+  });
 
   // Per provare il gioco più in fretta dalla console del browser
   window.chiwinnieDebug = {

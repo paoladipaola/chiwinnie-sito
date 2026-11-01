@@ -141,6 +141,9 @@ var Suoni = (function () {
   TEMI.puzzle = TEMI.sudoku;
   TEMI.labirinto = TEMI.memory;
   TEMI.aggiustatutto = TEMI.radura;
+  // in casetta: una ninna nanna allegra
+  TEMI.casa = { bpm: 80, chiave: 65, giro: [[0, "M"], [5, "M"], [0, "M"], [7, "M"]], ritmo: "dolce", brillio: true,
+                motivo: [2, null, 4, null, 5, null, 4, null, 2, null, 3, null, 4, null, null, null] };
   var temaVoluto = null, temaAttivo = null, passo = 0, prossimoTempo = 0, timer = null;
 
   // marimba: legno morbido, nota breve e rotonda

@@ -486,3 +486,20 @@ var FRASI = {
   brontolone: ["Grrrmpf… ho fame di spinaci!", "Niente spinaci, niente giochi!", "Brrr… sono un po' brontolone…"],
   pasto: ["Gnam gnam! Spinaci, che bontà!", "Wonni-wonni! Mi torna l'energia!"]
 };
+
+// Guardaroba: accessori da indossare, uno per posto (testa, viso, collo).
+// f = posizione sulla posa di fronte, in % dell'immagine: x e y del centro, w larghezza, r rotazione, sy schiacciamento.
+// Si comprano con petali o stelle; quelli "speciali" si vincono soltanto.
+var ACCESSORI = {
+  fiocco:          { nome: "Fiocco rosa",        posto: "testa", img: "img/casa/accessori/fiocco.png",          f: { x: 70, y: 6, w: 26, r: 18 }, gratis: true },
+  papillon:        { nome: "Papillon lilla",     posto: "collo", img: "img/casa/accessori/papillon.png",        f: { x: 50, y: 37, w: 22 }, gratis: true },
+  collana:         { nome: "Collana di margherite", posto: "collo", img: "img/casa/accessori/collana.png",      f: { x: 50, y: 41, w: 46 }, prezzo: { petali: 25 } },
+  coroncina_fiori: { nome: "Coroncina di fiori", posto: "testa", img: "img/casa/accessori/coroncina_fiori.png", f: { x: 50, y: 6, w: 50, sy: 0.45 }, prezzo: { petali: 30 } },
+  cappello_paglia: { nome: "Cappello di paglia", posto: "testa", img: "img/casa/accessori/cappello_paglia.png", f: { x: 50, y: 1, w: 66 }, prezzo: { petali: 40 } },
+  occhiali:        { nome: "Occhiali tondi",     posto: "viso",  img: "img/casa/accessori/occhiali.png",        f: { x: 50, y: 20, w: 40 }, prezzo: { stelle: 5 } },
+  sciarpa:         { nome: "Sciarpa a righe",    posto: "collo", img: "img/casa/accessori/sciarpa.png",         f: { x: 50, y: 46, w: 64 }, prezzo: { stelle: 8 } },
+  corona:          { nome: "Corona d'oro",       posto: "testa", img: "img/casa/accessori/corona.png",          f: { x: 50, y: 2, w: 32 },
+                     speciale: "Completa la Radura", vinto: function (s) { return Object.keys(ZONE[0].pezzi).every(function (k) { return s.costruiti.indexOf(k) !== -1; }); } },
+  cappello_mago:   { nome: "Cappello da mago",   posto: "testa", img: "img/casa/accessori/cappello_mago.png",   f: { x: 50, y: -8, w: 46 },
+                     speciale: "Aggiusta 5 cose con l'Aggiustatutto", vinto: function (s) { return (s.contatori.aggiustati || 0) >= 5; } }
+};
