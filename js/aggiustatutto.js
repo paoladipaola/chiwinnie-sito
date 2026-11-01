@@ -81,25 +81,94 @@
       ], fatto: "La stellina torna in cielo e la fontana zampilla scintille d'argento!" }
   ];
 
+  // Il palcoscenico di ogni guasto: lo sfondo, l'oggetto rotto e l'effetto che fa vedere il problema.
+  var SCENE = {
+    tetto:       { sfondo: "img/casa/interno.jpg", pos: "50% 18%", effetto: "pioggia", oggetto: null },
+    ponte:       { sfondo: "img/zona1/vuota.jpg", pos: "50% 80%", effetto: "traballa" },
+    altalena:    { sfondo: "img/zona1/vuota.jpg", pos: "50% 40%", effetto: "penzola" },
+    lanterne:    { sfondo: "img/zona1/vuota.jpg", pos: "50% 60%", effetto: "buio" },
+    orto:        { sfondo: "img/zona1/vuota.jpg", pos: "50% 60%", effetto: "appassito" },
+    mulino:      { sfondo: "img/zona2/vuota.jpg", pos: "50% 50%", effetto: "fermo" },
+    arnie:       { sfondo: "img/zona3/vuota.jpg", pos: "50% 60%", effetto: "api" },
+    aquilone:    { sfondo: "img/zona3/vuota.jpg", pos: "50% 40%", effetto: "impigliato", oggettoImg: "img/zona3/icone/coll_quercia.png" },
+    mongolfiera: { sfondo: "img/zona4/vuota.jpg", pos: "50% 40%", effetto: "sgonfio" },
+    fontana:     { sfondo: "img/zona4/vuota.jpg", pos: "50% 40%", effetto: "secco" }
+  };
+  // che disavventura mostrare per una scelta sbagliata: si capisce dalle parole della sua storia
+  function tipoGuaio(t) {
+    t = t.toLowerCase();
+    if (/formiche/.test(t)) return "formiche";
+    if (/bzzz|api /.test(t)) return "ronza";
+    if (/vola via|vola nel|cielo come|capriola|vola col/.test(t)) return "vola";
+    if (/splash|laghetto|nuoto|gelida|ninfee|ruscello/.test(t)) return "splash";
+    if (/bonk|in testa/.test(t)) return "bonk";
+    if (/bum|bang|botto/.test(t)) return "boom";
+    if (/sedere|cade|patapum|inciampa|crack|girotondo|terra/.test(t)) return "cade";
+    if (/vento|soffio|scivol|si stacca|si scioglie|si spezza|si rompe|sbriciola/.test(t)) return "vento";
+    return "nulla";
+  }
+  function sparsi(box, simbolo, n, classe) {
+    for (var i = 0; i < n; i++) {
+      var e = document.createElement("i"); e.className = "fx " + classe; e.textContent = simbolo;
+      e.style.left = (8 + Math.random() * 84) + "%"; e.style.animationDelay = (Math.random() * 1.2) + "s";
+      box.appendChild(e);
+    }
+  }
+
   Minigiochi.aggiustatutto = function (area, api) {
     var aperte = api.zoneAperte || ["radura"], fatti = api.aggiustati || [];
     var possibili = GUASTI.filter(function (g) { return !g.zona || aperte.indexOf(g.zona) !== -1; });
     // prima i guasti mai aggiustati, poi si ricomincia
     var nuovi = possibili.filter(function (g) { return fatti.indexOf(g.id) === -1; });
     var G = mescola((nuovi.length ? nuovi : possibili).slice())[0];
+    var S = SCENE[G.id] || { sfondo: "img/zona1/vuota.jpg", effetto: "" };
     var passi = G.passi.map(function (p) { return { domanda: p.domanda, scelte: mescola(p.scelte.slice()) }; });
-    var scelte = [null, null, null], bloccati = [false, false, false], passo = 0, tentativi = 0, finito = false, timers = [];
+    var scelte = [null, null, null], bloccati = [false, false, false], passo = 0, tentativi = 0, finito = false, occupato = false, timers = [];
     var MAX = 3;
+    function dopo(ms, f) { timers.push(setTimeout(f, ms)); }
 
     var box = document.createElement("div");
     box.className = "rompicapo aggiusta";
+    // il palcoscenico resta sempre lo stesso; sotto cambiano le domande
+    box.innerHTML = "<div class='palco problema-" + S.effetto + "'>" +
+      "<img class='palco-sfondo' src='" + S.sfondo + "' alt='' style='object-position:" + (S.pos || "50% 50%") + "'>" +
+      (S.oggetto === null ? "" : "<img class='palco-oggetto' src='" + (S.oggettoImg || G.img) + "' alt=''>") +
+      "<div class='palco-effetti'></div>" +
+      "<div class='palco-attore'><div class='vestito'><img src='" + immagineChiwi(api.colore, "fronte") + "' alt=''><div class='look'></div></div><div class='palco-borsa'></div></div>" +
+      "<div class='palco-fumetto'></div>" +
+      "</div><div class='aggiusta-sotto'></div>";
     area.appendChild(box);
-    function info() { api.info("🔧 " + (MAX - tentativi) + (MAX - tentativi === 1 ? " prova" : " prove")); }
+    var palco = box.querySelector(".palco"), effetti = box.querySelector(".palco-effetti"), sotto = box.querySelector(".aggiusta-sotto");
+    if (window.Look && api.look) Look.disegna(box.querySelector(".palco-attore .look"), api.look);
+    preparaProblema();
 
-    function scena(sotto) {
-      return "<div class='aggiusta-scena'><img class='agg-oggetto' src='" + G.img + "' alt=''><img class='agg-chiwi' src='" + immagineChiwi(api.colore, "fronte") + "' alt=''></div>" +
-        "<h2>" + esc(G.titolo) + "</h2>" + sotto;
+    function preparaProblema() {
+      effetti.innerHTML = "";
+      var e = S.effetto;
+      if (e === "pioggia") {
+        effetti.innerHTML = "<div class='buco'></div><div class='pozza'></div>";
+        for (var i = 0; i < 9; i++) { var g = document.createElement("i"); g.className = "goccia"; g.style.left = (46 + Math.random() * 10) + "%"; g.style.animationDelay = (i * 0.17) + "s"; effetti.appendChild(g); }
+      }
+      if (e === "api") sparsi(effetti, "🐝", 5, "ape");
+      if (e === "impigliato") effetti.innerHTML = "<i class='fx aquilone-impigliato'>🪁</i>";
+      if (e === "buio") effetti.innerHTML = "<div class='notte'></div>";
+      if (e === "fermo") effetti.innerHTML = "<i class='fx ramo'>🪵</i>";
+      if (e === "secco") effetti.innerHTML = "<i class='fx stellina'>⭐</i>";
+      fumetto({ pioggia: "Ploc… ploc… mi piove in testa!", traballa: "Aiuto, traballa tutto!", penzola: "La mia altalena è storta…", buio: "Che buio… ho un po' paura!",
+        appassito: "Poveri spinaci, sono tristi…", fermo: "La ruota non gira più!", api: "Le api sono preoccupate…", impigliato: "Il mio aquilone è lassù!",
+        sgonfio: "Si sta sgonfiando!", secco: "La fontana non zampilla…" }[e] || G.problema, 3500);
     }
+    function fumetto(t, ms) {
+      var f = palco.querySelector(".palco-fumetto"); f.textContent = t; f.classList.add("su");
+      clearTimeout(f._t); f._t = setTimeout(function () { f.classList.remove("su"); }, ms || 2800);
+    }
+    // gli attrezzi scelti finora stanno accanto al Chiwinnie
+    function borsa() {
+      box.querySelector(".palco-borsa").innerHTML = scelte.map(function (s, i) {
+        return s === null ? "" : "<span data-i='" + i + "'>" + passi[i].scelte[s].e + "</span>";
+      }).join("");
+    }
+    function info() { api.info("🔧 " + (MAX - tentativi) + (MAX - tentativi === 1 ? " prova" : " prove")); }
     function pallini() {
       return "<div class='aggiusta-passi'>" + passi.map(function (p, i) {
         var s = scelte[i];
@@ -108,21 +177,19 @@
     }
     function mostraPasso() {
       var p = passi[passo];
-      box.innerHTML = scena("<p class='problema'>" + esc(G.problema) + "</p>" + pallini() +
+      sotto.innerHTML = "<h2>" + esc(G.titolo) + "</h2>" + pallini() +
         "<p class='domanda'>" + (passo + 1) + ". " + esc(p.domanda) + "</p><div class='aggiusta-scelte'>" +
-        p.scelte.map(function (c, i) { return "<button data-s='" + i + "' class='" + (scelte[passo] === i ? "scelta" : "") + "'><b>" + c.e + "</b>" + esc(c.t) + "</button>"; }).join("") + "</div>");
+        p.scelte.map(function (c, i) { return "<button data-s='" + i + "' class='" + (scelte[passo] === i ? "scelta" : "") + "'><b>" + c.e + "</b>" + esc(c.t) + "</button>"; }).join("") + "</div>";
     }
     function riepilogo() {
-      box.innerHTML = scena("<p class='problema'>Ecco il tuo piano. Funzionerà?</p>" + pallini() +
-        "<div class='piano'>" + passi.map(function (p, i) { var c = p.scelte[scelte[i]]; return "<div><b>" + c.e + "</b>" + esc(c.t) + "</div>"; }).join("") + "</div>" +
-        "<div class='azioni-pannello'><button class='btn verde' data-azione='prova'>🔧 Prova ad aggiustare!</button></div>");
+      sotto.innerHTML = "<h2>" + esc(G.titolo) + "</h2>" + pallini() + "<p class='domanda'>Ecco il piano. Funzionerà?</p>" +
+        "<div class='azioni-pannello'><button class='btn verde' data-azione='prova'>🔧 Prova ad aggiustare!</button></div>";
     }
-    box.addEventListener("click", function (e) {
-      if (finito) return;
+    sotto.addEventListener("click", function (e) {
+      if (finito || occupato) return;
       var b = e.target.closest("button"); if (!b) return;
       if (b.dataset.s !== undefined) {
-        scelte[passo] = +b.dataset.s; Suoni.sfx("presa");
-        // passa al prossimo passo ancora da scegliere
+        scelte[passo] = +b.dataset.s; Suoni.sfx("presa"); borsa();
         var prossimo = scelte.indexOf(null);
         if (prossimo === -1) riepilogo(); else { passo = prossimo; mostraPasso(); }
       } else if (b.dataset.p !== undefined) {
@@ -132,51 +199,87 @@
       else if (b.dataset.azione === "riprova") { passo = scelte.indexOf(null); mostraPasso(); }
     });
 
+    // ---------- la prova, passo per passo, tutta animata ----------
     function prova() {
-      tentativi++; info();
-      box.querySelector(".aggiusta-scena").classList.add("al-lavoro");
-      box.querySelector(".azioni-pannello").innerHTML = "<p class='domanda'>Il Chiwinnie si mette al lavoro… 🔨</p>";
-      Suoni.sfx("gira");
-      timers.push(setTimeout(function () {
-        var sbagliato = -1;
-        passi.forEach(function (p, i) { if (p.scelte[scelte[i]].ok) bloccati[i] = true; else if (sbagliato === -1) sbagliato = i; });
-        if (sbagliato === -1) return vittoria();
-        var oops = passi[sbagliato].scelte[scelte[sbagliato]].oops;
-        // le scelte sbagliate si tolgono, quelle giuste restano
-        passi.forEach(function (p, i) { if (!bloccati[i]) scelte[i] = null; });
-        Suoni.sfx("errore"); vibra(80);
-        if (tentativi >= MAX) return sconfitta(oops);
+      occupato = true; tentativi++; info();
+      sotto.innerHTML = "<h2>" + esc(G.titolo) + "</h2><p class='domanda'>Il Chiwinnie si mette al lavoro… 🔨</p>";
+      var i = 0;
+      (function prossimo() {
+        if (i >= 3) return dopo(300, vittoria);
+        var c = passi[i].scelte[scelte[i]], attrezzo = box.querySelector(".palco-borsa [data-i='" + i + "']");
+        palco.classList.add("al-lavoro");
+        if (attrezzo) attrezzo.classList.add("usa");
+        Suoni.sfx("gira");
+        dopo(800, function () {
+          if (c.ok) {
+            bloccati[i] = true; brilla(); Suoni.sfx("presa");
+            if (attrezzo) attrezzo.classList.add("fatto");
+            i++; dopo(500, prossimo);
+          } else guaio(i, c, attrezzo);
+        });
+      })();
+    }
+    function brilla() { sparsi(effetti, "✨", 4, "scintilla"); }
+    function guaio(i, c, attrezzo) {
+      var tipo = tipoGuaio(c.oops);
+      palco.classList.remove("al-lavoro");
+      palco.classList.add("guaio-" + tipo);
+      if (tipo === "formiche") sparsi(effetti, "🐜", 7, "formica");
+      if (tipo === "ronza") sparsi(effetti, "🐝", 6, "ape-arrabbiata");
+      if (tipo === "splash") sparsi(effetti, "💦", 6, "spruzzo");
+      if (tipo === "bonk") sparsi(effetti, "💫", 3, "stelline");
+      if (tipo === "boom") sparsi(effetti, "💥", 3, "botto");
+      if (tipo === "cade") sparsi(effetti, "⭐", 3, "stelline");
+      if (tipo === "vento") sparsi(effetti, "🍃", 5, "foglia");
+      if (tipo === "vola") { var pal = document.createElement("i"); pal.className = "fx in-volo"; pal.textContent = c.e; effetti.appendChild(pal); }
+      if (attrezzo) attrezzo.classList.add("perso");
+      fumetto(c.oops, 3200);
+      Suoni.sfx("errore"); vibra(80);
+      dopo(1900, function () {
+        palco.className = "palco problema-" + S.effetto;
+        preparaProblema();
+        // le scelte sbagliate (e quelle dopo) si tolgono; quelle già provate e giuste restano
+        passi.forEach(function (p, k) { if (!bloccati[k]) scelte[k] = null; });
+        borsa(); occupato = false;
+        if (tentativi >= MAX) return sconfitta(c.oops);
         var giusti = bloccati.filter(Boolean).length;
-        box.innerHTML = scena("<div class='oops'><b>Oh no!</b> " + esc(oops) + "</div>" + pallini() +
-          "<p class='domanda'>" + (giusti ? "Però " + (giusti === 1 ? "un passo era giusto" : giusti + " passi erano giusti") + ": restano col segno verde." : "Nessun passo era giusto: pensaci bene!") + "</p>" +
-          "<div class='azioni-pannello'><button class='btn' data-azione='riprova'>Riprova (" + (MAX - tentativi) + ")</button></div>");
-      }, 1400));
+        sotto.innerHTML = "<h2>Oh no!</h2><div class='oops'>" + esc(c.oops) + "</div>" + pallini() +
+          "<p class='domanda'>" + (giusti ? (giusti === 1 ? "Un passo era giusto" : giusti + " passi erano giusti") + ": restano col segno verde." : "Pensaci bene e riprova!") + "</p>" +
+          "<div class='azioni-pannello'><button class='btn' data-azione='riprova'>Riprova (" + (MAX - tentativi) + ")</button></div>";
+      });
     }
     function vittoria() {
       finito = true; Suoni.sfx("coppia"); vibra(40);
-      box.innerHTML = scena("<div class='evviva'>✨ " + esc(G.fatto) + "</div>");
-      box.querySelector(".aggiusta-scena").classList.add("festa");
+      palco.classList.remove("al-lavoro", "problema-" + S.effetto);
+      palco.classList.add("risolto", "risolto-" + S.effetto);
+      effetti.innerHTML = "";
+      if (S.effetto === "secco") effetti.innerHTML = "<i class='fx zampillo'>💧</i><i class='fx zampillo z2'>💧</i><i class='fx zampillo z3'>✨</i>";
+      if (S.effetto === "impigliato") effetti.innerHTML = "<i class='fx aquilone-vola'>🪁</i>";
+      if (S.effetto === "arnie" || S.effetto === "api") sparsi(effetti, "🍯", 2, "scintilla");
+      sparsi(effetti, "✨", 8, "scintilla");
+      box.querySelector(".palco-borsa").innerHTML = "";
+      fumetto("Evviva, aggiustato!", 3000);
+      sotto.innerHTML = "<h2>" + esc(G.titolo) + "</h2><div class='evviva'>✨ " + esc(G.fatto) + "</div>";
       var primo = tentativi === 1;
-      timers.push(setTimeout(function () {
+      dopo(2600, function () {
         api.fine({
           punti: primo ? 20 : tentativi === 2 ? 14 : 10, completato: true, guasto: G.id, primoColpo: primo,
           bottino: { legnetti: 3, sassolini: 2, petali: primo ? 2 : 1, stelle: primo ? 1 : 0 },
           titolo: primo ? "Aggiustato al primo colpo!" : "Aggiustato!",
           messaggio: G.fatto + (primo ? " Al primo tentativo: una stella in regalo!" : "")
         });
-      }, 1800));
+      });
     }
     function sconfitta(oops) {
       finito = true;
       var giusto = passi.map(function (p) { var c = p.scelte.filter(function (x) { return x.ok; })[0]; return c.e + " " + c.t; });
-      box.innerHTML = scena("<div class='oops'><b>Oh no!</b> " + esc(oops) + "</div>");
-      timers.push(setTimeout(function () {
+      dopo(400, function () {
         api.fine({
           punti: 4, completato: false, bottino: { legnetti: 1 },
           titolo: "Quasi!",
           messaggio: "Il piano giusto era: " + giusto.join(" → ") + ". La prossima volta ce la fai!"
         });
-      }, 1600));
+      });
     }
     info(); mostraPasso();
     return function () { finito = true; timers.forEach(clearTimeout); };

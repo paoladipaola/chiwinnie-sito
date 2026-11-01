@@ -806,6 +806,7 @@
         fine: fineMinigioco,
         livello: stato.livello,
         colore: stato.colore,
+        look: stato.look || {},
         aggiustati: stato.aggiustati || [],
         zoneAperte: ZONE.filter(function (z, i) { return zonaAperta(i); }).map(function (z) { return z.id; }),
         turbo: !!(g.arcade && fioriAttivi())   // con l'energia dei fiori l'avventura parte con la supervelocità
