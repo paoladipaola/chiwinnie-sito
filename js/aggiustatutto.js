@@ -83,16 +83,18 @@
 
   // Il palcoscenico di ogni guasto: lo sfondo, l'oggetto rotto e l'effetto che fa vedere il problema.
   var SCENE = {
-    tetto:       { sfondo: "img/casa/interno.jpg", pos: "50% 18%", effetto: "pioggia", oggetto: null },
-    ponte:       { sfondo: "img/zona1/vuota.jpg", pos: "50% 80%", effetto: "traballa" },
-    altalena:    { sfondo: "img/zona1/vuota.jpg", pos: "50% 40%", effetto: "penzola" },
-    lanterne:    { sfondo: "img/zona1/vuota.jpg", pos: "50% 60%", effetto: "buio" },
-    orto:        { sfondo: "img/zona1/vuota.jpg", pos: "50% 60%", effetto: "appassito" },
-    mulino:      { sfondo: "img/zona2/vuota.jpg", pos: "50% 50%", effetto: "fermo" },
-    arnie:       { sfondo: "img/zona3/vuota.jpg", pos: "50% 60%", effetto: "api" },
-    aquilone:    { sfondo: "img/zona3/vuota.jpg", pos: "50% 40%", effetto: "impigliato", oggettoImg: "img/zona3/icone/coll_quercia.png" },
-    mongolfiera: { sfondo: "img/zona4/vuota.jpg", pos: "50% 40%", effetto: "sgonfio" },
-    fontana:     { sfondo: "img/zona4/vuota.jpg", pos: "50% 40%", effetto: "secco" }
+    // rotto = il quadro con il guasto (dipinto apposta), fisso = lo stesso quadro aggiustato; senza "rotto" il guasto lo fanno vedere gli effetti
+    // chiwi = dove sta il Chiwinnie [left, bottom] in %; fx = dove stanno gli effetti piccoli [left, top] in %
+    tetto:       { fisso: "img/casa/interno.jpg", pos: "50% 18%", effetto: "pioggia", chiwi: [38, 6] },
+    altalena:    { rotto: "img/aggiusta/altalena_rotto.jpg", fisso: "img/aggiusta/altalena.jpg", chiwi: [32, 2] },
+    ponte:       { rotto: "img/aggiusta/ponte_rotto.jpg", fisso: "img/aggiusta/ponte.jpg", chiwi: [70, 10] },
+    fontana:     { rotto: "img/aggiusta/fontana_rotto.jpg", fisso: "img/aggiusta/fontana.jpg", chiwi: [62, 2] },
+    lanterne:    { fisso: "img/aggiusta/lanterne.jpg", effetto: "buio", chiwi: [64, 4] },
+    orto:        { fisso: "img/aggiusta/orto.jpg", effetto: "appassito", chiwi: [62, 2] },
+    mulino:      { fisso: "img/aggiusta/mulino.jpg", effetto: "fermo", chiwi: [8, 2], fx: [64, 66] },
+    arnie:       { fisso: "img/aggiusta/arnie.jpg", effetto: "api", chiwi: [62, 2] },
+    aquilone:    { fisso: "img/aggiusta/aquilone.jpg", effetto: "impigliato", chiwi: [40, 2], fx: [84, 40] },
+    mongolfiera: { fisso: "img/aggiusta/mongolfiera.jpg", effetto: "sgonfio", chiwi: [44, 2], fx: [80, 50] }
   };
   // che disavventura mostrare per una scelta sbagliata: si capisce dalle parole della sua storia
   function tipoGuaio(t) {
@@ -121,7 +123,7 @@
     // prima i guasti mai aggiustati, poi si ricomincia
     var nuovi = possibili.filter(function (g) { return fatti.indexOf(g.id) === -1; });
     var G = mescola((nuovi.length ? nuovi : possibili).slice())[0];
-    var S = SCENE[G.id] || { sfondo: "img/zona1/vuota.jpg", effetto: "" };
+    var S = SCENE[G.id];
     var passi = G.passi.map(function (p) { return { domanda: p.domanda, scelte: mescola(p.scelte.slice()) }; });
     var scelte = [null, null, null], bloccati = [false, false, false], passo = 0, tentativi = 0, finito = false, occupato = false, timers = [];
     var MAX = 3;
@@ -130,11 +132,12 @@
     var box = document.createElement("div");
     box.className = "rompicapo aggiusta";
     // il palcoscenico resta sempre lo stesso; sotto cambiano le domande
-    box.innerHTML = "<div class='palco problema-" + S.effetto + "'>" +
-      "<img class='palco-sfondo' src='" + S.sfondo + "' alt='' style='object-position:" + (S.pos || "50% 50%") + "'>" +
-      (S.oggetto === null ? "" : "<img class='palco-oggetto' src='" + (S.oggettoImg || G.img) + "' alt=''>") +
+    var stilePos = "object-position:" + (S.pos || "50% 50%");
+    box.innerHTML = "<div class='palco problema-" + (S.effetto || "quadro") + "'>" +
+      "<img class='palco-sfondo' src='" + (S.rotto || S.fisso) + "' alt='' style='" + stilePos + "'>" +
+      (S.rotto ? "<img class='palco-fisso' src='" + S.fisso + "' alt='' style='" + stilePos + "'>" : "") +
       "<div class='palco-effetti'></div>" +
-      "<div class='palco-attore'><div class='vestito'><img src='" + immagineChiwi(api.colore, "fronte") + "' alt=''><div class='look'></div></div><div class='palco-borsa'></div></div>" +
+      "<div class='palco-attore' style='left:" + S.chiwi[0] + "%;bottom:" + S.chiwi[1] + "%'><div class='vestito'><img src='" + immagineChiwi(api.colore, "fronte") + "' alt=''><div class='look'></div></div><div class='palco-borsa'></div></div>" +
       "<div class='palco-fumetto'></div>" +
       "</div><div class='aggiusta-sotto'></div>";
     area.appendChild(box);
@@ -150,13 +153,14 @@
         for (var i = 0; i < 9; i++) { var g = document.createElement("i"); g.className = "goccia"; g.style.left = (46 + Math.random() * 10) + "%"; g.style.animationDelay = (i * 0.17) + "s"; effetti.appendChild(g); }
       }
       if (e === "api") sparsi(effetti, "🐝", 5, "ape");
-      if (e === "impigliato") effetti.innerHTML = "<i class='fx aquilone-impigliato'>🪁</i>";
+      var dove = S.fx ? " style='left:" + S.fx[0] + "%;top:" + S.fx[1] + "%'" : "";
+      if (e === "impigliato") effetti.innerHTML = "<i class='fx aquilone-impigliato'" + dove + ">🪁</i>";
+      if (e === "sgonfio") effetti.innerHTML = "<i class='fx sbuffo'" + dove + ">💨</i><i class='fx sbuffo s2'" + dove + ">💨</i>";
       if (e === "buio") effetti.innerHTML = "<div class='notte'></div>";
-      if (e === "fermo") effetti.innerHTML = "<i class='fx ramo'>🪵</i>";
-      if (e === "secco") effetti.innerHTML = "<i class='fx stellina'>⭐</i>";
-      fumetto({ pioggia: "Ploc… ploc… mi piove in testa!", traballa: "Aiuto, traballa tutto!", penzola: "La mia altalena è storta…", buio: "Che buio… ho un po' paura!",
+      if (e === "fermo") effetti.innerHTML = "<i class='fx ramo'" + dove + ">🪵</i>";
+      fumetto({ quadro: { altalena: "La mia altalena si è rotta…", ponte: "Il ponticello è rotto!", fontana: "La fontana non zampilla più…" }[G.id], pioggia: "Ploc… ploc… mi piove in testa!", traballa: "Aiuto, traballa tutto!", penzola: "La mia altalena è storta…", buio: "Che buio… ho un po' paura!",
         appassito: "Poveri spinaci, sono tristi…", fermo: "La ruota non gira più!", api: "Le api sono preoccupate…", impigliato: "Il mio aquilone è lassù!",
-        sgonfio: "Si sta sgonfiando!", secco: "La fontana non zampilla…" }[e] || G.problema, 3500);
+        sgonfio: "La mongolfiera perde aria!" }[e] || G.problema, 3500);
     }
     function fumetto(t, ms) {
       var f = palco.querySelector(".palco-fumetto"); f.textContent = t; f.classList.add("su");
@@ -236,7 +240,7 @@
       fumetto(c.oops, 3200);
       Suoni.sfx("errore"); vibra(80);
       dopo(1900, function () {
-        palco.className = "palco problema-" + S.effetto;
+        palco.className = "palco problema-" + (S.effetto || "quadro");
         preparaProblema();
         // le scelte sbagliate (e quelle dopo) si tolgono; quelle già provate e giuste restano
         passi.forEach(function (p, k) { if (!bloccati[k]) scelte[k] = null; });
@@ -250,12 +254,11 @@
     }
     function vittoria() {
       finito = true; Suoni.sfx("coppia"); vibra(40);
-      palco.classList.remove("al-lavoro", "problema-" + S.effetto);
-      palco.classList.add("risolto", "risolto-" + S.effetto);
+      palco.classList.remove("al-lavoro", "problema-" + (S.effetto || "quadro"));
+      palco.classList.add("risolto", "risolto-" + (S.effetto || "quadro"));
       effetti.innerHTML = "";
-      if (S.effetto === "secco") effetti.innerHTML = "<i class='fx zampillo'>💧</i><i class='fx zampillo z2'>💧</i><i class='fx zampillo z3'>✨</i>";
-      if (S.effetto === "impigliato") effetti.innerHTML = "<i class='fx aquilone-vola'>🪁</i>";
-      if (S.effetto === "arnie" || S.effetto === "api") sparsi(effetti, "🍯", 2, "scintilla");
+      if (S.effetto === "impigliato") effetti.innerHTML = "<i class='fx aquilone-vola' style='left:" + S.fx[0] + "%;top:" + S.fx[1] + "%'>🪁</i>";
+      if (S.effetto === "api") sparsi(effetti, "🍯", 2, "scintilla");
       sparsi(effetti, "✨", 8, "scintilla");
       box.querySelector(".palco-borsa").innerHTML = "";
       fumetto("Evviva, aggiustato!", 3000);

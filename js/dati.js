@@ -487,7 +487,7 @@ var FRASI = {
   pasto: ["Gnam gnam! Spinaci, che bontà!", "Wonni-wonni! Mi torna l'energia!"]
 };
 
-// Guardaroba: accessori da indossare, uno per posto (testa, viso, collo).
+// Guardaroba: accessori da indossare, uno per posto (testa, viso, collo, corpo, schiena: la schiena sta dietro al Chiwinnie).
 // f = posizione sulla posa di fronte, in % dell'immagine: x e y del centro, w larghezza, r rotazione, sy schiacciamento.
 // Si comprano con petali o stelle; quelli "speciali" si vincono soltanto.
 var ACCESSORI = {
@@ -501,5 +501,16 @@ var ACCESSORI = {
   corona:          { nome: "Corona d'oro",       posto: "testa", img: "img/casa/accessori/corona.png",          f: { x: 50, y: 2, w: 32 },
                      speciale: "Completa la Radura", vinto: function (s) { return Object.keys(ZONE[0].pezzi).every(function (k) { return s.costruiti.indexOf(k) !== -1; }); } },
   cappello_mago:   { nome: "Cappello da mago",   posto: "testa", img: "img/casa/accessori/cappello_mago.png",   f: { x: 50, y: -8, w: 46 },
-                     speciale: "Aggiusta 5 cose con l'Aggiustatutto", vinto: function (s) { return (s.contatori.aggiustati || 0) >= 5; } }
+                     speciale: "Aggiusta 5 cose con l'Aggiustatutto", vinto: function (s) { return (s.contatori.aggiustati || 0) >= 5; } },
+  berretto_lana:   { nome: "Berretto di lana",   posto: "testa", img: "img/casa/accessori/berretto_lana.png",   f: { x: 50, y: 3, w: 46 }, prezzo: { petali: 35 } },
+  basco:           { nome: "Basco da pittore",   posto: "testa", img: "img/casa/accessori/basco.png",           f: { x: 45, y: 5, w: 52, r: -12 }, prezzo: { petali: 45 } },
+  cuffie:          { nome: "Cuffie musicali",    posto: "testa", img: "img/casa/accessori/cuffie.png",          f: { x: 50, y: 19, w: 60 }, prezzo: { stelle: 7 } },
+  occhiali_cuore:  { nome: "Occhiali a cuore",   posto: "viso",  img: "img/casa/accessori/occhiali_cuore.png",  f: { x: 50, y: 20, w: 44 }, prezzo: { stelle: 6 } },
+  campanellino:    { nome: "Collare col campanellino", posto: "collo", img: "img/casa/accessori/campanellino.png", f: { x: 50, y: 39, w: 36 }, prezzo: { petali: 20 } },
+  grembiule:       { nome: "Grembiule a fiori",  posto: "corpo", img: "img/casa/accessori/grembiule.png",       f: { x: 50, y: 63, w: 50 }, prezzo: { petali: 30 } },
+  tutu:            { nome: "Tutù rosa",          posto: "corpo", img: "img/casa/accessori/tutu.png",            f: { x: 50, y: 76, w: 86 }, prezzo: { petali: 35 } },
+  mantello:        { nome: "Mantello da supereroe", posto: "schiena", img: "img/casa/accessori/mantello.png",   f: { x: 50, y: 52, w: 124 },
+                     speciale: "Arriva in fondo a tutte e 4 le avventure", vinto: function (s) { return ["bosco", "ruscello", "collina", "cielo"].every(function (k) { return (s.record[k + "Completo"] || 0) > 0; }); } },
+  ali_fata:        { nome: "Ali di fata",        posto: "schiena", img: "img/casa/accessori/ali_fata.png",      f: { x: 50, y: 38, w: 118 },
+                     speciale: "Trova tutte e 3 le stelle del Cielo", vinto: function (s) { return (s.record.cieloStelle || 0) >= 3; } }
 };

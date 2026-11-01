@@ -6,12 +6,13 @@ var Look = (function () {
   function disegna(box, look) {
     if (!box) return;
     look = look || {};
-    box.innerHTML = ["collo", "viso", "testa"].map(function (posto) {
+    box.innerHTML = ["schiena", "corpo", "collo", "viso", "testa"].map(function (posto) {
       var a = ACCESSORI[look[posto]]; if (!a) return "";
       var f = a.f;
       // di profilo la testa è più piccola e sta in alto a destra
       var sx = 86 + (f.x - 50) * 0.6, sy = (6 + (f.y * 4.2 - 8.4) * 0.6) / 1.98, sw = f.w * 1.08 * 0.6;
       if (posto === "collo") { sx -= 5; sy += 8; sw *= 0.8; }   // di profilo il collo è più indietro e più in basso
+      if (posto === "schiena") { sx = 46; sy = 30; sw = f.w * 0.55; }   // mantello e ali sulla schiena, a metà del corpo
       return "<img class='acc " + posto + "' src='" + a.img + "' alt='' style='--fx:" + f.x + "%;--fy:" + f.y + "%;--fw:" + f.w + "%;--sx:" + sx.toFixed(1) + "%;--sy:" + sy.toFixed(1) + "%;--sw:" + sw.toFixed(1) + "%;--r:" + (f.r || 0) + "deg;--sc:" + (f.sy || 1) + "'>";
     }).join("");
   }
@@ -68,16 +69,17 @@ var Look = (function () {
   function riposa() {
     if (!pronto("letto", PAUSA_LETTO)) { vai(POSTI.letto, function () { dice("Non ho sonno… riprova tra " + minutiA("letto", PAUSA_LETTO) + " minuti!"); }); return; }
     vai(POSTI.letto, function () {
+      // si infila sotto le coperte: compare il quadro con il Chiwinnie che dorme nel letto (del suo colore)
       var el = $("casa-chiwi"), stanza = $("casa-stanza");
+      $("casa-dorme").src = "img/casa/dorme/" + (stato().colore || "viola") + ".jpg";
       el.classList.add("dorme"); stanza.classList.add("sera");
-      dice("Zzz… zzz…", 4000);
       Suoni.sfx("magia");
       timers.push(setTimeout(function () {
         stanza.classList.remove("sera"); el.classList.remove("dorme");
         C.aggiornaEnergia(); var s = stato(); s.energia = Math.min(100, s.energia + 25); segna("letto");
         C.salva(); C.disegnaHud();
         dice("Che bella dormita! +25 energia ⚡", 3000); C.vibra(30);
-      }, 4200));
+      }, 6000));
     });
   }
   function biscotto() {
@@ -99,7 +101,7 @@ var Look = (function () {
   function apriArmadio() {
     controllaPremi(true);
     var s = stato(), look = s.look || {};
-    var html = "<h2>Il guardaroba</h2><p>Tocca un accessorio per metterlo o toglierlo. Uno per la testa, uno per il viso e uno per il collo.</p>" +
+    var html = "<h2>Il guardaroba</h2><p>Tocca un vestito o un accessorio per metterlo o toglierlo: uno per la testa, il viso, il collo, il corpo e la schiena.</p>" +
       "<div class='armadio-anteprima'><div class='vestito'><img src='" + immagineChiwi(s.colore, "fronte") + "' alt=''><div class='look' id='armadio-look'></div></div></div>" +
       "<div class='griglia armadio'>";
     Object.keys(ACCESSORI).forEach(function (k) {

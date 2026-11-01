@@ -115,7 +115,10 @@ input[type=text] {
 .chiwi-mondo.sinistra.cammina .vestito, .chiwi-casa.sinistra.cammina .vestito { animation: passetti-s .28s ease-in-out infinite; }
 @keyframes passetti-s { 0%, 100% { transform: scaleX(-1); } 50% { transform: scaleX(-1) translateY(-4%); } }
 .chiwi-mondo.salta .vestito, .chiwi-casa.salta .vestito { animation: salto .5s ease; }
+.vestito { isolation: isolate; }
 .look { position: absolute; inset: 0; pointer-events: none; }
+.look .acc.schiena { z-index: -1; }
+.cammina .look .acc.corpo { display: none; }
 .look .acc { position: absolute; left: var(--fx); top: var(--fy); width: var(--fw); transform: translate(-50%, -50%) rotate(var(--r)) scaleY(var(--sc)); filter: drop-shadow(0 2px 2px rgba(40, 30, 20, .25)); }
 .cammina .look .acc { left: var(--sx); top: var(--sy); width: var(--sw); }
 .cammina .look .acc.viso { display: none; }
@@ -279,9 +282,11 @@ input[type=text] {
 .aggiusta h2 { margin: 0; font-size: 20px; text-align: center; }
 .aggiusta-sotto { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
 .palco { position: relative; width: min(94vw, 420px); aspect-ratio: 4 / 3; flex: none; border-radius: 22px; overflow: hidden; border: 4px solid #fff; box-shadow: var(--ombra); background: #cfe3b5; }
-.palco-sfondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.palco-sfondo, .palco-fisso { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: filter 1s; }
+.palco-fisso { opacity: 0; transition: opacity 1.4s ease-in-out; }
+.palco.risolto .palco-fisso { opacity: 1; }
 .palco-oggetto { position: absolute; left: 6%; bottom: 10%; width: 52%; max-height: 70%; object-fit: contain; filter: drop-shadow(0 6px 6px rgba(0,0,0,.25)); transform-origin: 50% 0%; transition: filter .8s, transform .8s; }
-.palco-attore { position: absolute; right: 8%; bottom: 6%; width: 27%; transform-origin: 50% 100%; transition: transform .6s; z-index: 3; }
+.palco-attore { position: absolute; width: 21%; transform-origin: 50% 100%; transition: transform .6s; z-index: 3; }
 .palco-attore .vestito > img { filter: drop-shadow(0 5px 4px rgba(0,0,0,.25)); }
 .palco-borsa { position: absolute; left: -40%; bottom: 0; display: flex; gap: 2px; font-size: 26px; }
 .palco-borsa span { display: inline-block; animation: spunta-attrezzo .4s cubic-bezier(.3, 1.6, .5, 1); transition: transform .8s ease-in, opacity .5s; }
@@ -300,26 +305,28 @@ input[type=text] {
 @keyframes lavora { from { transform: rotate(-8deg) translateY(0); } to { transform: rotate(8deg) translateY(-6px); } }
 .palco.risolto .palco-attore { animation: festa .5s ease-in-out infinite; }
 /* pioggia dal buco nel tetto, dritta sul Chiwinnie */
-.problema-pioggia .palco-attore { right: auto; left: 38%; }
 .problema-pioggia .buco { position: absolute; left: 44%; top: 2%; width: 16%; height: 9%; background: radial-gradient(ellipse, #2f3c55 40%, #5b6b85 62%, transparent 72%); border-radius: 50%; }
 .problema-pioggia .goccia { position: absolute; top: 8%; width: 7px; height: 13px; background: #7fb8e8; border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%; opacity: .9; animation: goccia 1.1s linear infinite; }
 @keyframes goccia { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: .9; } 90% { opacity: .9; } 100% { transform: translateY(210px); opacity: 0; } }
 .problema-pioggia .pozza { position: absolute; left: 36%; bottom: 3%; width: 34%; height: 7%; background: radial-gradient(ellipse, rgba(110, 170, 230, .7), rgba(110, 170, 230, 0) 70%); animation: pozza 2s ease-in-out infinite alternate; }
 @keyframes pozza { to { transform: scaleX(1.15); } }
-.risolto-pioggia .palco-attore { left: 38%; right: auto; }
 /* gli altri problemi */
 .problema-traballa .palco-oggetto { animation: traballa .5s ease-in-out infinite; transform-origin: 50% 100%; }
 @keyframes traballa { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(2px); } }
 .problema-penzola .palco-oggetto { transform: rotate(9deg); animation: penzola 2.4s ease-in-out infinite; }
 @keyframes penzola { 50% { transform: rotate(14deg); } }
 .problema-buio .notte { position: absolute; inset: 0; background: rgba(25, 30, 70, .62); transition: opacity 1s; }
-.problema-appassito .palco-oggetto { filter: grayscale(.85) brightness(.85); transform: scaleY(.82); transform-origin: 50% 100%; }
-.problema-fermo .ramo { left: 30%; bottom: 30%; font-size: 34px; transform: rotate(30deg); }
+.problema-appassito .palco-sfondo { filter: saturate(.25) sepia(.35) brightness(.92); }
+.problema-fermo .ramo { font-size: 34px; transform: rotate(30deg); animation: traballa .6s infinite; }
 .problema-sgonfio .palco-oggetto { transform: scale(.8, .55); transform-origin: 50% 100%; animation: sgonfio 1.8s ease-in-out infinite alternate; }
 @keyframes sgonfio { to { transform: scale(.85, .5); } }
 .problema-secco .palco-oggetto { filter: grayscale(.7); }
 .problema-secco .stellina { left: 28%; bottom: 52%; font-size: 22px; animation: traballa .6s infinite; }
-.problema-impigliato .aquilone-impigliato { left: 30%; top: 14%; font-size: 40px; animation: traballa .7s ease-in-out infinite; }
+.problema-impigliato .aquilone-impigliato { font-size: 40px; animation: traballa .7s ease-in-out infinite; }
+.sbuffo { font-size: 26px; animation: sbuffo 1.4s ease-out infinite; }
+.sbuffo.s2 { animation-delay: .7s; }
+@keyframes sbuffo { from { transform: translate(0, 0) scale(.6); opacity: 1; } to { transform: translate(40px, -20px) scale(1.3); opacity: 0; } }
+.problema-sgonfio .palco-sfondo { filter: saturate(.7) brightness(.95); }
 .ape { top: 30%; font-size: 22px; animation: ronza 2.2s ease-in-out infinite; }
 @keyframes ronza { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(30px, -20px); } 50% { transform: translate(-10px, -40px); } 75% { transform: translate(-30px, 10px); } }
 /* quando è aggiustato */
@@ -375,11 +382,19 @@ input[type=text] {
 #casa-tela { position: absolute; top: 0; left: 50%; height: 100%; aspect-ratio: 900 / 1257; transform: translateX(-50%); }
 #casa-sfondo { width: 100%; height: 100%; object-fit: cover; display: block; }
 #casa-tela::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 8%; background: linear-gradient(transparent, #f3dcc0); pointer-events: none; }
-#casa-stanza.sera #casa-tela::before { content: ""; position: absolute; inset: 0; background: rgba(40, 40, 90, .45); z-index: 5; pointer-events: none; transition: opacity 1s; }
+#casa-stanza.sera #casa-tela::before { content: ""; position: absolute; inset: 0; background: rgba(40, 40, 90, .22); z-index: 5; pointer-events: none; transition: opacity 1s; }
 .zona-casa { position: absolute; background: transparent; border: 0; border-radius: 20px; cursor: pointer; z-index: 2; }
 .zona-casa:active { background: rgba(255, 255, 255, .25); }
 .chiwi-casa { position: absolute; width: 24%; z-index: 6; transform: translate(-50%, -100%); transition: left 1.5s ease-in-out, top 1.5s ease-in-out; pointer-events: none; }
-.chiwi-casa.dorme .vestito { transform: rotate(-80deg) translate(-10%, 10%); transition: transform .8s; }
+#casa-dorme { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease-in-out; pointer-events: none; z-index: 1; }
+#casa-stanza.sera #casa-dorme { opacity: 1; }
+.chiwi-casa.dorme { opacity: 0; transition: opacity .6s; }
+#casa-zzz { position: absolute; left: 25%; top: 57%; z-index: 6; pointer-events: none; opacity: 0; transition: opacity .8s .8s; }
+#casa-stanza.sera #casa-zzz { opacity: 1; }
+#casa-zzz span { position: absolute; font: 800 22px var(--font); color: #6a5aa3; text-shadow: 0 0 6px #fff, 0 0 2px #fff; animation: zzz 2.4s ease-out infinite; }
+#casa-zzz span:nth-child(2) { animation-delay: .8s; font-size: 26px; }
+#casa-zzz span:nth-child(3) { animation-delay: 1.6s; font-size: 32px; }
+@keyframes zzz { 0% { transform: translate(0, 0) scale(.5); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(40px, -70px) scale(1.1) rotate(10deg); opacity: 0; } }
 #casa-fumetto { z-index: 7; }
 #casa-azioni { flex: none; display: flex; gap: 10px; justify-content: center; padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
 #casa-azioni button { flex: 1; max-width: 130px; display: flex; flex-direction: column; align-items: center; gap: 2px; border: 3px solid #fff; border-radius: 20px; background: var(--carta); box-shadow: var(--ombra); padding: 10px 6px; font: 700 15px var(--font); color: var(--testo); cursor: pointer; }
