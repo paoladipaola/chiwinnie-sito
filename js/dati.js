@@ -402,6 +402,10 @@ var MINIGIOCHI = {
     nome: "Puzzle del Bosco", img: "img/puzzle/radura.jpg", livello: 3, energia: 10, rompicapo: true,
     descrizione: "Un quadro del Bosco Giardino si è mescolato! Tocca le tessere vicine al buco per farle scorrere e rimetti il disegno in ordine. Ogni zona che apri aggiunge un quadro nuovo."
   },
+  aggiustatutto: {
+    nome: "Aggiustatutto", img: "img/zona1/icone/casetta.png", livello: 2, energia: 10, rompicapo: true,
+    descrizione: "Qualcosa si è rotto nel Bosco Giardino! Aiuta il Chiwinnie a scegliere cosa fare in tre passi, con quattro idee per passo. Poi prova il tuo piano: se qualcosa va storto scopri cosa è successo e riprovi. Hai 3 prove."
+  },
   labirinto: {
     nome: "Labirinto delle siepi", img: "img/spinaci.png", livello: 3, energia: 10, rompicapo: true,
     descrizione: "Porta il Chiwinnie al cestino degli spinaci tra le siepi. Scorri il dito o usa le frecce: corre da solo fino al prossimo incrocio. Raccogli i 5 petali lungo la strada!"
@@ -417,19 +421,19 @@ var SFIDE = [
   { testo: "Costruisci la casetta per il tuo Chiwinnie", stelle: 2, xp: 15, verifica: function (s) { return costruito(s, "casetta"); } },
   { testo: "Pianta l'orto di spinaci", stelle: 1, xp: 10, verifica: function (s) { return costruito(s, "orto"); } },
   { testo: "Arriva al cestino nell'Avventura nel Bosco", stelle: 2, xp: 20, verifica: function (s) { return (s.record.boscoCompleto || 0) >= 1; } },
-  { testo: "Raccogli 3 volte quello che produce il giardino", stelle: 1, xp: 10, verifica: function (s) { return s.contatori.raccolti >= 3; } },
+  { testo: "Raccogli 3 volte quello che produce il giardino", stelle: 1, xp: 10, progresso: function (s) { return [s.contatori.raccolti, 3]; }, verifica: function (s) { return s.contatori.raccolti >= 3; } },
   { testo: "Fai fiorire le aiuole", stelle: 1, xp: 10, verifica: function (s) { return costruito(s, "aiuole"); } },
-  { testo: "Dai gli spinaci al tuo Chiwinnie 5 volte", stelle: 1, xp: 10, verifica: function (s) { return s.contatori.pasti >= 5; } },
+  { testo: "Dai gli spinaci al tuo Chiwinnie 5 volte", stelle: 1, xp: 10, progresso: function (s) { return [s.contatori.pasti, 5]; }, verifica: function (s) { return s.contatori.pasti >= 5; } },
   { testo: "Completa il Memory dei fiori", stelle: 2, xp: 20, verifica: function (s) { return s.contatori.memoryCompleti >= 1; } },
-  { testo: "Arreda la radura con 6 pezzi", stelle: 2, xp: 20, verifica: function (s) { return quantiCostruiti(s) >= 6; } },
-  { testo: "Trova tutte e 3 le stelle nascoste nel Bosco", stelle: 3, xp: 30, verifica: function (s) { return (s.record.boscoStelle || 0) >= 3; } },
+  { testo: "Arreda la radura con 6 pezzi", stelle: 2, xp: 20, progresso: function (s) { return [quantiCostruiti(s), 6]; }, verifica: function (s) { return quantiCostruiti(s) >= 6; } },
+  { testo: "Trova tutte e 3 le stelle nascoste nel Bosco", stelle: 3, xp: 30, progresso: function (s) { return [s.record.boscoStelle || 0, 3]; }, verifica: function (s) { return (s.record.boscoStelle || 0) >= 3; } },
   { testo: "Costruisci il laghetto delle ninfee", stelle: 1, xp: 15, verifica: function (s) { return costruito(s, "laghetto"); } },
   { testo: "Appendi l'altalena al grande albero", stelle: 1, xp: 15, verifica: function (s) { return costruito(s, "altalena"); } },
-  { testo: "Prendi 15 lucciole in una partita", stelle: 2, xp: 20, verifica: function (s) { return s.record.lucciole >= 15; } },
+  { testo: "Prendi 15 lucciole in una partita", stelle: 2, xp: 20, progresso: function (s) { return [+s.record.lucciole || 0, 15]; }, verifica: function (s) { return (+s.record.lucciole || 0) >= 15; } },
   { testo: "Pianta il ciliegio in fiore", stelle: 2, xp: 15, verifica: function (s) { return costruito(s, "albero"); } },
   { testo: "Costruisci il ponticello", stelle: 2, xp: 15, verifica: function (s) { return costruito(s, "ponte"); } },
   { testo: "Completa il Memory in meno di 20 mosse", stelle: 2, xp: 20, verifica: function (s) { return s.record.memoryMosse > 0 && s.record.memoryMosse < 20; } },
-  { testo: "Arreda la radura con 12 pezzi", stelle: 3, xp: 30, verifica: function (s) { return quantiCostruiti(s) >= 12; } },
+  { testo: "Arreda la radura con 12 pezzi", stelle: 3, xp: 30, progresso: function (s) { return [quantiCostruiti(s), 12]; }, verifica: function (s) { return quantiCostruiti(s) >= 12; } },
   { testo: "Accendi i lampioni", stelle: 2, xp: 20, verifica: function (s) { return costruito(s, "lampioni"); } },
   { testo: "Completa la Radura", stelle: 5, xp: 50, verifica: function (s) { return quantiCostruiti(s) >= Object.keys(ZONE[0].pezzi).length; } },
   { testo: "Costruisci il mulino ad acqua", stelle: 2, xp: 25, verifica: function (s) { return costruito(s, "rusc_mulino"); } },
@@ -447,9 +451,12 @@ var SFIDE = [
   { testo: "Risolvi il Sudoku dei fiori", stelle: 2, xp: 15, ordine: 6.5, verifica: function (s) { return (s.contatori.sudokuCompleti || 0) >= 1; } },
   { testo: "Rimetti in ordine il Puzzle del Bosco", stelle: 2, xp: 15, ordine: 7.5, verifica: function (s) { return (s.contatori.puzzleCompleti || 0) >= 1; } },
   { testo: "Esci dal Labirinto delle siepi", stelle: 2, xp: 15, ordine: 8.5, verifica: function (s) { return (s.contatori.labirintiCompleti || 0) >= 1; } },
-  { testo: "Risolvi 3 Sudoku senza errori", stelle: 3, xp: 30, ordine: 15.5, verifica: function (s) { return (s.contatori.sudokuPerfetti || 0) >= 3; } },
+  { testo: "Risolvi 3 Sudoku senza errori", stelle: 3, xp: 30, ordine: 15.5, progresso: function (s) { return [s.contatori.sudokuPerfetti || 0, 3]; }, verifica: function (s) { return (s.contatori.sudokuPerfetti || 0) >= 3; } },
   { testo: "Completa il Puzzle difficile da 16 tessere", stelle: 3, xp: 30, ordine: 16.5, verifica: function (s) { return (s.contatori.puzzleDifficili || 0) >= 1; } },
-  { testo: "Prendi tutti e 5 i petali nel Labirinto", stelle: 2, xp: 20, ordine: 17.5, verifica: function (s) { return (s.record.labirintoPetali || 0) >= 5; } }
+  { testo: "Prendi tutti e 5 i petali nel Labirinto", stelle: 2, xp: 20, ordine: 17.5, progresso: function (s) { return [s.record.labirintoPetali || 0, 5]; }, verifica: function (s) { return (s.record.labirintoPetali || 0) >= 5; } },
+  { testo: "Aggiusta 3 cose con l'Aggiustatutto", stelle: 2, xp: 20, ordine: 9.5, progresso: function (s) { return [s.contatori.aggiustati || 0, 3]; }, verifica: function (s) { return (s.contatori.aggiustati || 0) >= 3; } },
+  { testo: "Aggiusta 3 cose al primo colpo", stelle: 3, xp: 30, ordine: 18.5, progresso: function (s) { return [s.contatori.aggiustatiPrimo || 0, 3]; }, verifica: function (s) { return (s.contatori.aggiustatiPrimo || 0) >= 3; } },
+  { testo: "Esci dal Labirinto nella nebbia", stelle: 3, xp: 30, ordine: 19.5, verifica: function (s) { return (s.contatori.labirintiDifficili || 0) >= 1; } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,

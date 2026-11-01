@@ -682,17 +682,32 @@
     apriPannello(html);
   }
 
+  // saltare una sfida costa qualche stella: una in più del premio
+  function costoSalto(i) { return SFIDE[i].stelle + 1; }
+  function saltaSfida(i) {
+    var costo = costoSalto(i);
+    if ((stato.materiali.stelle || 0) < costo) { avviso("Servono " + costo + " stelle per saltarla"); return; }
+    aggiungi("stelle", -costo);
+    stato.ritirate = stato.ritirate || [];
+    stato.ritirate.push(i);
+    Suoni.sfx("magia");
+    salva(); disegnaTutto(); apriSfide();
+  }
   function apriSfide() {
-    var html = "<h2>Sfide</h2><p>Completa le sfide per guadagnare stelle ed esperienza.</p>";
+    controllaSfide();
+    var html = "<h2>Sfide</h2><p>Completa le sfide per guadagnare stelle ed esperienza. Se una è troppo difficile puoi saltarla pagando qualche stella.</p>";
     // prima quelle completate da ritirare, poi le prossime tre da fare
     var vis = stato.sfidaDaRitirare.slice().sort(function (a, b) { return a - b; }).concat(sfideVisibili());
     if (!vis.length) html += "<p><b>Hai completato tutte le sfide! Presto ne arriveranno di nuove.</b></p>";
     vis.forEach(function (i) {
       var s = SFIDE[i], fatta = stato.sfidaDaRitirare.indexOf(i) !== -1, ritirata = (stato.ritirate || []).indexOf(i) !== -1;
       if (ritirata) return;
-      html += "<div class='riga-sfida" + (fatta ? " fatta" : "") + "'><div class='testo'>" + esc(s.testo) + "</div>" +
+      var pr = !fatta && s.progresso ? s.progresso(stato) : null;
+      html += "<div class='riga-sfida" + (fatta ? " fatta" : "") + "'><div class='testo'>" + esc(s.testo) +
+        (pr ? "<div class='nota'>Il tuo record: " + Math.min(pr[0], pr[1]) + " / " + pr[1] + "</div>" : "") + "</div>" +
         "<div class='premio'>" + s.stelle + "<img src='img/stella.png' alt='stelle'></div>" +
-        (fatta ? "<button class='btn piccolo verde' data-azione='ritira' data-i='" + i + "'>Ritira</button>" : "") + "</div>";
+        (fatta ? "<button class='btn piccolo verde' data-azione='ritira' data-i='" + i + "'>Ritira</button>"
+               : "<button class='btn piccolo bianco salta' data-azione='salta' data-i='" + i + "' title='Salta la sfida'>Salta<br>−" + costoSalto(i) + "⭐</button>") + "</div>";
     });
     apriPannello(html);
   }
@@ -736,6 +751,7 @@
     else if (a === "vai-zona") vaiZona(b.dataset.zona);
     else if (a === "gioca") avviaMinigioco(b.dataset.chiave);
     else if (a === "ritira") ritiraSfida(+b.dataset.i);
+    else if (a === "salta") saltaSfida(+b.dataset.i);
     else if (a === "apri-nutri") apriNutri();
     else if (a === "mangia-spinaci") nutri();
     else if (a === "mangia-fiori") nutriFiori();
@@ -785,6 +801,7 @@
         fine: fineMinigioco,
         livello: stato.livello,
         colore: stato.colore,
+        aggiustati: stato.aggiustati || [],
         zoneAperte: ZONE.filter(function (z, i) { return zonaAperta(i); }).map(function (z) { return z.id; }),
         turbo: !!(g.arcade && fioriAttivi())   // con l'energia dei fiori l'avventura parte con la supervelocità
       });
@@ -802,8 +819,8 @@
     if (ris.completato) setTimeout(function () { Suoni.dici("Wii-chu!"); }, 800);
     Object.keys(ris.bottino).forEach(function (m) { aggiungi(m, ris.bottino[m]); });
     var xp = Math.max(2, Math.round(ris.punti / 2));
-    if (k === "raccolta") stato.record.raccolta = Math.max(stato.record.raccolta, ris.punti);
-    if (k === "lucciole") stato.record.lucciole = Math.max(stato.record.lucciole, ris.punti);
+    if (k === "raccolta") stato.record.raccolta = Math.max(+stato.record.raccolta || 0, ris.punti);
+    if (k === "lucciole") stato.record.lucciole = Math.max(+stato.record.lucciole || 0, ris.punti);
     if (g0.arcade) {
       if (ris.completato) stato.record[k + "Completo"] = (stato.record[k + "Completo"] || 0) + 1;
       stato.record[k + "Stelle"] = Math.max(stato.record[k + "Stelle"] || 0, ris.stelleLivello || 0);
@@ -812,6 +829,11 @@
       var c = stato.contatori;
       if (k === "sudoku") { c.sudokuCompleti = (c.sudokuCompleti || 0) + 1; if (ris.bottino.stelle) c.sudokuPerfetti = (c.sudokuPerfetti || 0) + 1; }
       if (k === "puzzle") { c.puzzleCompleti = (c.puzzleCompleti || 0) + 1; if (ris.difficile) c.puzzleDifficili = (c.puzzleDifficili || 0) + 1; }
+      if (k === "aggiustatutto") {
+        c.aggiustati = (c.aggiustati || 0) + 1; if (ris.primoColpo) c.aggiustatiPrimo = (c.aggiustatiPrimo || 0) + 1;
+        stato.aggiustati = stato.aggiustati || []; if (stato.aggiustati.indexOf(ris.guasto) === -1) stato.aggiustati.push(ris.guasto);
+      }
+      if (k === "labirinto" && ris.difficile) c.labirintiDifficili = (c.labirintiDifficili || 0) + 1;
       if (k === "labirinto") { c.labirintiCompleti = (c.labirintiCompleti || 0) + 1; stato.record.labirintoPetali = Math.max(stato.record.labirintoPetali || 0, ris.bottino.petali || 0); }
     }
     if (k === "memory" && ris.completato) {

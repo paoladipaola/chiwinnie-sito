@@ -140,6 +140,7 @@ var Suoni = (function () {
                   motivo: [4, null, 5, null, 3, null, null, null, 4, null, 2, null, 3, null, null, null] };
   TEMI.puzzle = TEMI.sudoku;
   TEMI.labirinto = TEMI.memory;
+  TEMI.aggiustatutto = TEMI.radura;
   var temaVoluto = null, temaAttivo = null, passo = 0, prossimoTempo = 0, timer = null;
 
   // marimba: legno morbido, nota breve e rotonda

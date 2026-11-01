@@ -185,6 +185,8 @@ input[type=text] {
 .riga-sfida { display: flex; gap: 10px; align-items: center; background: white; border: 2px solid var(--bordo); border-radius: 18px; padding: 10px 12px; margin-top: 10px; }
 .riga-sfida.fatta { border-color: var(--oro); background: #fff8e2; }
 .riga-sfida .testo { flex: 1; font-weight: 600; }
+.riga-sfida .testo .nota { font-size: 13px; font-weight: 700; color: var(--lilla-scuro); }
+.riga-sfida .salta { font-size: 12px; line-height: 1.1; padding: 6px 10px; white-space: nowrap; }
 .premio { display: flex; align-items: center; gap: 2px; font-weight: 800; }
 .premio img { width: 24px; }
 .scheda { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin-top: 8px; }
@@ -212,10 +214,11 @@ input[type=text] {
   padding: calc(70px + env(safe-area-inset-top, 0px)) 16px calc(20px + env(safe-area-inset-bottom, 0px));
   background: linear-gradient(rgba(251, 244, 232, .82), rgba(251, 244, 232, .9)), url(../img/radura.jpg) center / cover; color: var(--testo); }
 .rompicapo .spiega { margin: 0; text-align: center; font-weight: 700; max-width: 340px; }
-.sudoku { display: grid; grid-template-columns: repeat(4, 1fr); width: min(88vw, 380px, 52vh); aspect-ratio: 1; background: var(--carta);
+.sudoku { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); width: min(88vw, 380px, 50vh); height: min(88vw, 380px, 50vh); flex: none; background: var(--carta);
   border: 4px solid var(--verde-scuro); border-radius: 18px; overflow: hidden; box-shadow: var(--ombra); }
-.sudoku .cella { border: 1px solid var(--bordo); background: transparent; padding: 10%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-.sudoku .cella img { width: 100%; height: 100%; object-fit: contain; }
+.sudoku .cella { min-width: 0; min-height: 0; overflow: hidden; border: 1px solid var(--bordo); background: transparent; padding: 10%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.sudoku .cella img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.sudoku.n6 .cella { padding: 6%; }
 .sudoku .cella.dx { border-right: 3px solid var(--verde-scuro); }
 .sudoku .cella.giu { border-bottom: 3px solid var(--verde-scuro); }
 .sudoku .cella.fissa { background: #efe6d4; }
@@ -224,7 +227,8 @@ input[type=text] {
 .sudoku.risolto .cella img { animation: festa .6s ease-in-out 2; }
 @keyframes ops { 0%, 100% { transform: none; } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 @keyframes festa { 50% { transform: scale(1.2) rotate(8deg); } }
-.tavolozza { display: flex; gap: 8px; }
+.tavolozza { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 360px; }
+.tavolozza.n6 button { width: min(50px, 13vw); height: min(50px, 13vw); padding: 5px; border-radius: 14px; }
 .tavolozza button { width: min(58px, 16vw); height: min(58px, 16vw); border-radius: 18px; border: 3px solid #fff; background: var(--carta); box-shadow: var(--ombra); padding: 8px; cursor: pointer; }
 .tavolozza button img { width: 100%; height: 100%; object-fit: contain; }
 .tavolozza .gomma { font-size: 26px; color: var(--lilla-scuro); font-weight: 800; }
@@ -236,10 +240,17 @@ input[type=text] {
 .tavola { position: relative; width: min(90vw, 400px, 58vh); aspect-ratio: 1; background: #3d5a3a; border: 4px solid #fff; border-radius: 16px; overflow: hidden; box-shadow: var(--ombra); }
 .tessera { position: absolute; border: 1px solid rgba(255, 255, 255, .7); padding: 0; background-repeat: no-repeat; cursor: pointer; transition: left .15s ease-out, top .15s ease-out; }
 .tessera.buco { visibility: hidden; }
+.tessera i { display: none; position: absolute; left: 4px; top: 2px; font-style: normal; font-weight: 800; font-size: 18px; color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, .7), 0 0 2px #000; }
+.tavola.numeri .tessera i { display: block; }
+.tessera.giusta { box-shadow: inset 0 0 0 3px rgba(255, 230, 120, .85); }
+.tavola.risolto .tessera { box-shadow: none; }
+.tavola.risolto .tessera i { display: none; }
 .tavola.risolto .tessera { border-color: transparent; transition: border-color .8s; }
-.puzzle-gioco .sotto { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+.puzzle-gioco .sotto { display: flex; align-items: center; gap: 12px; font-weight: 700; max-width: 400px; font-size: 14px; }
+.puzzle-gioco .aiuto { flex: none; }
 .puzzle-gioco .modello { width: 72px; height: 72px; border-radius: 12px; border: 3px solid #fff; box-shadow: var(--ombra); }
 .labirinto-gioco { justify-content: flex-start; }
+.rompicapo.scelta { justify-content: center; }
 #mg-area .labirinto-gioco canvas { position: relative; inset: auto; border-radius: 14px; box-shadow: var(--ombra); flex: none; }
 .frecce { display: grid; grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(2, 54px); gap: 6px; margin-top: auto; }
 .frecce button { border: 3px solid #fff; border-radius: 16px; background: var(--verde); color: #fff; font-size: 22px; box-shadow: var(--ombra); cursor: pointer; touch-action: manipulation; }
@@ -248,6 +259,41 @@ input[type=text] {
 .frecce [data-d=sx] { grid-column: 1; grid-row: 2; }
 .frecce [data-d=giu] { grid-column: 2; grid-row: 2; }
 .frecce [data-d=dx] { grid-column: 3; grid-row: 2; }
+
+/* scelta del livello nei rompicapi */
+.carta-livelli { background: var(--carta); border-radius: 26px; padding: 22px; box-shadow: var(--ombra); display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.livelli { display: flex; flex-direction: column; gap: 10px; width: min(76vw, 300px); }
+.livelli .btn { display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
+.livelli .btn small { font-size: 13px; font-weight: 600; opacity: .85; }
+.puzzle-gioco .livelli { flex-direction: row; flex-wrap: wrap; justify-content: center; width: min(92vw, 380px); }
+.puzzle-gioco .livelli .btn { flex: 1 1 100px; padding-left: 8px; padding-right: 8px; }
+
+/* Aggiustatutto */
+.aggiusta { justify-content: flex-start; gap: 10px; overflow-y: auto; }
+.aggiusta h2 { margin: 0; font-size: 22px; }
+.aggiusta-scena { position: relative; width: 230px; height: 120px; flex: none; }
+.aggiusta-scena .agg-oggetto { position: absolute; left: 0; top: 0; width: 170px; height: 120px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,.2)); }
+.aggiusta-scena .agg-chiwi { position: absolute; right: 0; bottom: 0; width: 76px; }
+.aggiusta-scena.al-lavoro .agg-chiwi { animation: lavora .25s ease-in-out infinite alternate; }
+.aggiusta-scena.festa .agg-chiwi { animation: festa .5s ease-in-out infinite; }
+@keyframes lavora { from { transform: rotate(-8deg) translateY(0); } to { transform: rotate(8deg) translateY(-6px); } }
+.aggiusta .problema, .aggiusta .domanda { margin: 0; text-align: center; font-weight: 700; max-width: 360px; }
+.aggiusta .domanda { font-size: 18px; color: var(--lilla-scuro); }
+.aggiusta-passi { display: flex; align-items: center; gap: 6px; }
+.aggiusta-passi span { font-weight: 800; color: var(--bordo); }
+.aggiusta-passi button { width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--bordo); background: var(--carta); font: 800 18px var(--font); color: var(--testo); cursor: pointer; }
+.aggiusta-passi button.ora { border-color: var(--lilla); }
+.aggiusta-passi button.giusto { border-color: var(--verde); background: #e6f2d9; }
+.aggiusta-scelte { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: min(92vw, 380px); }
+.aggiusta-scelte button { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 8px; border-radius: 18px; border: 3px solid #fff; background: var(--carta); box-shadow: var(--ombra); font: 700 15px/1.15 var(--font); color: var(--testo); cursor: pointer; min-height: 92px; justify-content: center; }
+.aggiusta-scelte button b { font-size: 34px; line-height: 1.1; }
+.aggiusta-scelte button.scelta { border-color: var(--lilla); }
+.aggiusta-scelte button:active { transform: scale(.95); }
+.aggiusta .piano { display: flex; flex-direction: column; gap: 8px; width: min(92vw, 360px); }
+.aggiusta .piano div { display: flex; align-items: center; gap: 10px; background: var(--carta); border-radius: 14px; padding: 8px 12px; font-weight: 700; box-shadow: var(--ombra); }
+.aggiusta .piano b { font-size: 28px; }
+.aggiusta .oops, .aggiusta .evviva { background: var(--carta); border-radius: 18px; padding: 14px 16px; max-width: 360px; text-align: center; font-weight: 700; box-shadow: var(--ombra); border: 3px solid #fbd9de; }
+.aggiusta .evviva { border-color: var(--oro); background: #fff8e2; font-size: 18px; }
 
 /* Memory */
 .memory { position: absolute; left: 12px; right: 12px; top: 80px; bottom: 20px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 10px; }

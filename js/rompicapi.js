@@ -7,116 +7,139 @@
   function tempoDa(inizio) { return Math.floor((Date.now() - inizio) / 1000); }
   function orologio(s) { return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2); }
 
-  // ---------- Sudoku dei fiori (4×4) ----------
-  // Ogni riga, ogni colonna e ogni quadrato 2×2 ha i quattro simboli una volta sola.
-  var SIMBOLI = ["spinaci", "petali", "stella", "lucciola"];
+  // ---------- Sudoku dei fiori ----------
+  // Ogni riga, ogni colonna e ogni riquadro ha ogni simbolo una volta sola.
+  // Facile e medio: 4×4 con riquadri 2×2. Difficile: 6×6 con riquadri 2×3 e sei simboli.
+  var SIMBOLI = ["spinaci", "petali", "stella", "lucciola", "legnetti", "sassolini"];
+  var LIVELLI_SUDOKU = {
+    facile:    { N: 4, br: 2, bc: 2, dati: 9 },
+    medio:     { N: 4, br: 2, bc: 2, dati: 6 },
+    difficile: { N: 6, br: 2, bc: 3, dati: 14 }
+  };
 
-  function soluzioneCasuale() {
-    var g = [[0, 1, 2, 3], [2, 3, 0, 1], [1, 0, 3, 2], [3, 2, 1, 0]];
-    var simb = mescola([0, 1, 2, 3]);
-    // si scambiano righe dentro la stessa fascia, le fasce tra loro, e lo stesso per le colonne
-    function ordine() { var f = mescola([[0, 1], [2, 3]]); return [].concat(mescola(f[0].slice()), mescola(f[1].slice())); }
-    var r = ordine(), c = ordine(), trasposta = Math.random() < 0.5, out = [];
-    for (var i = 0; i < 4; i++) {
-      out.push([]);
-      for (var j = 0; j < 4; j++) { var v = trasposta ? g[c[j]][r[i]] : g[r[i]][c[j]]; out[i].push(simb[v]); }
-    }
-    return out;
-  }
-  function puoStare(g, i, j, v) {
-    for (var k = 0; k < 4; k++) if (g[i][k] === v || g[k][j] === v) return false;
-    var bi = i - i % 2, bj = j - j % 2;
-    for (var a = bi; a < bi + 2; a++) for (var b = bj; b < bj + 2; b++) if (g[a][b] === v) return false;
-    return true;
-  }
-  function contaSoluzioni(g, max) {
-    for (var i = 0; i < 4; i++) for (var j = 0; j < 4; j++) if (g[i][j] === null) {
-      var n = 0;
-      for (var v = 0; v < 4; v++) if (puoStare(g, i, j, v)) {
-        g[i][j] = v; n += contaSoluzioni(g, max - n); g[i][j] = null;
-        if (n >= max) return n;
-      }
-      return n;
-    }
-    return 1;
+  // sceltaLivello: piccola schermata con i bottoni Facile / Medio / Difficile
+  function sceltaLivello(area, classe, testo, voci, via) {
+    var box = document.createElement("div");
+    box.className = "rompicapo scelta " + classe;
+    box.innerHTML = "<div class='carta-livelli'><p class='spiega'>" + testo + "</p><div class='livelli'>" +
+      voci.map(function (v) { return "<button class='btn" + (v.bianco ? " bianco" : "") + "' data-l='" + v.id + "'>" + v.nome + "<small>" + v.nota + "</small></button>"; }).join("") +
+      "</div></div>";
+    area.appendChild(box);
+    box.querySelector(".livelli").addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      box.innerHTML = ""; box.classList.remove("scelta"); via(box, b.dataset.l);
+    });
+    return box;
   }
 
   function sudoku(area, api) {
-    var sol = soluzioneCasuale();
-    var dati = api.livello < 5 ? 9 : api.livello < 10 ? 7 : 6;   // quanti simboli già messi
-    var g = sol.map(function (r) { return r.slice(); });
-    var celle = mescola(Array.from({ length: 16 }, function (_, i) { return i; })), messi = 16;
-    celle.forEach(function (n) {
-      if (messi <= dati) return;
-      var i = Math.floor(n / 4), j = n % 4, v = g[i][j];
-      g[i][j] = null;
-      if (contaSoluzioni(g, 2) !== 1) g[i][j] = v; else messi--;
-    });
-    var fissa = g.map(function (r) { return r.map(function (v) { return v !== null; }); });
+    var fermato = false, timer = null;
+    sceltaLivello(area, "sudoku-gioco", "Quanto difficile?", [
+      { id: "facile", nome: "Facile", nota: "4×4 · tanti aiuti" },
+      { id: "medio", nome: "Medio", nota: "4×4 · pochi aiuti", bianco: true },
+      { id: "difficile", nome: "Difficile", nota: "6×6 · sei simboli", bianco: true }
+    ], gioca);
 
-    var box = document.createElement("div");
-    box.className = "rompicapo sudoku-gioco";
-    box.innerHTML = "<p class='spiega'>Ogni riga, colonna e quadrato ha i quattro simboli una volta sola.</p>" +
-      "<div class='sudoku'></div><div class='tavolozza'>" +
-      SIMBOLI.map(function (s, v) { return "<button data-v='" + v + "'><img src='img/" + s + ".png' alt=''></button>"; }).join("") +
-      "<button data-v='x' class='gomma'>✕</button></div>";
-    area.appendChild(box);
-    var griglia = box.querySelector(".sudoku"), scelta = null, errori = 0, finito = false, inizio = Date.now();
-
-    function disegna() {
-      var h = "";
-      for (var i = 0; i < 4; i++) for (var j = 0; j < 4; j++) {
-        var v = g[i][j], cls = ["cella"];
-        if (fissa[i][j]) cls.push("fissa");
-        if (scelta && scelta[0] === i && scelta[1] === j) cls.push("scelta");
-        if (j === 1) cls.push("dx"); if (i === 1) cls.push("giu");
-        h += "<button class='" + cls.join(" ") + "' data-i='" + i + "' data-j='" + j + "'>" + (v !== null ? "<img src='img/" + SIMBOLI[v] + ".png' alt=''>" : "") + "</button>";
+    function gioca(box, liv) {
+      var L = LIVELLI_SUDOKU[liv], N = L.N, BR = L.br, BC = L.bc;
+      function puoStare(g, i, j, v) {
+        for (var k = 0; k < N; k++) if (g[i][k] === v || g[k][j] === v) return false;
+        var bi = i - i % BR, bj = j - j % BC;
+        for (var a = bi; a < bi + BR; a++) for (var b = bj; b < bj + BC; b++) if (g[a][b] === v) return false;
+        return true;
       }
-      griglia.innerHTML = h;
-    }
-    function info() { api.info("⏱ " + orologio(tempoDa(inizio)) + (errori ? "  ·  " + errori + " ops" : "")); }
-    var timer = setInterval(info, 500); info(); disegna();
-
-    griglia.addEventListener("click", function (e) {
-      var c = e.target.closest(".cella"); if (!c || finito) return;
-      var i = +c.dataset.i, j = +c.dataset.j;
-      if (fissa[i][j]) { Suoni.sfx("gira"); return; }
-      scelta = [i, j]; Suoni.sfx("gira"); disegna();
-    });
-    box.querySelector(".tavolozza").addEventListener("click", function (e) {
-      var b = e.target.closest("button"); if (!b || !scelta || finito) return;
-      var i = scelta[0], j = scelta[1];
-      if (b.dataset.v === "x") { g[i][j] = null; disegna(); return; }
-      var v = +b.dataset.v;
-      g[i][j] = null;
-      if (!puoStare(g, i, j, v)) {
-        // il simbolo c'è già nella riga, nella colonna o nel quadrato: si mostra dove e non si mette
-        errori++; Suoni.sfx("errore"); vibra(60); info();
-        var cella = griglia.querySelector("[data-i='" + i + "'][data-j='" + j + "']");
-        cella.classList.add("ops"); setTimeout(function () { cella.classList.remove("ops"); }, 500);
-        return;
+      // riempie la griglia (in ordine casuale) e conta le soluzioni fino a "max"
+      function risolvi(g, max, casuale) {
+        for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) if (g[i][j] === null) {
+          var n = 0, vals = Array.from({ length: N }, function (_, k) { return k; });
+          if (casuale) mescola(vals);
+          for (var x = 0; x < N; x++) {
+            var v = vals[x];
+            if (!puoStare(g, i, j, v)) continue;
+            g[i][j] = v; n += risolvi(g, max - n, casuale);
+            if (n >= max) return n;
+            g[i][j] = null;
+          }
+          return n;
+        }
+        return 1;
       }
-      g[i][j] = v; Suoni.sfx("presa"); vibra(15);
-      // passa da sola alla prossima casella vuota
-      scelta = null;
-      for (var n = 0; n < 16 && !scelta; n++) { var a = Math.floor(n / 4), bb = n % 4; if (g[a][bb] === null) scelta = [a, bb]; }
-      disegna();
-      if (!scelta) termina();
-    });
+      var g = Array.from({ length: N }, function () { return new Array(N).fill(null); });
+      risolvi(g, 1, true);
+      var celle = mescola(Array.from({ length: N * N }, function (_, i) { return i; })), messi = N * N;
+      celle.forEach(function (n) {
+        if (messi <= L.dati) return;
+        var i = Math.floor(n / N), j = n % N, v = g[i][j];
+        g[i][j] = null;
+        var prova = g.map(function (r) { return r.slice(); });
+        if (risolvi(prova, 2, false) !== 1) g[i][j] = v; else messi--;
+      });
+      var fissa = g.map(function (r) { return r.map(function (v) { return v !== null; }); });
 
-    function termina() {
-      finito = true; clearInterval(timer);
-      var s = tempoDa(inizio), perfetto = errori === 0;
-      griglia.classList.add("risolto"); Suoni.sfx("coppia");
-      setTimeout(function () {
-        api.fine({
-          punti: 16 - errori * 2 + (s < 60 ? 6 : 0), completato: true, bottino: { petali: 3, sassolini: 2, stelle: perfetto ? 1 : 0 },
-          titolo: perfetto ? "Sudoku perfetto!" : "Sudoku risolto!",
-          messaggio: "Ce l'hai fatta in " + orologio(s) + "." + (perfetto ? " Nessun errore: una stella in regalo!" : "")
-        });
-      }, 900);
+      box.innerHTML = "<p class='spiega'>Ogni riga, colonna e riquadro ha " + (N === 4 ? "i quattro" : "i sei") + " simboli una volta sola.</p>" +
+        "<div class='sudoku n" + N + "'></div><div class='tavolozza n" + N + "'>" +
+        SIMBOLI.slice(0, N).map(function (s, v) { return "<button data-v='" + v + "'><img src='img/" + s + ".png' alt=''></button>"; }).join("") +
+        "<button data-v='x' class='gomma'>✕</button></div>";
+      var griglia = box.querySelector(".sudoku"), scelta = null, errori = 0, finito = false, inizio = Date.now();
+      griglia.style.gridTemplateColumns = griglia.style.gridTemplateRows = "repeat(" + N + ", minmax(0, 1fr))";
+
+      function disegna() {
+        var h = "";
+        for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) {
+          var v = g[i][j], cls = ["cella"];
+          if (fissa[i][j]) cls.push("fissa");
+          if (scelta && scelta[0] === i && scelta[1] === j) cls.push("scelta");
+          if (j % BC === BC - 1 && j < N - 1) cls.push("dx"); if (i % BR === BR - 1 && i < N - 1) cls.push("giu");
+          h += "<button class='" + cls.join(" ") + "' data-i='" + i + "' data-j='" + j + "'>" + (v !== null ? "<img src='img/" + SIMBOLI[v] + ".png' alt=''>" : "") + "</button>";
+        }
+        griglia.innerHTML = h;
+      }
+      function info() { api.info("⏱ " + orologio(tempoDa(inizio)) + (errori ? "  ·  " + errori + " ops" : "")); }
+      timer = setInterval(info, 500); info(); disegna();
+
+      griglia.addEventListener("click", function (e) {
+        var c = e.target.closest(".cella"); if (!c || finito) return;
+        var i = +c.dataset.i, j = +c.dataset.j;
+        if (fissa[i][j]) { Suoni.sfx("gira"); return; }
+        scelta = [i, j]; Suoni.sfx("gira"); disegna();
+      });
+      box.querySelector(".tavolozza").addEventListener("click", function (e) {
+        var b = e.target.closest("button"); if (!b || !scelta || finito) return;
+        var i = scelta[0], j = scelta[1];
+        if (b.dataset.v === "x") { g[i][j] = null; disegna(); return; }
+        var v = +b.dataset.v;
+        g[i][j] = null;
+        if (!puoStare(g, i, j, v)) {
+          // il simbolo c'è già nella riga, nella colonna o nel riquadro: non si mette
+          errori++; Suoni.sfx("errore"); vibra(60); info();
+          var cella = griglia.querySelector("[data-i='" + i + "'][data-j='" + j + "']");
+          cella.classList.add("ops"); setTimeout(function () { cella.classList.remove("ops"); }, 500);
+          return;
+        }
+        g[i][j] = v; Suoni.sfx("presa"); vibra(15);
+        // passa da sola alla prossima casella vuota
+        scelta = null;
+        for (var n = 0; n < N * N && !scelta; n++) { var a = Math.floor(n / N), bb = n % N; if (g[a][bb] === null) scelta = [a, bb]; }
+        disegna();
+        if (!scelta) termina();
+      });
+
+      function termina() {
+        finito = true; clearInterval(timer);
+        var s = tempoDa(inizio), perfetto = errori === 0, peso = { facile: 1, medio: 1.5, difficile: 3 }[liv];
+        griglia.classList.add("risolto"); Suoni.sfx("coppia");
+        setTimeout(function () {
+          if (fermato) return;
+          api.fine({
+            punti: Math.round((16 - Math.min(10, errori * 2)) * peso) + (s < 60 ? 6 : 0), completato: true, difficile: liv === "difficile",
+            bottino: { petali: Math.round(3 * peso), sassolini: Math.round(2 * peso), stelle: perfetto ? (liv === "difficile" ? 2 : 1) : 0 },
+            titolo: perfetto ? "Sudoku perfetto!" : "Sudoku risolto!",
+            messaggio: "Ce l'hai fatta in " + orologio(s) + "." + (perfetto ? " Nessun errore: " + (liv === "difficile" ? "due stelle" : "una stella") + " in regalo!" : "")
+          });
+        }, 900);
+      }
     }
-    return function () { finito = true; clearInterval(timer); };
+    return function () { fermato = true; clearInterval(timer); };
   }
 
   // ---------- Puzzle scorrevole ----------
@@ -129,24 +152,29 @@
     box.className = "rompicapo puzzle-gioco";
     box.innerHTML = "<p class='spiega'>Scegli il quadro e quante tessere.</p><div class='quadri'>" +
       aperte.map(function (z) { return "<button data-z='" + z + "'><img src='" + QUADRI[z] + "' alt=''></button>"; }).join("") +
-      "</div><div class='azioni-pannello'><button class='btn' data-n='3'>Facile · 9</button><button class='btn bianco' data-n='4'>Difficile · 16</button></div>";
+      "</div><div class='livelli'><button class='btn' data-l='facile'>Facile<small>9 tessere · poco mescolato</small></button>" +
+      "<button class='btn bianco' data-l='medio'>Medio<small>9 tessere</small></button><button class='btn bianco' data-l='difficile'>Difficile<small>16 tessere</small></button></div>";
     area.appendChild(box);
     var quadro = aperte[aperte.length - 1], fermato = false, timer = null;
     function evidenzia() { box.querySelectorAll(".quadri button").forEach(function (b) { b.classList.toggle("scelto", b.dataset.z === quadro); }); }
     evidenzia();
     box.querySelector(".quadri").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) { quadro = b.dataset.z; evidenzia(); Suoni.sfx("gira"); } });
-    box.querySelector(".azioni-pannello").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) gioca(+b.dataset.n); });
+    box.querySelector(".livelli").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) gioca(b.dataset.l); });
 
-    function gioca(N) {
-      var img = QUADRI[quadro];
-      box.innerHTML = "<div class='tavola'></div><div class='sotto'><img class='modello' src='" + img + "' alt=''><span>Rimetti in ordine il quadro!</span></div>";
+    function gioca(liv) {
+      var N = liv === "difficile" ? 4 : 3, img = QUADRI[quadro];
+      box.innerHTML = "<div class='tavola" + (liv === "facile" ? " numeri" : "") + "'></div><div class='sotto'><img class='modello' src='" + img + "' alt=''>" +
+        "<span>Rimetti in ordine il quadro! Le tessere al posto giusto si illuminano.</span><button class='btn piccolo bianco aiuto'>🔢 Aiuto</button></div>";
+      box.querySelector(".aiuto").addEventListener("click", function () { tavola.classList.toggle("numeri"); });
       var tavola = box.querySelector(".tavola");
       // pos[k] = casella dove sta la tessera k; l'ultima tessera è il buco
       var pos = Array.from({ length: N * N }, function (_, i) { return i; }), buco = N * N - 1, mosse = 0, finito = false, inizio = Date.now();
       function vicine(c) { var r = Math.floor(c / N), k = c % N, v = []; if (r > 0) v.push(c - N); if (r < N - 1) v.push(c + N); if (k > 0) v.push(c - 1); if (k < N - 1) v.push(c + 1); return v; }
       // si mescola con mosse vere, così il puzzle è sempre risolvibile
       var prima = -1;
-      for (var m = 0; m < N * N * 18; m++) {
+      // il livello facile è mescolato appena: si risolve in poche mosse
+      var giri = liv === "facile" ? 8 : N * N * 18;
+      for (var m = 0; m < giri || pos.every(function (p, i) { return p === i; }); m++) {
         var v = vicine(pos[buco]).filter(function (c) { return c !== prima; });
         var dove = v[Math.floor(Math.random() * v.length)], k = pos.indexOf(dove);
         prima = pos[buco]; pos[k] = pos[buco]; pos[buco] = dove;
@@ -159,6 +187,7 @@
         t.style.backgroundSize = (N * 100) + "%";
         t.style.backgroundPosition = (k % N) * 100 / (N - 1) + "% " + Math.floor(k / N) * 100 / (N - 1) + "%";
         t.dataset.k = k;
+        t.innerHTML = "<i>" + (k + 1) + "</i>";
         tavola.appendChild(t);
         return t;
       });
@@ -176,12 +205,12 @@
       function termina() {
         finito = true; clearInterval(timer);
         tessere[buco].classList.remove("buco"); tavola.classList.add("risolto"); Suoni.sfx("coppia"); vibra(40);
-        var s = tempoDa(inizio), bravo = mosse <= (N === 3 ? 60 : 200);
+        var s = tempoDa(inizio), bravo = mosse <= (liv === "facile" ? 25 : N === 3 ? 60 : 200);
         setTimeout(function () {
           if (fermato) return;
           api.fine({
-            punti: (N === 3 ? 12 : 24) + (bravo ? 6 : 0), completato: true, difficile: N === 4,
-            bottino: { legnetti: N === 3 ? 3 : 6, petali: N === 3 ? 2 : 4, stelle: bravo ? 1 : 0 },
+            punti: (liv === "facile" ? 8 : N === 3 ? 12 : 24) + (bravo ? 6 : 0), completato: true, difficile: N === 4,
+            bottino: { legnetti: liv === "facile" ? 2 : N === 3 ? 3 : 6, petali: liv === "facile" ? 1 : N === 3 ? 2 : 4, stelle: bravo && liv !== "facile" ? 1 : 0 },
             titolo: N === 4 ? "Puzzle difficile completato!" : "Quadro rimesso a posto!",
             messaggio: "Ce l'hai fatta in " + mosse + " mosse e " + orologio(s) + "." + (bravo ? " Pochissime mosse: una stella in regalo!" : "")
           });
@@ -193,8 +222,21 @@
 
   // ---------- Labirinto ----------
   // Il Chiwinnie deve arrivare al cestino degli spinaci tra le siepi. Si guida scorrendo il dito o con le frecce.
+  var LIVELLI_LABIRINTO = {
+    facile:    { C: 6, giri: true, nebbia: false },
+    medio:     { C: 9, giri: false, nebbia: false },
+    difficile: { C: 11, giri: false, nebbia: true }   // nella nebbia si vede solo vicino al Chiwinnie
+  };
   function labirinto(area, api) {
-    var C = 6 + Math.min(3, Math.floor(api.livello / 4));
+    var ferma = null, scelta = sceltaLivello(area, "labirinto-gioco", "Quanto difficile?", [
+      { id: "facile", nome: "Facile", nota: "piccolo, tante strade" },
+      { id: "medio", nome: "Medio", nota: "grande, una sola strada", bianco: true },
+      { id: "difficile", nome: "Difficile", nota: "gigante, nella nebbia", bianco: true }
+    ], function (box, liv) { box.remove(); ferma = labirintoGioca(area, api, liv); });
+    return function () { if (ferma) ferma(); };
+  }
+  function labirintoGioca(area, api, liv) {
+    var LL = LIVELLI_LABIRINTO[liv], C = LL.C;
     var box = document.createElement("div");
     box.className = "rompicapo labirinto-gioco";
     box.innerHTML = "<canvas></canvas><div class='frecce'><button data-d='su'>▲</button><button data-d='sx'>◀</button><button data-d='giu'>▼</button><button data-d='dx'>▶</button></div>";
@@ -202,7 +244,7 @@
     var cv = box.querySelector("canvas"), ctx = cv.getContext("2d");
     var dpr = Math.min(2, window.devicePixelRatio || 1);
     var W = box.clientWidth - 32, H = box.clientHeight - 250;   // spazio per titolo e frecce
-    var R = Math.max(C, Math.min(C + 4, Math.round(C * H / W)));
+    var R = Math.max(C, Math.min(Math.round(C * 1.6), Math.round(C * H / W)));
     var lato = Math.floor(Math.min((W - 16) / C, (H - 8) / R));
     cv.width = C * lato * dpr; cv.height = R * lato * dpr; cv.style.width = C * lato + "px"; cv.style.height = R * lato + "px";
     ctx.scale(dpr, dpr);
@@ -221,7 +263,7 @@
       }
     })();
     // qualche passaggio in più, così ci sono più strade
-    for (var x = 0; x < R * C / 8; x++) {
+    for (var x = 0; LL.giri && x < R * C / 8; x++) {
       var c0 = Math.floor(Math.random() * R * C), d0 = Math.random() < 0.5 ? 1 : 2, r0 = Math.floor(c0 / C), k0 = c0 % C;
       if ((d0 === 1 && k0 < C - 1) || (d0 === 2 && r0 < R - 1)) { var n0 = c0 + (d0 === 1 ? 1 : C); aperto[c0][d0] = true; aperto[n0][(d0 + 2) % 4] = true; }
     }
@@ -303,6 +345,15 @@
       if (I.cesto.complete) ctx.drawImage(I.cesto, (C - 0.5) * lato - sc / 2, (R - 0.5) * lato - sc / 2, sc, sc);
       var sz = lato * 0.95;
       if (I.chiwi.complete) ctx.drawImage(I.chiwi, (vis.k + 0.5) * lato - sz / 2, (vis.r + 0.5) * lato - sz / 2 - 2, sz, sz);
+      if (LL.nebbia && !finito) {
+        // nebbia: si vede solo un cerchio intorno al Chiwinnie (e il cestino brilla da lontano)
+        var cx = (vis.k + 0.5) * lato, cy = (vis.r + 0.5) * lato, rg = ctx.createRadialGradient(cx, cy, lato * 1.4, cx, cy, lato * 2.8);
+        rg.addColorStop(0, "rgba(245, 240, 250, 0)"); rg.addColorStop(1, "rgba(236, 230, 244, 0.97)");
+        ctx.fillStyle = rg; ctx.fillRect(0, 0, w, h);
+        ctx.globalAlpha = 0.6 + Math.sin(tempo * 3) * 0.3;
+        if (I.cesto.complete) ctx.drawImage(I.cesto, (C - 0.5) * lato - sc / 2, (R - 0.5) * lato - sc / 2, sc, sc);
+        ctx.globalAlpha = 1;
+      }
     }
     raf = requestAnimationFrame(ciclo);
     // per le prove: window.chiwinnieLabirinto.passo(dt) fa avanzare il gioco anche a schermo nascosto
@@ -311,14 +362,14 @@
     function termina() {
       finito = true; window.removeEventListener("keydown", tasto);
       Suoni.sfx("coppia"); vibra(40);
-      var s = tempoDa(inizio), veloce = s <= 30 + C * 5;
+      var s = tempoDa(inizio), veloce = s <= 20 + C * R * 0.6, peso = { facile: 1, medio: 2, difficile: 3 }[liv];
       setTimeout(function () {
         disegna();
         api.fine({
-          punti: 10 + presi * 2 + (veloce ? 6 : 0), completato: true,
-          bottino: { sassolini: 2, legnetti: 2, petali: presi, stelle: veloce && presi === 5 ? 1 : 0 },
+          punti: 10 * peso + presi * 2 + (veloce ? 6 : 0), completato: true, difficile: liv === "difficile",
+          bottino: { sassolini: 2 * peso, legnetti: 2 * peso, petali: presi, stelle: veloce && presi === 5 ? (liv === "facile" ? 0 : 1) : 0 },
           titolo: "Fuori dal labirinto!",
-          messaggio: "Arrivato al cestino in " + orologio(s) + " con " + presi + " petali." + (veloce && presi === 5 ? " Tutti i petali e velocissimo: una stella in regalo!" : presi < 5 ? " Prova a prendere tutti e 5 i petali!" : "")
+          messaggio: "Arrivato al cestino in " + orologio(s) + " con " + presi + " petali." + (veloce && presi === 5 && liv !== "facile" ? " Tutti i petali e velocissimo: una stella in regalo!" : presi < 5 ? " Prova a prendere tutti e 5 i petali!" : "")
         });
       }, 500);
     }
