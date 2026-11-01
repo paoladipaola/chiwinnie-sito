@@ -90,11 +90,11 @@
     ponte:       { rotto: "img/aggiusta/ponte_rotto.jpg", fisso: "img/aggiusta/ponte.jpg", chiwi: [70, 10] },
     fontana:     { rotto: "img/aggiusta/fontana_rotto.jpg", fisso: "img/aggiusta/fontana.jpg", chiwi: [62, 2] },
     lanterne:    { fisso: "img/aggiusta/lanterne.jpg", effetto: "buio", chiwi: [64, 4] },
-    orto:        { fisso: "img/aggiusta/orto.jpg", effetto: "appassito", chiwi: [62, 2] },
+    orto:        { rotto: "img/aggiusta/orto_rotto.jpg", fisso: "img/aggiusta/orto.jpg", chiwi: [62, 2] },
     mulino:      { fisso: "img/aggiusta/mulino.jpg", effetto: "fermo", chiwi: [8, 2], fx: [64, 66] },
-    arnie:       { fisso: "img/aggiusta/arnie.jpg", effetto: "api", chiwi: [62, 2] },
-    aquilone:    { fisso: "img/aggiusta/aquilone.jpg", effetto: "impigliato", chiwi: [40, 2], fx: [84, 40] },
-    mongolfiera: { fisso: "img/aggiusta/mongolfiera.jpg", effetto: "sgonfio", chiwi: [44, 2], fx: [80, 50] }
+    arnie:       { rotto: "img/aggiusta/arnie_rotto.jpg", fisso: "img/aggiusta/arnie.jpg", chiwi: [72, 2] },
+    aquilone:    { rotto: "img/aggiusta/aquilone_rotto.jpg", fisso: "img/aggiusta/aquilone.jpg", chiwi: [40, 2] },
+    mongolfiera: { rotto: "img/aggiusta/mongolfiera_rotto.jpg", fisso: "img/aggiusta/mongolfiera.jpg", chiwi: [44, 2] }
   };
   // che disavventura mostrare per una scelta sbagliata: si capisce dalle parole della sua storia
   function tipoGuaio(t) {
@@ -158,9 +158,10 @@
       if (e === "sgonfio") effetti.innerHTML = "<i class='fx sbuffo'" + dove + ">💨</i><i class='fx sbuffo s2'" + dove + ">💨</i>";
       if (e === "buio") effetti.innerHTML = "<div class='notte'></div>";
       if (e === "fermo") effetti.innerHTML = "<i class='fx ramo'" + dove + ">🪵</i>";
-      fumetto({ quadro: { altalena: "La mia altalena si è rotta…", ponte: "Il ponticello è rotto!", fontana: "La fontana non zampilla più…" }[G.id], pioggia: "Ploc… ploc… mi piove in testa!", traballa: "Aiuto, traballa tutto!", penzola: "La mia altalena è storta…", buio: "Che buio… ho un po' paura!",
+      fumetto({ quadro: { altalena: "La mia altalena si è rotta…", ponte: "Il ponticello è rotto!", fontana: "La fontana non zampilla più…",
+        orto: "Poveri spinaci, sono tutti mosci…", arnie: "Il tetto delle api è caduto!", aquilone: "Il mio aquilone è lassù sull'albero!", mongolfiera: "La mongolfiera si sta sgonfiando!" }[G.id], pioggia: "Ploc… ploc… mi piove in testa!", traballa: "Aiuto, traballa tutto!", penzola: "La mia altalena è storta…", buio: "Che buio… ho un po' paura!",
         appassito: "Poveri spinaci, sono tristi…", fermo: "La ruota non gira più!", api: "Le api sono preoccupate…", impigliato: "Il mio aquilone è lassù!",
-        sgonfio: "La mongolfiera perde aria!" }[e] || G.problema, 3500);
+        sgonfio: "La mongolfiera perde aria!" }[e || "quadro"] || G.problema, 3500);
     }
     function fumetto(t, ms) {
       var f = palco.querySelector(".palco-fumetto"); f.textContent = t; f.classList.add("su");
@@ -257,7 +258,6 @@
       palco.classList.remove("al-lavoro", "problema-" + (S.effetto || "quadro"));
       palco.classList.add("risolto", "risolto-" + (S.effetto || "quadro"));
       effetti.innerHTML = "";
-      if (S.effetto === "impigliato") effetti.innerHTML = "<i class='fx aquilone-vola' style='left:" + S.fx[0] + "%;top:" + S.fx[1] + "%'>🪁</i>";
       if (S.effetto === "api") sparsi(effetti, "🍯", 2, "scintilla");
       sparsi(effetti, "✨", 8, "scintilla");
       box.querySelector(".palco-borsa").innerHTML = "";
