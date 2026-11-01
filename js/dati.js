@@ -393,10 +393,23 @@ var MINIGIOCHI = {
   lucciole: {
     nome: "Lucciole", img: "img/lucciola.png", livello: 4, energia: 15,
     descrizione: "È sera nel bosco: tocca le lucciole prima che si spengano."
+  },
+  sudoku: {
+    nome: "Sudoku dei fiori", img: "img/stella.png", livello: 2, energia: 10, rompicapo: true,
+    descrizione: "Una griglia 4×4 con spinaci, petali, stelle e lucciole. Tocca una casella vuota e scegli il simbolo: in ogni riga, in ogni colonna e in ogni quadrato ogni simbolo va una volta sola."
+  },
+  puzzle: {
+    nome: "Puzzle del Bosco", img: "img/puzzle/radura.jpg", livello: 3, energia: 10, rompicapo: true,
+    descrizione: "Un quadro del Bosco Giardino si è mescolato! Tocca le tessere vicine al buco per farle scorrere e rimetti il disegno in ordine. Ogni zona che apri aggiunge un quadro nuovo."
+  },
+  labirinto: {
+    nome: "Labirinto delle siepi", img: "img/spinaci.png", livello: 3, energia: 10, rompicapo: true,
+    descrizione: "Porta il Chiwinnie al cestino degli spinaci tra le siepi. Scorri il dito o usa le frecce: corre da solo fino al prossimo incrocio. Raccogli i 5 petali lungo la strada!"
   }
 };
 
-// Sfide: si sbloccano in ordine, se ne vedono tre alla volta.
+// Sfide: si vedono tre alla volta, nell'ordine della lista (o secondo "ordine", se c'è).
+// Le sfide nuove vanno sempre in fondo: il salvataggio ricorda le sfide fatte per posizione.
 // "verifica" riceve lo stato e dice se la sfida è completata.
 function costruito(s, id) { return s.costruiti.indexOf(id) !== -1; }
 function quantiCostruiti(s) { return s.costruiti.length; }
@@ -430,7 +443,13 @@ var SFIDE = [
   { testo: "Costruisci il nido di piume del Celeste", stelle: 2, xp: 35, verifica: function (s) { return costruito(s, "cielo_nido"); } },
   { testo: "Arriva alla porta d'oro nell'Avventura nel Cielo", stelle: 2, xp: 35, verifica: function (s) { return (s.record.cieloCompleto || 0) >= 1; } },
   { testo: "Trova tutte e 3 le stelle del Cielo", stelle: 3, xp: 45, verifica: function (s) { return (s.record.cieloStelle || 0) >= 3; } },
-  { testo: "Completa il Cielo del Celeste", stelle: 10, xp: 100, verifica: function (s) { return Object.keys(ZONE[3].pezzi).every(function (k) { return costruito(s, k); }); } }
+  { testo: "Completa il Cielo del Celeste", stelle: 10, xp: 100, verifica: function (s) { return Object.keys(ZONE[3].pezzi).every(function (k) { return costruito(s, k); }); } },
+  { testo: "Risolvi il Sudoku dei fiori", stelle: 2, xp: 15, ordine: 6.5, verifica: function (s) { return (s.contatori.sudokuCompleti || 0) >= 1; } },
+  { testo: "Rimetti in ordine il Puzzle del Bosco", stelle: 2, xp: 15, ordine: 7.5, verifica: function (s) { return (s.contatori.puzzleCompleti || 0) >= 1; } },
+  { testo: "Esci dal Labirinto delle siepi", stelle: 2, xp: 15, ordine: 8.5, verifica: function (s) { return (s.contatori.labirintiCompleti || 0) >= 1; } },
+  { testo: "Risolvi 3 Sudoku senza errori", stelle: 3, xp: 30, ordine: 15.5, verifica: function (s) { return (s.contatori.sudokuPerfetti || 0) >= 3; } },
+  { testo: "Completa il Puzzle difficile da 16 tessere", stelle: 3, xp: 30, ordine: 16.5, verifica: function (s) { return (s.contatori.puzzleDifficili || 0) >= 1; } },
+  { testo: "Prendi tutti e 5 i petali nel Labirinto", stelle: 2, xp: 20, ordine: 17.5, verifica: function (s) { return (s.record.labirintoPetali || 0) >= 5; } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,

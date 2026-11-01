@@ -207,6 +207,48 @@ input[type=text] {
 .bottino span { display: flex; align-items: center; gap: 2px; }
 .bottino img { width: 36px; height: 36px; object-fit: contain; }
 
+/* Rompicapi: sudoku, puzzle, labirinto */
+.rompicapo { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  padding: calc(70px + env(safe-area-inset-top, 0px)) 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(rgba(251, 244, 232, .82), rgba(251, 244, 232, .9)), url(../img/radura.jpg) center / cover; color: var(--testo); }
+.rompicapo .spiega { margin: 0; text-align: center; font-weight: 700; max-width: 340px; }
+.sudoku { display: grid; grid-template-columns: repeat(4, 1fr); width: min(88vw, 380px, 52vh); aspect-ratio: 1; background: var(--carta);
+  border: 4px solid var(--verde-scuro); border-radius: 18px; overflow: hidden; box-shadow: var(--ombra); }
+.sudoku .cella { border: 1px solid var(--bordo); background: transparent; padding: 10%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.sudoku .cella img { width: 100%; height: 100%; object-fit: contain; }
+.sudoku .cella.dx { border-right: 3px solid var(--verde-scuro); }
+.sudoku .cella.giu { border-bottom: 3px solid var(--verde-scuro); }
+.sudoku .cella.fissa { background: #efe6d4; }
+.sudoku .cella.scelta { background: #e6f2d9; box-shadow: inset 0 0 0 4px var(--verde); }
+.sudoku .cella.ops { animation: ops .45s; background: #fbd9de; }
+.sudoku.risolto .cella img { animation: festa .6s ease-in-out 2; }
+@keyframes ops { 0%, 100% { transform: none; } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@keyframes festa { 50% { transform: scale(1.2) rotate(8deg); } }
+.tavolozza { display: flex; gap: 8px; }
+.tavolozza button { width: min(58px, 16vw); height: min(58px, 16vw); border-radius: 18px; border: 3px solid #fff; background: var(--carta); box-shadow: var(--ombra); padding: 8px; cursor: pointer; }
+.tavolozza button img { width: 100%; height: 100%; object-fit: contain; }
+.tavolozza .gomma { font-size: 26px; color: var(--lilla-scuro); font-weight: 800; }
+.tavolozza button:active { transform: scale(.92); }
+.quadri { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: min(84vw, 340px); }
+.quadri button { padding: 0; border: 4px solid #fff; border-radius: 16px; overflow: hidden; aspect-ratio: 1; box-shadow: var(--ombra); cursor: pointer; background: var(--carta); }
+.quadri button img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.quadri button.scelto { border-color: var(--verde); transform: scale(1.04); }
+.tavola { position: relative; width: min(90vw, 400px, 58vh); aspect-ratio: 1; background: #3d5a3a; border: 4px solid #fff; border-radius: 16px; overflow: hidden; box-shadow: var(--ombra); }
+.tessera { position: absolute; border: 1px solid rgba(255, 255, 255, .7); padding: 0; background-repeat: no-repeat; cursor: pointer; transition: left .15s ease-out, top .15s ease-out; }
+.tessera.buco { visibility: hidden; }
+.tavola.risolto .tessera { border-color: transparent; transition: border-color .8s; }
+.puzzle-gioco .sotto { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+.puzzle-gioco .modello { width: 72px; height: 72px; border-radius: 12px; border: 3px solid #fff; box-shadow: var(--ombra); }
+.labirinto-gioco { justify-content: flex-start; }
+#mg-area .labirinto-gioco canvas { position: relative; inset: auto; border-radius: 14px; box-shadow: var(--ombra); flex: none; }
+.frecce { display: grid; grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(2, 54px); gap: 6px; margin-top: auto; }
+.frecce button { border: 3px solid #fff; border-radius: 16px; background: var(--verde); color: #fff; font-size: 22px; box-shadow: var(--ombra); cursor: pointer; touch-action: manipulation; }
+.frecce button:active { background: var(--verde-scuro); }
+.frecce [data-d=su] { grid-column: 2; }
+.frecce [data-d=sx] { grid-column: 1; grid-row: 2; }
+.frecce [data-d=giu] { grid-column: 2; grid-row: 2; }
+.frecce [data-d=dx] { grid-column: 3; grid-row: 2; }
+
 /* Memory */
 .memory { position: absolute; left: 12px; right: 12px; top: 80px; bottom: 20px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 10px; }
 .carta-mem { perspective: 600px; cursor: pointer; }

@@ -583,7 +583,12 @@
   // le prossime tre sfide ancora da completare (in ordine), da mostrare nel pannello
   function sfideVisibili() {
     var lista = [], ritirate = stato.ritirate || [];
-    for (var i = 0; i < SFIDE.length && lista.length < 3; i++) {
+    var ordinate = SFIDE.map(function (s, i) { return i; }).sort(function (a, b) {
+      var oa = SFIDE[a].ordine !== undefined ? SFIDE[a].ordine : a, ob = SFIDE[b].ordine !== undefined ? SFIDE[b].ordine : b;
+      return oa - ob;
+    });
+    for (var n = 0; n < ordinate.length && lista.length < 3; n++) {
+      var i = ordinate[n];
       if (ritirate.indexOf(i) === -1 && stato.sfidaDaRitirare.indexOf(i) === -1) lista.push(i);
     }
     return lista;
@@ -780,6 +785,7 @@
         fine: fineMinigioco,
         livello: stato.livello,
         colore: stato.colore,
+        zoneAperte: ZONE.filter(function (z, i) { return zonaAperta(i); }).map(function (z) { return z.id; }),
         turbo: !!(g.arcade && fioriAttivi())   // con l'energia dei fiori l'avventura parte con la supervelocità
       });
     });
@@ -801,6 +807,12 @@
     if (g0.arcade) {
       if (ris.completato) stato.record[k + "Completo"] = (stato.record[k + "Completo"] || 0) + 1;
       stato.record[k + "Stelle"] = Math.max(stato.record[k + "Stelle"] || 0, ris.stelleLivello || 0);
+    }
+    if (g0.rompicapo && ris.completato) {
+      var c = stato.contatori;
+      if (k === "sudoku") { c.sudokuCompleti = (c.sudokuCompleti || 0) + 1; if (ris.bottino.stelle) c.sudokuPerfetti = (c.sudokuPerfetti || 0) + 1; }
+      if (k === "puzzle") { c.puzzleCompleti = (c.puzzleCompleti || 0) + 1; if (ris.difficile) c.puzzleDifficili = (c.puzzleDifficili || 0) + 1; }
+      if (k === "labirinto") { c.labirintiCompleti = (c.labirintiCompleti || 0) + 1; stato.record.labirintoPetali = Math.max(stato.record.labirintoPetali || 0, ris.bottino.petali || 0); }
     }
     if (k === "memory" && ris.completato) {
       stato.contatori.memoryCompleti++;
