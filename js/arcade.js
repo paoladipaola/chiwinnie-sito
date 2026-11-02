@@ -107,7 +107,66 @@
     return unisciTerreno(L);
   }
 
-  function nuovoLivello() { return { terreno: [], piattaforme: [], funghi: [], rovi: [], pigne: [], pesci: [], oggetti: [], stelle: [], traguardo: 0 }; }
+  function nuovoLivello() { return { terreno: [], piattaforme: [], funghi: [], rovi: [], pigne: [], pesci: [], nebbiolini: [], oggetti: [], stelle: [], traguardo: 0 }; }
+
+  // ---------- La Fuga dal Nebbione ----------
+  // Un'avventura lunga che cambia ogni volta: si mettono in fila tanti pezzi di percorso scelti a caso,
+  // sempre più difficili, con il tema di una delle zone già aperte.
+  function livelloFuga(T, LUNGHEZZA) {
+    var L = nuovoLivello();
+    var x = 0, tipiP = Object.keys(T.piatt);
+    function terra(lung) { L.terreno.push([x, x + lung]); x += lung; }
+    function buco(lung) { x += lung; }
+    function fila(k, n, x0, y, passo) { for (var i = 0; i < n; i++) L.oggetti.push({ x: x0 + i * (passo || 60), y: y, k: k }); }
+    function arco(k, n, x0, y, larg, alt) {
+      for (var i = 0; i < n; i++) { var t = n === 1 ? .5 : i / (n - 1); L.oggetti.push({ x: x0 + t * larg, y: y - Math.sin(t * Math.PI) * alt, k: k }); }
+    }
+    function piatt(px, py, w) { L.piattaforme.push({ tipo: tipiP[Math.floor(Math.random() * tipiP.length)], x: px, y: py, w: (w || 200) + 30 }); }
+    function roba() { return ["spinaci", "petali", "legnetti", "sassolini", "petali"][Math.floor(Math.random() * 5)]; }
+    function nemico(px) {
+      // rovi o pigne dove il tema li ha; altrimenti un nebbiolino
+      if (T.ostacolo && Math.random() < 0.5) L.rovi.push({ x: px });
+      else if (T.rotolante && Math.random() < 0.6) L.pigne.push({ x: px + 300 });
+      else L.nebbiolini.push({ x: px, y0: TERRA_Y - 75, fase: Math.random() * 6 });
+    }
+    var PEZZI = [
+      // una buca da saltare, con un arco di materiali sopra
+      function (d) { var b = x, lung = 150 + Math.round(d * 60); buco(lung); arco(roba(), 4, b - 50, TERRA_Y - 90, lung + 100, 100);
+        if (T.pesce && lung > 170) L.pesci.push({ x: b + lung / 2, fase: Math.random() * 6 }); terra(500 + Math.round(Math.random() * 300)); },
+      // un ostacolo sul prato
+      function () { var p = x; terra(800); nemico(p + 420); arco(roba(), 3, p + 360, TERRA_Y - 100, 140, 80); fila(roba(), 3, p + 120, TERRA_Y - 50); },
+      // scala di piattaforme sopra il prato
+      function () { var p = x; terra(1000); piatt(p + 120, 370); fila(roba(), 3, p + 160, 330); piatt(p + 430, 280); fila(roba(), 3, p + 460, 240); piatt(p + 700, 330, 180); },
+      // isole sospese sopra una lunga buca
+      function () { terra(300); var b = x; buco(950);
+        piatt(b + 180, 400); fila(roba(), 2, b + 220, 360); piatt(b + 470, 340); fila(roba(), 3, b + 500, 300); piatt(b + 760, 400); fila(roba(), 2, b + 800, 360); terra(400); },
+      // il trampolino e il grande salto
+      function () { terra(600); L.funghi.push({ x: x - 80 }); var b = x; buco(380); arco("petali", 6, b - 40, TERRA_Y - 230, 420, 150); terra(500); },
+      // i nebbiolini del Nebbione
+      function (d) { var p = x; terra(1100);
+        L.nebbiolini.push({ x: p + 380, y0: TERRA_Y - 70, fase: Math.random() * 6 });
+        L.nebbiolini.push({ x: p + 800, y0: d > 0.5 ? TERRA_Y - 80 : TERRA_Y - 170, fase: Math.random() * 6 });
+        fila(roba(), 4, p + 520, TERRA_Y - 50); },
+      // due ostacoli di fila
+      function () { var p = x; terra(1100); nemico(p + 350); nemico(p + 800); fila(roba(), 3, p + 500, TERRA_Y - 50); },
+      // prato per riprendere fiato, pieno di petali
+      function () { var p = x; terra(800); arco("petali", 6, p + 100, TERRA_Y - 60, 500, 120); }
+    ];
+    terra(1000); fila("spinaci", 5, 380, TERRA_Y - 50);
+    var ultimo = -1, stelle = [0.2, 0.5, 0.8];
+    while (x < LUNGHEZZA) {
+      var d = x / LUNGHEZZA, k;
+      do { k = Math.floor(Math.random() * PEZZI.length); } while (k === ultimo || (d < 0.15 && (k === 3 || k === 6)));
+      ultimo = k;
+      var prima = x;
+      PEZZI[k](d);
+      // le tre stelle nascoste, in alto sopra il percorso
+      if (stelle.length && d >= stelle[0]) { stelle.shift(); L.stelle.push({ x: prima + (x - prima) / 2, y: 210 }); }
+    }
+    terra(1300); arco("petali", 7, x - 1200, TERRA_Y - 60, 600, 140);
+    L.traguardo = x - 400;
+    return unisciTerreno(L);
+  }
 
   // ---------- Il livello del Ruscello ----------
   // Rive e acqua: si salta su ninfee e sassi, i pesci saltano fuori dall'acqua, i fiori di loto fanno da trampolino.
@@ -294,8 +353,10 @@
     L.meta = off;
     L.traguardo += off;
     unisciTerreno(L);
-    // bolle dei superpoteri, sempre sopra un tratto di terra
-    var tipi = ["super", "calamita", "ali", "super", "calamita"], posti = [0.16, 0.34, 0.52, 0.7, 0.86];
+    return mettiPoteri(L, ["super", "calamita", "ali", "super", "calamita"], [0.16, 0.34, 0.52, 0.7, 0.86]);
+  }
+  // bolle dei superpoteri, sempre sopra un tratto di terra
+  function mettiPoteri(L, tipi, posti) {
     L.poteri = posti.map(function (f, i) {
       var x = L.traguardo * f;
       for (var t = 0; t < 40 && !L.terreno.some(function (s) { return x > s[0] + 60 && x < s[1] - 60; }); t++) x += 50;
@@ -310,9 +371,12 @@
   };
 
   // ---------- Motore ----------
-  function avventura(area, api, crea, T) {
-    var L = raddoppia(crea());
+  function avventura(area, api, crea, T, fuga) {
+    var L = fuga ? crea() : raddoppia(crea());
     L.poteri = L.poteri || [];
+    L.nebbiolini = L.nebbiolini || [];
+    // nella fuga il Nebbione insegue: "distanza" è quanto è lontano dietro al Chiwinnie
+    var distanza = 420, DISTANZA_MAX = 520;
     var canvas = document.createElement("canvas");
     area.appendChild(canvas);
     var ctx = canvas.getContext("2d");
@@ -343,7 +407,7 @@
     };
 
     var chiwi = { x: 140, y: TERRA_Y, vy: 0, aTerra: true, coyote: 0, tenuto: 0, invulnerabile: 0, schiaccia: 0, spinta: 1 };
-    var velocita = 300, cuori = 3, punti = 0, stelleTrovate = 0, controllo = 140;
+    var velocita = 300, cuori = fuga ? 4 : 3, punti = 0, stelleTrovate = 0, controllo = 140;
     var bottino = { spinaci: 0, legnetti: 0, sassolini: 0, petali: 0, stelle: 0 };
     var premuto = false, buffer = 0, finito = false, arrivato = 0, pausa = 0, raf, ultimo = performance.now(), tempo = 0;
     var scintille = [], scritte = [];
@@ -388,9 +452,21 @@
       tempo += dt;
       if (pausa > 0) { pausa -= dt; return; }
       if (arrivato) { chiwi.x += velocita * 0.5 * dt; arrivato += dt; if (arrivato > 1.6) termina(true); return; }
-      velocita = Math.min(chiwi.x > (L.meta || 1e9) ? 360 : 345, 300 + chiwi.x / 400);
+      velocita = fuga ? Math.min(410, 290 + chiwi.x / 300) : Math.min(chiwi.x > (L.meta || 1e9) ? 360 : 345, 300 + chiwi.x / 400);
       var turbo = attivo("super") ? 1.7 : 1;
       chiwi.x += velocita * chiwi.spinta * turbo * dt;
+      if (fuga) {
+        // il Nebbione si avvicina piano piano; i salti sui trampolini e la supervelocità lo lasciano indietro
+        distanza = Math.min(DISTANZA_MAX, distanza + velocita * (chiwi.spinta * turbo - 1) * dt - 14 * dt);
+        if (distanza < 40) {
+          distanza = 420;
+          if (!(chiwi.invulnerabile > 0)) {
+            scritta(chiwi.x, chiwi.y - 130, "Brrr, il Nebbione!", "#6b6f7c");
+            colpito();
+            if (finito) return;
+          }
+        }
+      }
       if (potere && tempo >= potere.fino) potere = null;
       buffer -= dt; chiwi.coyote -= dt; chiwi.invulnerabile -= dt; chiwi.schiaccia -= dt;
 
@@ -442,7 +518,9 @@
         if (cuori <= 0) { termina(false); return; }
         // si riparte a terra, un bel po' prima del bordo, così c'è spazio per prendere la rincorsa
         var seg = L.terreno.filter(function (s) { return controllo >= s[0] && controllo <= s[1]; })[0] || L.terreno[0];
+        var primaX = chiwi.x;
         chiwi.x = Math.max(seg[0] + 40, Math.min(controllo, seg[1]) - 320);
+        if (fuga) distanza = Math.max(150, distanza - Math.max(0, primaX - chiwi.x) * 0.5);
         chiwi.y = TERRA_Y; chiwi.vy = 0; chiwi.aTerra = true; chiwi.invulnerabile = 1.8; pausa = 0.6; chiwi.spinta = 1;
         L.funghi.forEach(function (f) { f.boing = 0; });
       }
@@ -487,6 +565,23 @@
           }
         }
       });
+      // nebbiolini: nuvolette grigie che fluttuano; saltandoci sopra fanno "puff"
+      L.nebbiolini.forEach(function (n) {
+        if (n.via) return;
+        if (!n.attivo && n.x - chiwi.x < vistaW * 0.8) n.attivo = true;
+        if (n.attivo) n.x -= 50 * dt;
+        n.y = n.y0 + Math.sin(tempo * 2.2 + n.fase) * 30;
+        var dx = Math.abs(chiwi.x - n.x), dy = n.y - (chiwi.y - 35);
+        if (dx < 46 && Math.abs(dy) < 46) {
+          if (attivo("super") || (chiwi.vy > 0 && chiwi.y - 35 < n.y - 8)) {
+            n.via = true; n.puff = 0.01; punti += 2; bottino.petali++;
+            if (!attivo("super")) { chiwi.vy = -650; chiwi.schiaccia = 0.2; }
+            distanza = Math.min(DISTANZA_MAX, distanza + 50);
+            scritta(n.x, n.y - 50, "Puff! +2"); brilla(n.x, n.y, 14, "#d9dce4"); Suoni.sfx("presa");
+          } else colpito();
+        }
+        if (n.puff) n.puff += dt;
+      });
       // la calamita attira i materiali vicini
       if (attivo("calamita")) L.oggetti.forEach(function (o) {
         if (o.preso) return;
@@ -523,6 +618,22 @@
     // ---------- Disegno ----------
     function img(im, x, y, w, h) { if (im.complete && im.naturalWidth) ctx.drawImage(im, x, y, w, h); }
     function larghezzaDa(im, h) { return im.naturalWidth ? im.naturalWidth / im.naturalHeight * h : h; }
+
+    // una nuvoletta grigia (i nebbiolini e i bordi del Nebbione)
+    function nuvolina(x, y, sc, alfa, faccia) {
+      ctx.save(); ctx.globalAlpha = Math.max(0, alfa); ctx.translate(x, y); ctx.scale(sc, sc);
+      ctx.fillStyle = "#a7abb6";
+      ctx.beginPath(); ctx.arc(-18, 6, 18, 0, Math.PI * 2); ctx.arc(18, 6, 18, 0, Math.PI * 2); ctx.arc(0, -6, 24, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#c4c7d0";
+      ctx.beginPath(); ctx.arc(-6, -12, 13, 0, Math.PI * 2); ctx.fill();
+      if (faccia) {
+        ctx.fillStyle = "#3c3f4a";
+        ctx.beginPath(); ctx.arc(-8, 0, 4, 0, Math.PI * 2); ctx.arc(8, 0, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#3c3f4a"; ctx.lineWidth = 3; ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(-14, -9); ctx.lineTo(-3, -5); ctx.moveTo(14, -9); ctx.lineTo(3, -5); ctx.stroke();
+      }
+      ctx.restore();
+    }
 
     function disegna() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -598,6 +709,10 @@
         ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.cos(tempo * 1.9 + p.fase) * -0.6);
         img(I.pesce, -T.pesce.w / 2, -T.pesce.h / 2, T.pesce.w, T.pesce.h); ctx.restore();
       });
+      L.nebbiolini.forEach(function (n) {
+        if ((n.via && (!n.puff || n.puff > 0.4)) || n.x < cam - 80 || n.x > cam + vistaW + 80) return;
+        nuvolina(n.x, n.y, n.via ? 1 + n.puff * 3 : 1, n.via ? 1 - n.puff * 2.5 : 1, true);
+      });
       L.pigne.forEach(function (p) {
         if (p.via || !I.pigna) return;
         ctx.save(); ctx.translate(p.x, p.y - 26); ctx.rotate(p.rot); img(I.pigna, -24, -26, 48, 54); ctx.restore();
@@ -666,6 +781,21 @@
       });
       ctx.globalAlpha = 1;
       scritte = scritte.filter(function (s) { return s.t < 1; });
+      if (fuga) {
+        // il Nebbione: un muro di nebbia grigia che arriva da sinistra, con due occhi brontoloni
+        var bordo = Math.max(cam + 26, chiwi.x - 20 - distanza * 0.5);   // disegnato un po' più vicino di quanto è: si vede arrivare
+        var gn = ctx.createLinearGradient(bordo - 160, 0, bordo + 30, 0);
+        gn.addColorStop(0, "rgba(150,154,166,.95)"); gn.addColorStop(1, "rgba(150,154,166,0)");
+        ctx.fillStyle = gn; ctx.fillRect(cam - 10, -alzo, bordo + 40 - cam, ALTEZZA + alzo);
+        for (var nb = 0; nb < 6; nb++) nuvolina(bordo - 40 + Math.sin(tempo * 1.5 + nb) * 12, 80 + nb * 85, 1.5, 0.85, false);
+        if (bordo > cam + 60) {
+          var oy = TERRA_Y - 230 + Math.sin(tempo * 2) * 10, ox = bordo - 40;
+          ctx.fillStyle = "#3c3f4a";
+          ctx.beginPath(); ctx.arc(ox - 18, oy, 9, 0, Math.PI * 2); ctx.arc(ox + 18, oy, 9, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = "#3c3f4a"; ctx.lineWidth = 5; ctx.lineCap = "round";
+          ctx.beginPath(); ctx.moveTo(ox - 32, oy - 22); ctx.lineTo(ox - 8, oy - 14); ctx.moveTo(ox + 32, oy - 22); ctx.lineTo(ox + 8, oy - 14); ctx.stroke();
+        }
+      }
       ctx.restore();
 
       // barra del superpotere attivo
@@ -694,7 +824,7 @@
     if (api.turbo) attiva("super", 5);
     raf = requestAnimationFrame(ciclo);
     // per i test dalla console
-    window.chiwinnieArcade = { chiwi: chiwi, livello: L, info: function () { return { cuori: cuori, punti: punti, stelle: stelleTrovate, arrivato: !!arrivato }; }, premi: giu, lascia: su, potere: function () { return potere; }, passo: function (dt) { if (!finito) { aggiorna(dt); if (!finito) disegna(); } } };
+    window.chiwinnieArcade = { chiwi: chiwi, livello: L, info: function () { return { cuori: cuori, punti: punti, stelle: stelleTrovate, arrivato: !!arrivato, nebbione: Math.round(distanza) }; }, premi: giu, lascia: su, potere: function () { return potere; }, passo: function (dt) { if (!finito) { aggiorna(dt); if (!finito) disegna(); } } };
 
     function pulisci() {
       finito = true; cancelAnimationFrame(raf);
@@ -708,7 +838,7 @@
       if (arrivo) { bottino.spinaci += 2; bottino.legnetti += 2; }
       api.fine({
         punti: punti + (arrivo ? 10 : 0), bottino: bottino, completato: arrivo, stelleLivello: stelleTrovate,
-        titolo: arrivo ? (stelleTrovate === 3 ? T.perfetto : T.arrivo) : "Che peccato!",
+        titolo: fuga ? (arrivo ? "Sei sfuggito al Nebbione!" : "Il Nebbione ti ha preso!") : arrivo ? (stelleTrovate === 3 ? T.perfetto : T.arrivo) : "Che peccato!",
         messaggio: arrivo ? "Hai raccolto " + punti + " cose e trovato " + stelleTrovate + (stelleTrovate === 1 ? " stella" : " stelle") + " su 3. Bonus arrivo: +2 spinaci e +2 legnetti."
           : "I cuori sono finiti, ma tutto quello che hai raccolto resta tuo. Riprova!"
       });
@@ -720,4 +850,11 @@
   Minigiochi.ruscello = function (area, api) { return avventura(area, api, livelloRuscello, TEMI.ruscello); };
   Minigiochi.collina = function (area, api) { return avventura(area, api, livelloCollina, TEMI.collina); };
   Minigiochi.cielo = function (area, api) { return avventura(area, api, livelloCielo, TEMI.cielo); };
+  // la Fuga sceglie a caso il paesaggio fra le zone già aperte
+  Minigiochi.fuga = function (area, api) {
+    var temi = ["bosco"].concat((api.zoneAperte || []).filter(function (z) { return TEMI[z]; }));
+    var T = TEMI[temi[Math.floor(Math.random() * temi.length)]];
+    var L = function () { return mettiPoteri(livelloFuga(T, 30000), ["super", "calamita", "ali", "super", "ali", "calamita", "super"], [0.1, 0.22, 0.36, 0.5, 0.64, 0.77, 0.9]); };
+    return avventura(area, api, L, T, true);
+  };
 })();

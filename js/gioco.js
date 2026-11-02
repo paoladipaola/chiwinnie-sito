@@ -268,6 +268,7 @@
     $("chiwi-img").src = immagineChiwi(stato.colore, "fronte");
     Casa.aggiornaLook();
     adattaScena();
+    Missione.apriMondo();
     disegnaTutto();
     if (!chiwiPos) { var pr = prati()[0]; chiwiPos = { x: (pr.x1 + pr.x2) / 2, y: (pr.y1 + pr.y2) / 2 }; }
     posizionaChiwi(chiwiPos.x, chiwiPos.y, true);
@@ -277,6 +278,7 @@
     disegnaPezzi();
     disegnaHud();
     controllaSfide();
+    Missione.disegna();
     var ora = new Date().getHours();
     mondo.classList.toggle("notte", ora >= 20 || ora < 7);
     salva();
@@ -389,6 +391,7 @@
     // il tempo avanzato oltre l'ultimo pezzo non si perde, tranne quando la produzione era ferma al massimo
     stato.prod[k] = n >= p.produce.max ? Date.now() : stato.prod[k] + n * p.produce.ogni;
     stato.contatori.raccolti++;
+    Missione.evento("raccolto");
     for (var i = 0; i < Math.min(n, 4); i++) setTimeout(volaVerso, i * 120, p.produce.materiale, e.clientX, e.clientY);
     vibra(30);
     Suoni.sfx("raccogli");
@@ -435,6 +438,7 @@
     Suoni.sfx("costruisci");
     setTimeout(function () { Suoni.sfx("magia"); esclama("Nimmi-nimmi!", "Che bello!"); }, 700);
     toast(p.nome + "! +" + p.xp + " esperienza");
+    Missione.evento("costruito");
     if (costruitiIn(z) === totalePezzi(z)) setTimeout(zonaCompletata, 2200);
   }
 
@@ -516,6 +520,7 @@
 
   function coccola(e) {
     stato.contatori.coccole++;
+    Missione.evento("coccola");
     coriandoli(e.clientX, e.clientY, "💗", 5);
     chiwi.classList.remove("salta"); void chiwi.offsetWidth; chiwi.classList.add("salta");
     vibra(25);
@@ -571,6 +576,7 @@
     stato.materiali.spinaci--;
     stato.energia = Math.min(100, stato.energia + ENERGIA_PER_SPINACIO);
     stato.contatori.pasti++;
+    Missione.evento("pasto");
     Suoni.sfx("pasto");
     var r = chiwi.getBoundingClientRect();
     coriandoli(r.left + r.width / 2, r.top + r.height / 3, "🥬", 4);
@@ -793,7 +799,7 @@
     Suoni.musica(k);
     $("mg-info").textContent = "⚡ " + g.energia;
     var area = $("mg-area");
-    area.innerHTML = "<div class='" + (k === "lucciole" ? "notte-bosco" : g.arcade ? "sfondo-arcade" : "") + "'" + (g.arcade ? " style=\"background-image:url(img/" + k + "/sfondo.jpg)\"" : "") + "></div>" +
+    area.innerHTML = "<div class='" + (k === "lucciole" ? "notte-bosco" : g.arcade ? "sfondo-arcade" : "") + "'" + (g.arcade ? " style=\"background-image:url(img/" + (k === "fuga" ? "bosco" : k) + "/sfondo.jpg)\"" : "") + "></div>" +
       "<div class='mg-intro'><img class='icona' src='" + g.img + "' alt=''><h2>" + esc(g.nome) + "</h2><p>" + esc(g.descrizione) + "</p>" +
       "<button class='btn verde' id='mg-via'>Gioca!</button></div>";
     $("mg-via").addEventListener("click", function () {
@@ -846,7 +852,14 @@
       stato.contatori.memoryCompleti++;
       if (!stato.record.memoryMosse || ris.mosse < stato.record.memoryMosse) stato.record.memoryMosse = ris.mosse;
     }
+    if (k === "tris") stato.record.tris = Math.max(+stato.record.tris || 0, ris.punti);
+    if (k === "conti" && ris.completato) { stato.contatori.contiCompleti = (stato.contatori.contiCompleti || 0) + 1; if (ris.perfetto) stato.contatori.contiPerfetti = (stato.contatori.contiPerfetti || 0) + 1; }
+    if (k === "fuga" && ris.completato) stato.contatori.fughe = (stato.contatori.fughe || 0) + 1;
     guadagnaXp(xp);
+    Missione.evento("partita", {
+      gioco: k, arcade: !!g0.arcade, rompicapo: !!g0.rompicapo, completato: !!ris.completato, bottino: ris.bottino,
+      stelleLivello: ris.stelleLivello || 0, punti: ris.punti, file: ris.file || 0, giuste: ris.giuste || 0
+    });
     controllaSfide();
     Casa.controllaPremi();
     salva();
@@ -920,6 +933,10 @@
     stato: function () { return stato; }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
     mostra: mostra, apriPannello: apriPannello, chiudiPannello: chiudiPannello, apriMondo: apriMondo, aggiornaEnergia: aggiornaEnergia,
     disegnaHud: function () { disegnaTutto(); }
+  });
+  Missione.avvia({
+    stato: function () { return stato; }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
+    apriPannello: apriPannello, guadagnaXp: guadagnaXp, disegnaHud: function () { disegnaTutto(); }
   });
 
   // Per provare il gioco più in fretta dalla console del browser

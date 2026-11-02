@@ -442,3 +442,84 @@ input[type=text] {
 .chiwi-mondo.radioso .vestito > img { filter: drop-shadow(0 0 8px #fff3a0) drop-shadow(0 0 16px #ffd1e8); }
 .avatar.radioso { box-shadow: 0 0 0 3px #ffe27a, 0 0 14px #ffd1e8; }
 .hud-fiori { background: #fff3cf; color: #9a6a00; border-radius: 99px; padding: 0 7px; font-size: 12px; font-weight: 800; }
+
+/* ---------- La grande missione ---------- */
+.missione-pill { display: flex; align-items: center; gap: 8px; margin: 8px auto 0; border: 0; font: inherit; font-weight: 800; font-size: 15px; color: white; cursor: pointer;
+  background: linear-gradient(90deg, #6d7180, #8a78c2); border-radius: 99px; padding: 3px 14px 3px 4px; box-shadow: var(--ombra); position: relative; width: fit-content; }
+.missione-pill .nebbione { width: 44px; height: 31px; }
+.missione-pill .lucine { background: rgba(255, 255, 255, .22); border-radius: 99px; padding: 0 8px; }
+.missione-pill .pallino { right: -2px; top: -2px; }
+.nebbione { display: block; }
+.missione-testa { display: flex; gap: 12px; align-items: center; }
+.missione-testa .nebbione { width: 96px; flex: none; animation: galleggia-n 3s ease-in-out infinite; }
+@keyframes galleggia-n { 50% { transform: translateY(-5px); } }
+.missione-conto { display: flex; justify-content: space-between; gap: 8px; margin: 10px 0 2px; font-weight: 700; }
+.missione-conto span { background: white; border: 2px solid var(--bordo); border-radius: 99px; padding: 4px 12px; }
+.missione-conto .lucine { background: #fff8e2; border-color: var(--oro); }
+.titoletto { margin-top: 16px; font-size: 18px; }
+.riga-sfida.missione .premio { font-weight: 800; white-space: nowrap; }
+.barretta { height: 8px; background: #efe3d0; border-radius: 99px; overflow: hidden; margin: 6px 0 2px; }
+.barretta div { height: 100%; background: var(--oro); border-radius: 99px; }
+.bolle-amici { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+.amico-bolla { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; font-size: 14px; }
+.amico-bolla small { font-size: 12px; color: var(--lilla-scuro); font-weight: 700; }
+.amico-bolla .btn { font-size: 13px; padding: 4px 10px; }
+.bolla-nebbia { width: 82px; height: 82px; border-radius: 50%; position: relative; display: flex; align-items: flex-end; justify-content: center; overflow: hidden;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .9), rgba(200, 204, 214, .7) 45%, rgba(140, 145, 158, .85)); box-shadow: inset 0 0 12px rgba(255, 255, 255, .8), var(--ombra); }
+.bolla-nebbia .vestito { width: 62%; margin-bottom: 8%; }
+.amico-bolla.chiuso .vestito { filter: grayscale(1) brightness(.5) opacity(.55); }
+.amico-bolla.prossimo .vestito { filter: grayscale(.85) opacity(.8); }
+.amico-bolla.prossimo .bolla-nebbia { animation: galleggia-n 2.2s ease-in-out infinite; }
+.amico-bolla.libero .bolla-nebbia { background: radial-gradient(circle at 50% 40%, #fffaf2, #f6e7f7); box-shadow: inset 0 0 0 3px var(--rosa), var(--ombra); }
+.amico-bolla.scoppia .bolla-nebbia { animation: scoppia .9s ease forwards; }
+@keyframes scoppia { 30% { transform: scale(1.18); } 60% { transform: scale(.9); filter: brightness(1.6); } 100% { transform: scale(1.3); opacity: 0; } }
+.liberato .amico-grande { width: 130px; margin: 0 auto; animation: salto .6s ease 2; }
+.liberato .fumetto { background: white; border-radius: 16px; padding: 8px 12px; box-shadow: var(--ombra); }
+.storia .nebbione { width: 150px; margin: 0 auto; animation: galleggia-n 3s ease-in-out infinite; }
+#amici { position: absolute; inset: 0; pointer-events: none; }
+#amici .amico { width: 9.5%; pointer-events: auto; cursor: pointer; }
+#amici .amico.salta .vestito { animation: salto .5s ease; }
+
+/* ---------- Tris di fiori ---------- */
+.tris-gioco { justify-content: center; }
+.tris-obiettivi { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.tris-obiettivi span { display: flex; align-items: center; gap: 4px; background: var(--carta); border-radius: 99px; padding: 3px 12px 3px 4px; font-weight: 800; font-size: 18px; box-shadow: var(--ombra); }
+.tris-obiettivi span.fatto { background: #e6f2d9; color: var(--verde-scuro); }
+.tris-obiettivi img { width: 30px; height: 30px; object-fit: contain; }
+.tris-obiettivi .mosse { padding-left: 12px; background: var(--lilla-scuro); color: white; }
+.tris-tavola { position: relative; width: min(94vw, 440px, 62vh); aspect-ratio: 1; flex: none; border-radius: 18px; box-shadow: var(--ombra); touch-action: none;
+  background: repeating-conic-gradient(#f4ead8 0% 25%, #fbf4e8 0% 50%) 0 0 / calc(200% / 7) calc(200% / 7); border: 4px solid #fff; overflow: hidden; }
+.tris-t { position: absolute; display: flex; align-items: center; justify-content: center; padding: 0; transition: left .18s ease-out, top .22s ease-in; cursor: pointer; }
+.tris-t img { width: 82%; height: 82%; object-fit: contain; pointer-events: none; filter: drop-shadow(0 2px 2px rgba(60, 40, 20, .25)); }
+.tris-t.scelta { background: rgba(138, 120, 194, .25); border-radius: 12px; }
+.tris-t.scelta img { transform: scale(1.12); }
+.tris-t.via img { transform: scale(0); opacity: 0; transition: transform .2s, opacity .2s; }
+.tris-t.suggerita img { animation: festa .7s ease-in-out infinite; }
+.tris-t.soffione { background: radial-gradient(circle, rgba(255, 243, 160, .9), rgba(255, 243, 160, 0) 70%); }
+.tris-t.soffione::after { content: "✦"; position: absolute; right: 6%; top: 2%; font-size: 14px; color: #c98a12; }
+.tris-t.soffione.riga::before, .tris-t.soffione.colonna::before { content: ""; position: absolute; background: rgba(255, 210, 63, .5); border-radius: 4px; }
+.tris-t.soffione.riga::before { left: 4%; right: 4%; top: 46%; height: 8%; }
+.tris-t.soffione.colonna::before { top: 4%; bottom: 4%; left: 46%; width: 8%; }
+.tris-tavola.vinto .tris-t img { animation: festa .6s ease-in-out 2; }
+
+/* ---------- Indovinelli dei numeri ---------- */
+.conti-gioco { justify-content: center; }
+.conti-passi { display: flex; gap: 6px; }
+.conti-passi i { width: 14px; height: 14px; border-radius: 50%; background: rgba(255, 255, 255, .7); border: 2px solid var(--bordo); }
+.conti-passi i.fatto { background: var(--verde); border-color: var(--verde); }
+.conti-passi i.ora { background: var(--oro); border-color: var(--oro); transform: scale(1.2); }
+.conti-carta { position: relative; background: var(--carta); border-radius: 24px; padding: 18px 18px 16px; box-shadow: var(--ombra); width: min(92vw, 420px); text-align: center; }
+.conti-chiwi { position: absolute; left: -6px; top: -34px; width: 64px; filter: drop-shadow(0 4px 3px rgba(40, 60, 20, .25)); }
+.conti-domanda { font-size: 21px; font-weight: 700; line-height: 1.3; margin: 6px 0 10px; text-wrap: balance; }
+.figure { display: inline-flex; flex-wrap: wrap; gap: 4px; justify-content: center; max-width: 100%; vertical-align: middle; }
+.figure img { width: 38px; height: 38px; object-fit: contain; }
+.figure img.via { opacity: .3; filter: grayscale(1); }
+.conti-carta > b { font-size: 28px; margin: 0 8px; vertical-align: middle; }
+.sequenza { display: flex; gap: 8px; justify-content: center; }
+.sequenza span { min-width: 54px; padding: 6px 8px; border-radius: 14px; background: white; border: 3px solid var(--bordo); font-size: 26px; font-weight: 800; }
+.sequenza .buco { border-style: dashed; border-color: var(--lilla); color: var(--lilla-scuro); }
+.sequenza .buco.giusta { border-style: solid; border-color: var(--verde); background: #e6f2d9; }
+.conti-risposte { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: min(92vw, 420px); }
+.conti-risposte .btn { font-size: 28px; padding: 10px; margin: 0; }
+.conti-risposte .btn.giusta { background: var(--verde); color: white; border-color: var(--verde); animation: festa .5s; }
+.conti-risposte .btn.sbagliata { opacity: .45; animation: ops .45s; }

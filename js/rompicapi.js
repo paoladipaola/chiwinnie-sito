@@ -379,4 +379,5 @@
   Minigiochi.sudoku = sudoku;
   Minigiochi.puzzle = puzzle;
   Minigiochi.labirinto = labirinto;
+  window.SceltaLivello = sceltaLivello;   // la usano anche gli altri giochini
 })();

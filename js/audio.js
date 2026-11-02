@@ -141,6 +141,11 @@ var Suoni = (function () {
   TEMI.puzzle = TEMI.sudoku;
   TEMI.labirinto = TEMI.memory;
   TEMI.aggiustatutto = TEMI.radura;
+  TEMI.tris = TEMI.memory;
+  TEMI.conti = TEMI.sudoku;
+  // la fuga dal Nebbione: come il bosco, ma di corsa
+  TEMI.fuga = { bpm: 144, chiave: 57, giro: [[0, "M"], [9, "m"], [5, "M"], [7, "M"]], ritmo: "saltellante", batteria: true,
+                motivo: [5, 6, 7, null, 7, 6, 5, null, 4, 5, 6, null, 5, 4, 3, null] };
   // in casetta: una ninna nanna allegra
   TEMI.casa = { bpm: 80, chiave: 65, giro: [[0, "M"], [5, "M"], [0, "M"], [7, "M"]], ritmo: "dolce", brillio: true,
                 motivo: [2, null, 4, null, 5, null, 4, null, 2, null, 3, null, 4, null, null, null] };

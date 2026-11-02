@@ -409,6 +409,18 @@ var MINIGIOCHI = {
   labirinto: {
     nome: "Labirinto delle siepi", img: "img/spinaci.png", livello: 3, energia: 10, rompicapo: true,
     descrizione: "Porta il Chiwinnie al cestino degli spinaci tra le siepi. Scorri il dito o usa le frecce: corre da solo fino al prossimo incrocio. Raccogli i 5 petali lungo la strada!"
+  },
+  fuga: {
+    nome: "Fuga dal Nebbione", img: "img/bosco/corsa2.png", livello: 2, energia: 20, arcade: true,
+    descrizione: "Il Nebbione ti insegue! Corri più veloce che puoi in una lunga avventura che cambia ogni volta: salta le buche, schiaccia i nebbiolini grigi saltandoci sopra e prendi i superpoteri. Se il Nebbione ti raggiunge perdi un cuore. In fondo ti aspetta una lucina!"
+  },
+  tris: {
+    nome: "Tris di fiori", img: "img/petali.png", livello: 2, energia: 10,
+    descrizione: "Scambia due simboli vicini per metterne tre uguali in fila: spariscono e ne cadono di nuovi. Con quattro in fila nasce un soffione che pulisce tutta la riga! Raccogli quello che chiede il Chiwinnie prima che finiscano le mosse."
+  },
+  conti: {
+    nome: "Indovinelli dei numeri", img: "img/stella.png", livello: 1, energia: 0, rompicapo: true,
+    descrizione: "Il Chiwinnie ha dieci indovinelli con i numeri: conta, aggiungi, togli e scopri la regola. Scegli la risposta giusta tra quattro. Non serve energia: è un gioco per far lavorare la testa!"
   }
 };
 
@@ -514,3 +526,48 @@ var ACCESSORI = {
   ali_fata:        { nome: "Ali di fata",        posto: "schiena", img: "img/casa/accessori/ali_fata.png",      f: { x: 50, y: 38, w: 118 },
                      speciale: "Trova tutte e 3 le stelle del Cielo", vinto: function (s) { return (s.record.cieloStelle || 0) >= 3; } }
 };
+
+
+// ---------- La grande missione ----------
+// Il Nebbione, una nuvola grigia e brontolona che non sopporta i colori, ha chiuso dodici Chiwinnie
+// in bolle di nebbia. Ogni bolla si apre con le lucine, che si guadagnano con le missioni.
+// Gli amici liberati vanno a vivere nella loro zona e portano un regalo.
+var AMICI = [
+  { id: "pimpi",     nome: "Pimpi", femmina: true,     colore: "rosa",   look: { testa: "fiocco" },          zona: "radura",   lucine: 2, regalo: { petali: 8 } },
+  { id: "mirtillo",  nome: "Mirtillo",  colore: "blu",    look: { viso: "occhiali" },         zona: "radura",   lucine: 2, regalo: { legnetti: 8 } },
+  { id: "nuvoletta", nome: "Nuvoletta", femmina: true, colore: "bianco", look: { collo: "papillon" },        zona: "radura",   lucine: 3, regalo: { sassolini: 6, stelle: 1 } },
+  { id: "ciuffo",    nome: "Ciuffo",    colore: "verde",  look: { testa: "cappello_paglia" }, zona: "ruscello", lucine: 3, regalo: { spinaci: 8, petali: 6 } },
+  { id: "lulu",      nome: "Lulù", femmina: true,      colore: "viola",  look: { collo: "collana" },         zona: "ruscello", lucine: 3, regalo: { legnetti: 10 } },
+  { id: "fagiolo",   nome: "Fagiolo",   colore: "verde",  look: { testa: "berretto_lana" },   zona: "ruscello", lucine: 4, regalo: { sassolini: 8, stelle: 1 } },
+  { id: "stellina",  nome: "Stellina", femmina: true,  colore: "rosa",   look: { testa: "coroncina_fiori" }, zona: "collina",  lucine: 4, regalo: { petali: 12, stelle: 1 } },
+  { id: "brillo",    nome: "Brillo",    colore: "blu",    look: { testa: "cuffie" },          zona: "collina",  lucine: 4, regalo: { legnetti: 12 } },
+  { id: "pervinca",  nome: "Pervinca", femmina: true,  colore: "viola",  look: { testa: "basco" },           zona: "collina",  lucine: 5, regalo: { sassolini: 10, stelle: 2 } },
+  { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
+  { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
+  { id: "tobia",     nome: "Tobia",     colore: "blu",    look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
+];
+
+// Missioni rapide: tre alla volta, facili, sempre nuove. Finite tutte e tre si sale di grado.
+// ev = l'evento che le fa avanzare; conta(dati) = di quanto avanzano; n = obiettivo per grado (l'ultimo vale da lì in poi);
+// gioco = serve che quel gioco sia già aperto.
+var MISSIONI = [
+  { id: "partite",   testo: "Gioca {n} partite a un gioco qualsiasi", ev: "partita", n: [2, 3, 3, 4, 5] },
+  { id: "petali",    testo: "Raccogli {n} petali giocando", ev: "partita", conta: function (d) { return d.bottino.petali || 0; }, n: [8, 12, 15, 20, 25] },
+  { id: "spinaci",   testo: "Raccogli {n} spinaci giocando", ev: "partita", conta: function (d) { return d.bottino.spinaci || 0; }, n: [6, 10, 12, 15, 20] },
+  { id: "legnetti",  testo: "Raccogli {n} legnetti giocando", ev: "partita", conta: function (d) { return d.bottino.legnetti || 0; }, n: [6, 8, 10, 14, 18] },
+  { id: "avventura", testo: "Arriva in fondo a un'avventura", testoN: "Arriva in fondo a {n} avventure", ev: "partita", conta: function (d) { return d.arcade && d.completato ? 1 : 0; }, n: [1, 1, 2, 2, 3] },
+  { id: "stelle",    testo: "Trova {n} stelle nascoste nelle avventure", ev: "partita", conta: function (d) { return d.arcade ? d.stelleLivello || 0 : 0; }, n: [1, 2, 3, 4, 5] },
+  { id: "rompicapi", testo: "Risolvi {n} rompicapi", ev: "partita", conta: function (d) { return d.rompicapo && d.completato ? 1 : 0; }, n: [1, 2, 2, 3, 4] },
+  { id: "tris",      testo: "Fai {n} file nel Tris di fiori", ev: "partita", gioco: "tris", conta: function (d) { return d.gioco === "tris" ? d.file || 0 : 0; }, n: [15, 25, 35, 45, 60] },
+  { id: "conti",     testo: "Rispondi giusto a {n} indovinelli dei numeri", ev: "partita", gioco: "conti", conta: function (d) { return d.gioco === "conti" ? d.giuste || 0 : 0; }, n: [5, 8, 10, 15, 20] },
+  { id: "fuga",      testo: "Scappa dal Nebbione fino in fondo", ev: "partita", gioco: "fuga", conta: function (d) { return d.gioco === "fuga" && d.completato ? 1 : 0; }, n: [1] },
+  { id: "memory",    testo: "Completa {n} Memory dei fiori", ev: "partita", gioco: "memory", conta: function (d) { return d.gioco === "memory" && d.completato ? 1 : 0; }, n: [1, 1, 2] },
+  { id: "lucciole",  testo: "Prendi {n} lucciole in tutto", ev: "partita", gioco: "lucciole", conta: function (d) { return d.gioco === "lucciole" ? d.punti || 0 : 0; }, n: [10, 15, 20, 30] },
+  { id: "pasti",     testo: "Dai da mangiare {n} volte al tuo Chiwinnie", ev: "pasto", n: [2, 3, 3, 4] },
+  { id: "raccolti",  testo: "Raccogli {n} volte quello che produce il giardino", ev: "raccolto", n: [2, 3, 4, 5] },
+  { id: "coccole",   testo: "Fai {n} coccole al tuo Chiwinnie", ev: "coccola", n: [5, 8, 10, 12] },
+  { id: "arreda",    testo: "Arreda un pezzo nuovo", testoN: "Arreda {n} pezzi nuovi", ev: "costruito", n: [1, 1, 2] }
+];
+// premio di ogni missione e del grado (crescono un po' a ogni grado)
+function premioMissione(grado) { return { lucine: 1, xp: 8 + grado * 2, materiali: { petali: 2 + grado, legnetti: 2 + grado } }; }
+function premioGrado(grado) { return { lucine: 2, materiali: { legnetti: 5 + grado * 2, sassolini: 3 + grado, petali: 5 + grado * 2, spinaci: 4 }, stelle: grado % 3 === 0 ? 2 : 1 }; }
