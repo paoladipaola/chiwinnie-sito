@@ -488,7 +488,8 @@ var COLORI_CHIWI = [
   { id: "rosa", nome: "Rosa", carattere: "affettuosi e allegri" },
   { id: "bianco", nome: "Bianco", carattere: "dolci e coccoloni" },
   { id: "blu", nome: "Blu", carattere: "curiosi e intelligenti" },
-  { id: "verde", nome: "Verde", carattere: "tranquilli e saggi" }
+  { id: "verde", nome: "Verde", carattere: "tranquilli e saggi" },
+  { id: "arcobaleno", nome: "Arcobaleno", carattere: "rarissimi e pieni di fantasia" }
 ];
 function immagineChiwi(colore, nome) { return "img/chiwi/" + (colore || "viola") + "/" + nome + (/felice|coccolone|brontolone/.test(nome) ? ".jpg" : ".png"); }
 
@@ -544,7 +545,7 @@ var AMICI = [
   { id: "pervinca",  nome: "Pervinca", femmina: true,  colore: "viola",  look: { testa: "basco" },           zona: "collina",  lucine: 5, regalo: { sassolini: 10, stelle: 2 } },
   { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
   { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
-  { id: "tobia",     nome: "Tobia",     colore: "blu",    look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
+  { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
 ];
 
 // Missioni rapide: tre alla volta, facili, sempre nuove. Finite tutte e tre si sale di grado.

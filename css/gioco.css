@@ -62,7 +62,7 @@ input[type=text] {
 .cuore { position: absolute; left: 50%; top: 64%; width: 44px; transform: translate(-50%, -50%) scale(0); transition: transform .8s cubic-bezier(.3, 1.6, .5, 1); }
 .cuore.visibile { transform: translate(-50%, -50%) scale(1); }
 
-.scelta-colori { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 12px 0 4px; }
+.scelta-colori { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0 4px; }
 .scelta-colori button { border: 3px solid transparent; background: white; border-radius: 16px; padding: 4px 2px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; color: var(--testo); }
 .scelta-colori button img { width: 100%; display: block; }
 .scelta-colori button.scelto { border-color: var(--lilla-scuro); background: #f3eefc; }
