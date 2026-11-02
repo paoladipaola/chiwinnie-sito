@@ -402,6 +402,7 @@
       corsa1: carica(immagineChiwi(api.colore, "corsa1")), corsa2: carica(immagineChiwi(api.colore, "corsa2")),
       salto: carica(immagineChiwi(api.colore, "salto")), caduta: carica(immagineChiwi(api.colore, "caduta")),
       stella: carica("img/stella.png"),
+      nebbiolino: carica("img/nebbione/nebbiolino.png"), nebbione: carica("img/nebbione/nebbione.png"),
       spinaci: carica("img/spinaci.png"), legnetti: carica("img/legnetti.png"),
       sassolini: carica("img/sassolini.png"), petali: carica("img/petali.png")
     };
@@ -622,6 +623,17 @@
     // una nuvoletta grigia (i nebbiolini e i bordi del Nebbione)
     function nuvolina(x, y, sc, alfa, faccia) {
       ctx.save(); ctx.globalAlpha = Math.max(0, alfa); ctx.translate(x, y); ctx.scale(sc, sc);
+      // il nebbiolino dipinto, se l'immagine è pronta
+      if (faccia && I.nebbiolino.complete && I.nebbiolino.naturalWidth) { ctx.drawImage(I.nebbiolino, -48, -38, 96, 75); ctx.restore(); return; }
+      if (!faccia) {
+        // il bordo del Nebbione: sbuffi di nebbia morbida, senza contorni
+        [[-20, 8, 34], [20, 6, 32], [0, -10, 38]].forEach(function (c) {
+          var g = ctx.createRadialGradient(c[0], c[1], 0, c[0], c[1], c[2]);
+          g.addColorStop(0, "rgba(170,174,186,.85)"); g.addColorStop(0.6, "rgba(185,189,200,.55)"); g.addColorStop(1, "rgba(200,204,214,0)");
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c[0], c[1], c[2], 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.restore(); return;
+      }
       ctx.fillStyle = "#a7abb6";
       ctx.beginPath(); ctx.arc(-18, 6, 18, 0, Math.PI * 2); ctx.arc(18, 6, 18, 0, Math.PI * 2); ctx.arc(0, -6, 24, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = "#c4c7d0";
@@ -788,12 +800,10 @@
         gn.addColorStop(0, "rgba(150,154,166,.95)"); gn.addColorStop(1, "rgba(150,154,166,0)");
         ctx.fillStyle = gn; ctx.fillRect(cam - 10, -alzo, bordo + 40 - cam, ALTEZZA + alzo);
         for (var nb = 0; nb < 6; nb++) nuvolina(bordo - 40 + Math.sin(tempo * 1.5 + nb) * 12, 80 + nb * 85, 1.5, 0.85, false);
-        if (bordo > cam + 60) {
-          var oy = TERRA_Y - 230 + Math.sin(tempo * 2) * 10, ox = bordo - 40;
-          ctx.fillStyle = "#3c3f4a";
-          ctx.beginPath(); ctx.arc(ox - 18, oy, 9, 0, Math.PI * 2); ctx.arc(ox + 18, oy, 9, 0, Math.PI * 2); ctx.fill();
-          ctx.strokeStyle = "#3c3f4a"; ctx.lineWidth = 5; ctx.lineCap = "round";
-          ctx.beginPath(); ctx.moveTo(ox - 32, oy - 22); ctx.lineTo(ox - 8, oy - 14); ctx.moveTo(ox + 32, oy - 22); ctx.lineTo(ox + 8, oy - 14); ctx.stroke();
+        if (bordo > cam + 60 && I.nebbione.naturalWidth) {
+          // il Nebbione in persona, che si affaccia dalla nebbia
+          var nw = 190, nh = nw * I.nebbione.naturalHeight / I.nebbione.naturalWidth;
+          img(I.nebbione, bordo - nw * 0.75, TERRA_Y - 300 + Math.sin(tempo * 2) * 10, nw, nh);
         }
       }
       ctx.restore();
@@ -824,7 +834,7 @@
     if (api.turbo) attiva("super", 5);
     raf = requestAnimationFrame(ciclo);
     // per i test dalla console
-    window.chiwinnieArcade = { chiwi: chiwi, livello: L, info: function () { return { cuori: cuori, punti: punti, stelle: stelleTrovate, arrivato: !!arrivato, nebbione: Math.round(distanza) }; }, premi: giu, lascia: su, potere: function () { return potere; }, passo: function (dt) { if (!finito) { aggiorna(dt); if (!finito) disegna(); } } };
+    window.chiwinnieArcade = { chiwi: chiwi, livello: L, info: function () { return { cuori: cuori, punti: punti, stelle: stelleTrovate, arrivato: !!arrivato, nebbione: Math.round(distanza) }; }, premi: giu, lascia: su, potere: function () { return potere; }, avvicina: function (d) { distanza = d; }, passo: function (dt) { if (!finito) { aggiorna(dt); if (!finito) disegna(); } } };
 
     function pulisci() {
       finito = true; cancelAnimationFrame(raf);

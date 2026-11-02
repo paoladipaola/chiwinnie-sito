@@ -8,21 +8,9 @@
   function stato() { return C ? C.stato() : null; }
   function scegli(a) { return a[Math.floor(Math.random() * a.length)]; }
 
-  // il Nebbione: una nuvola grigia e brontolona (alla fine della storia diventa buono e prende i colori)
+  // il Nebbione: una nuvola grigia e brontolona (alla fine della storia diventa buono e rosa)
   function nebbione(buono) {
-    var c1 = buono ? "#fde7f0" : "#b9bcc6", c2 = buono ? "#fff6c9" : "#9a9eaa", occhi = "#3c3f4a";
-    return "<svg class='nebbione" + (buono ? " buono" : "") + "' viewBox='0 0 120 84' aria-hidden='true'>" +
-      "<g fill='" + c2 + "'><circle cx='28' cy='50' r='22'/><circle cx='92' cy='50' r='22'/><circle cx='60' cy='60' r='24'/></g>" +
-      "<g fill='" + c1 + "'><circle cx='34' cy='42' r='22'/><circle cx='60' cy='32' r='28'/><circle cx='86' cy='42' r='22'/><rect x='24' y='42' width='72' height='26' rx='13'/></g>" +
-      (buono
-        ? "<path d='M44 40 q5 -6 10 0 M66 40 q5 -6 10 0' stroke='" + occhi + "' stroke-width='3.5' fill='none' stroke-linecap='round'/>" +
-          "<path d='M50 52 q10 9 20 0' stroke='" + occhi + "' stroke-width='3.5' fill='none' stroke-linecap='round'/>" +
-          "<circle cx='42' cy='50' r='4' fill='#f7a8bf'/><circle cx='78' cy='50' r='4' fill='#f7a8bf'/>"
-        : "<path d='M41 33 l14 5 M79 33 l-14 5' stroke='" + occhi + "' stroke-width='4' stroke-linecap='round'/>" +
-          "<circle cx='50' cy='44' r='5' fill='" + occhi + "'/><circle cx='70' cy='44' r='5' fill='" + occhi + "'/>" +
-          "<circle cx='51.5' cy='42.5' r='1.6' fill='#fff'/><circle cx='71.5' cy='42.5' r='1.6' fill='#fff'/>" +
-          "<path d='M52 58 q8 -6 16 0' stroke='" + occhi + "' stroke-width='3.5' fill='none' stroke-linecap='round'/>") +
-      "</svg>";
+    return "<img class='nebbione" + (buono ? " buono" : "") + "' src='img/nebbione/nebbione" + (buono ? "_buono" : "") + ".png' alt=''>";
   }
 
   // ---------- dati salvati ----------
@@ -165,7 +153,7 @@
     AMICI.forEach(function (a) {
       var libero = s.missione.liberati.indexOf(a.id) !== -1, ilProssimo = prossimo && prossimo.id === a.id;
       html += "<div class='amico-bolla" + (libero ? " libero" : ilProssimo ? " prossimo" : " chiuso") + "' data-amico='" + a.id + "'>" +
-        "<div class='bolla-nebbia'>" + htmlChiwi(a) + "</div>" +
+        "<div class='bolla-nebbia'>" + htmlChiwi(a) + (libero ? "" : "<img class='bolla-img' src='img/nebbione/bolla.png' alt=''>") + "</div>" +
         "<b>" + (libero || ilProssimo ? C.esc(a.nome) : "?") + "</b>" +
         (libero ? "<small>" + C.esc(nomeZona(a.zona)) + "</small>" :
           ilProssimo ? "<button class='btn piccolo" + (s.missione.lucine >= a.lucine ? " verde" : " bianco") + "' data-azione='libera' data-amico='" + a.id + "'>Libera · " + a.lucine + " ✨</button>" :
@@ -209,7 +197,7 @@
   function storia() {
     var s = dati();
     s.missione.storia = true; C.salva();
-    C.apriPannello("<div class='centro storia'>" + nebbione(false) +
+    C.apriPannello("<div class='centro storia'><img class='storia-quadro' src='img/nebbione/storia.jpg' alt='Il Nebbione soffia via i Chiwinnie nelle bolle'>" +
       "<h2>Il Nebbione!</h2>" +
       "<p>Una notte, sul Bosco Giardino è arrivato il <b>Nebbione</b>: una grande nuvola grigia e brontolona che non sopporta i colori.</p>" +
       "<p>Ha soffiato forte forte e ha chiuso <b>dodici Chiwinnie</b> in bolle di nebbia, sparse per il bosco.</p>" +
