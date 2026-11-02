@@ -116,6 +116,7 @@
     coriandoli(window.innerWidth / 2, window.innerHeight / 2, "⭐", 10);
     vibra([40, 60, 40]);
     Suoni.sfx("livello");
+    Missione.regalaLucine(1, "per il livello nuovo");
     setTimeout(function () { Suoni.dici("Wii-chu!"); }, 900);
   }
 
@@ -199,7 +200,7 @@
         "<h2>" + esc(bozza.nome) + " ha il cuore " + bozza.cuore.nome + "!</h2>" +
         (bozza.cuore.raro ? "<p><b>Un cuore d'oro! Succede rarissimamente.</b></p>" : "") +
         "<p>Il suo fiore preferito è la <b>" + bozza.fiore + "</b> e ha un carattere <b>" + bozza.carattere + "</b>.</p>" +
-        "<p>Ora vive in una radura del bosco tutta da costruire. Aiutalo a farla diventare il posto più bello del mondo!</p>" +
+        "<p>Il Nebbione ha portato via i suoi amici. Costruite insieme una casa nuova nella radura e raccogliete le lucine ✨ per liberarli tutti!</p>" +
         "<button class='btn' id='btn-entra'>Andiamo nella radura!</button>";
       $("btn-entra").addEventListener("click", completaImprinting);
     }, 2300);
@@ -214,13 +215,14 @@
       materiali: JSON.parse(JSON.stringify(MATERIALI_INIZIALI)),
       zona: "radura", costruiti: [], prod: {}, zoneComplete: [],
       sfideFatte: 0, sfidaDaRitirare: [],
+      missione: { lucine: 0, liberati: [], storia: true, racconto2: true },
       record: { raccolta: 0, lucciole: 0, memoryMosse: 0, boscoCompleto: 0, boscoStelle: 0 },
       contatori: { raccolti: 0, pasti: 0, coccole: 0, memoryCompleti: 0, partite: 0 }
     };
     salva();
     apriMondo();
     setTimeout(function () {
-      parla("Wii-chu! Mi costruisci una casetta?", 4000);
+      parla("Wii-chu! Costruiamo una casetta, poi salviamo i miei amici!", 4500);
       toast("Tocca 🏡 Arreda per iniziare", 3500);
     }, 800);
   }
@@ -444,7 +446,7 @@
 
   function zonaCompletata() {
     var i = ZONE.indexOf(zonaCorrente()), prossima = ZONE[i + 1];
-    if (stato.zoneComplete.indexOf(zonaCorrente().id) === -1) stato.zoneComplete.push(zonaCorrente().id);
+    if (stato.zoneComplete.indexOf(zonaCorrente().id) === -1) { stato.zoneComplete.push(zonaCorrente().id); Missione.regalaLucine(3, "per la zona completata"); }
     salva();
     apriPannello(
       "<div class='centro'><img src='img/stella.png' style='width:90px'><h2>" + esc(zonaCorrente().nome) + " è completa!</h2>" +
@@ -514,7 +516,9 @@
       if (puntoLibero(p)) { posizionaChiwi(p.x, p.y); break; }
     }
     if (Math.random() < .3) setTimeout(function () {
-      if (Math.random() < .4) { var e = scegli(ESCLAMAZIONI); esclama(e[0], e[1]); } else parla(scegli(FRASI.felice));
+      var pensiero = Math.random() < .4 && Missione.frase();
+      if (pensiero) parla(pensiero, 3200);
+      else if (Math.random() < .4) { var e = scegli(ESCLAMAZIONI); esclama(e[0], e[1]); } else parla(scegli(FRASI.felice));
     }, 2300);
   }
 
@@ -621,6 +625,7 @@
     stato.sfidaDaRitirare.splice(idx, 1);
     aggiungi("stelle", SFIDE[i].stelle);
     guadagnaXp(SFIDE[i].xp);
+    Missione.regalaLucine(1, "dalla sfida");
     // Le sfide ritirate escono dalla lista: avanzano tutte quelle consecutive già fatte
     stato.ritirate = stato.ritirate || [];
     stato.ritirate.push(i);
@@ -835,6 +840,8 @@
     if (k === "lucciole") stato.record.lucciole = Math.max(+stato.record.lucciole || 0, ris.punti);
     if (g0.arcade) {
       if (ris.completato) stato.record[k + "Completo"] = (stato.record[k + "Completo"] || 0) + 1;
+      // arrivare in fondo alla Fuga vale anche per l'avventura di quel paesaggio (es. la porta d'oro del Cielo)
+      if (ris.completato && ris.tema && ris.tema !== k) stato.record[ris.tema + "Completo"] = (stato.record[ris.tema + "Completo"] || 0) + 1;
       stato.record[k + "Stelle"] = Math.max(stato.record[k + "Stelle"] || 0, ris.stelleLivello || 0);
     }
     if (g0.rompicapo && ris.completato) {
@@ -917,8 +924,9 @@
   stato = carica();
   var idUrl = new URLSearchParams(location.search).get("id");
   if (stato && stato.versione === 3) { apriMondo(); setTimeout(function () { parla("Wii-chu, " + stato.bambino + "!"); }, 600); }
-  else if (idUrl) iniziaImprinting(idUrl.slice(0, 32));
-  else mostra("s-benvenuto");
+  // chi inizia ascolta prima la storia del Nebbione, poi sveglia il Chiwinnie che è riuscito a scappare
+  else if (idUrl) setTimeout(function () { Missione.racconta(null, function () { iniziaImprinting(idUrl.slice(0, 32)); }); }, 0);
+  else { mostra("s-benvenuto"); setTimeout(function () { Missione.racconta(null); }, 0); }
   if (!stato) Suoni.musica("radura");
   passeggia();
   }

@@ -371,7 +371,7 @@
   };
 
   // ---------- Motore ----------
-  function avventura(area, api, crea, T, fuga) {
+  function avventura(area, api, crea, T, fuga, tema) {
     var L = fuga ? crea() : raddoppia(crea());
     L.poteri = L.poteri || [];
     L.nebbiolini = L.nebbiolini || [];
@@ -847,7 +847,7 @@
       pulisci();
       if (arrivo) { bottino.spinaci += 2; bottino.legnetti += 2; }
       api.fine({
-        punti: punti + (arrivo ? 10 : 0), bottino: bottino, completato: arrivo, stelleLivello: stelleTrovate,
+        punti: punti + (arrivo ? 10 : 0), bottino: bottino, completato: arrivo, stelleLivello: stelleTrovate, tema: tema,
         titolo: fuga ? (arrivo ? "Sei sfuggito al Nebbione!" : "Il Nebbione ti ha preso!") : arrivo ? (stelleTrovate === 3 ? T.perfetto : T.arrivo) : "Che peccato!",
         messaggio: arrivo ? "Hai raccolto " + punti + " cose e trovato " + stelleTrovate + (stelleTrovate === 1 ? " stella" : " stelle") + " su 3. Bonus arrivo: +2 spinaci e +2 legnetti."
           : "I cuori sono finiti, ma tutto quello che hai raccolto resta tuo. Riprova!"
@@ -863,8 +863,8 @@
   // la Fuga sceglie a caso il paesaggio fra le zone già aperte
   Minigiochi.fuga = function (area, api) {
     var temi = ["bosco"].concat((api.zoneAperte || []).filter(function (z) { return TEMI[z]; }));
-    var T = TEMI[temi[Math.floor(Math.random() * temi.length)]];
+    var tema = temi[Math.floor(Math.random() * temi.length)], T = TEMI[tema];
     var L = function () { return mettiPoteri(livelloFuga(T, 30000), ["super", "calamita", "ali", "super", "ali", "calamita", "super"], [0.1, 0.22, 0.36, 0.5, 0.64, 0.77, 0.9]); };
-    return avventura(area, api, L, T, true);
+    return avventura(area, api, L, T, true, tema);
   };
 })();

@@ -524,3 +524,25 @@ input[type=text] {
 .conti-risposte .btn { font-size: 28px; padding: 10px; margin: 0; }
 .conti-risposte .btn.giusta { background: var(--verde); color: white; border-color: var(--verde); animation: festa .5s; }
 .conti-risposte .btn.sbagliata { opacity: .45; animation: ops .45s; }
+
+/* ---------- La storia a tutto schermo ---------- */
+#racconto { position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; background: var(--crema); animation: entra .5s ease;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); }
+#racconto.buio { background: radial-gradient(circle at 50% 35%, #4b5672, #1f2638 75%); }
+.racconto-quadro { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.racconto-quadro img { width: 100%; height: 100%; object-fit: cover; animation: avvicina 9s ease-out both; }
+.racconto-quadro.ritaglio img { width: 72%; height: 80%; object-fit: contain; animation: galleggia-n 3s ease-in-out infinite; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, .35)); }
+@keyframes avvicina { from { transform: scale(1.12); } to { transform: scale(1); } }
+.racconto-testo { background: var(--carta); border-radius: 26px 26px 0 0; padding: 18px 20px 20px; box-shadow: 0 -6px 18px rgba(0, 0, 0, .15); text-align: center; }
+.racconto-testo p { font-size: 19px; line-height: 1.4; margin: 0 auto 10px; max-width: 30em; text-wrap: balance; }
+.racconto-punti { display: flex; gap: 6px; justify-content: center; margin-bottom: 4px; }
+.racconto-punti i { width: 9px; height: 9px; border-radius: 50%; background: var(--bordo); }
+.racconto-punti i.ora { background: var(--lilla); transform: scale(1.3); }
+
+/* nebbia ai bordi del bosco finché ci sono amici prigionieri */
+#nebbia-mondo { position: absolute; inset: 0; pointer-events: none; z-index: 860; transition: opacity 2s;
+  background: radial-gradient(ellipse 75% 60% at 50% 55%, rgba(170, 175, 190, 0) 55%, rgba(170, 175, 190, .55) 100%); }
+
+.missione-pill .conta { font-size: 12px; opacity: .85; }
+.missione-pill.pronta { animation: pronta 1.2s ease-in-out infinite; background: linear-gradient(90deg, #8a78c2, #e8b64a); }
+@keyframes pronta { 50% { transform: scale(1.06); } }

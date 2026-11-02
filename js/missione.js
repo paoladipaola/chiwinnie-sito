@@ -17,6 +17,7 @@
   function dati() {
     var s = stato();
     if (!s.missione) s.missione = { lucine: 0, liberati: [], storia: false };
+    if (!s.missione.racconto2) { s.missione.racconto2 = true; s.missione.storia = false; }   // la storia ora è a tutto schermo: la rivedono tutti una volta
     if (!s.missioni) s.missioni = { grado: 1, attive: [], fatte: 0 };
     return s;
   }
@@ -160,7 +161,9 @@
           "<small>" + a.lucine + " ✨</small>") +
         "</div>";
     });
-    html += "</div><p class='nota centro'>Gli amici liberati vanno a vivere nella loro zona del Bosco Giardino e ti portano un regalo.</p>";
+    html += "</div><p class='nota centro'>Gli amici liberati vanno a vivere nella loro zona del Bosco Giardino e ti portano un regalo.</p>" +
+      "<p class='nota centro'>Le lucine arrivano dalle missioni, dalle sfide, da ogni livello nuovo e da ogni zona completata.</p>" +
+      "<div class='azioni-pannello'><button class='btn bianco' data-azione='rileggi-storia'>📖 Rileggi la storia</button></div>";
     C.apriPannello(html);
     vestiTutti($("pannello-corpo"));
   }
@@ -193,25 +196,55 @@
     }, 900);
   }
 
-  // ---------- la storia, la prima volta ----------
-  function storia() {
-    var s = dati();
-    s.missione.storia = true; C.salva();
-    C.apriPannello("<div class='centro storia'><img class='storia-quadro' src='img/nebbione/storia.jpg' alt='Il Nebbione soffia via i Chiwinnie nelle bolle'>" +
-      "<h2>Il Nebbione!</h2>" +
-      "<p>Una notte, sul Bosco Giardino è arrivato il <b>Nebbione</b>: una grande nuvola grigia e brontolona che non sopporta i colori.</p>" +
-      "<p>Ha soffiato forte forte e ha chiuso <b>dodici Chiwinnie</b> in bolle di nebbia, sparse per il bosco.</p>" +
-      "<p>Solo la luce può aprirle. Completa le missioni, raccogli le <b>lucine ✨</b> e libera tutti gli amici di " + C.esc(s.nome) + "!</p>" +
-      "<div class='azioni-pannello'><button class='btn verde' data-azione='apri-missione'>Iniziamo!</button></div></div>");
+  // ---------- la storia, a tutto schermo ----------
+  // Si racconta all'inizio del gioco (prima di svegliare il Chiwinnie) e si può rileggere dal pannello della missione.
+  // nome: il nome del proprio Chiwinnie, se c'è già; poi: cosa fare alla fine.
+  function racconta(nome, poi) {
+    var chi = nome ? "<b>" + C.esc(nome) + "</b>" : "un piccolo Chiwinnie";
+    var pagine = [
+      { img: "img/zona1/finale.jpg", testo: "Nel Bosco Giardino vivevano tanti Chiwinnie, morbidi e colorati. Di giorno giocavano tra i fiori, e la sera guardavano le lucciole tutti insieme." },
+      { img: "img/nebbione/nebbione.png", buio: true, testo: "Ma una notte arrivò il <b>Nebbione</b>: una grande nuvola grigia e brontolona che non sopporta i colori." },
+      { img: "img/nebbione/storia.jpg", testo: "Soffiò forte forte e chiuse <b>dodici Chiwinnie</b> in bolle di nebbia, portandoli via, lontano nel bosco." },
+      { img: immagineChiwi((stato() && stato().colore) || "viola", "corsa1"), buio: true, testo: "Solo uno riuscì a scappare: " + chi + ". Corse tutta la notte e arrivò fin qui, stanchissimo." },
+      { img: "img/lucciola.png", buio: true, testo: "Le bolle di nebbia si aprono solo con la luce. Raccogli le <b>lucine ✨</b>, ricostruisci il Bosco Giardino e libera tutti gli amici!", ultima: true }
+    ];
+    var box = document.createElement("div");
+    box.id = "racconto";
+    document.getElementById("app").appendChild(box);
+    var i = 0;
+    function pagina() {
+      var p = pagine[i];
+      box.className = p.buio ? "buio" : "";
+      box.innerHTML = "<div class='racconto-quadro" + (/\.png$/.test(p.img) ? " ritaglio" : "") + "'><img src='" + p.img + "' alt=''></div>" +
+        "<div class='racconto-testo'><p>" + p.testo + "</p><div class='racconto-punti'>" + pagine.map(function (x, k) { return "<i" + (k === i ? " class='ora'" : "") + "></i>"; }).join("") + "</div>" +
+        "<div class='azioni-pannello'>" + (i === 0 ? "<button class='btn bianco' data-r='salta'>Salta</button>" : "") +
+        "<button class='btn verde' data-r='avanti'>" + (p.ultima ? (nome ? "Andiamo!" : "Svegliamolo!") : "Avanti") + "</button></div></div>";
+      Suoni.sfx(i === 1 ? "errore" : "tap");
+    }
+    function fine() { box.remove(); var s = stato(); if (s) { dati(); s.missione.storia = true; C.salva(); } if (poi) poi(); }
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-r]");
+      if (b && b.dataset.r === "salta") return fine();
+      if (!b && !e.target.closest(".racconto-quadro")) return;
+      if (i < pagine.length - 1) { i++; pagina(); } else fine();
+    });
+    pagina();
   }
+  function storia() { var s = stato(); C.chiudiPannello(); racconta(s && s.nome, function () { if (s) apri(); }); }
 
   // ---------- nel giardino: il bottone della missione e gli amici liberati ----------
   function disegna() {
     var s = stato(); if (!s || !$("btn-missione")) return;
     dati();
-    var b = $("btn-missione");
-    b.innerHTML = nebbione(s.missione.liberati.length === AMICI.length) + "<span>Amici <b>" + s.missione.liberati.length + "/" + AMICI.length + "</b></span><span class='lucine'>✨ " + s.missione.lucine + "</span>" +
-      (puoLiberare() ? "<i class='pallino'></i>" : "");
+    var b = $("btn-missione"), a = prossimoAmico(), liberi = s.missione.liberati.length;
+    b.classList.toggle("pronta", puoLiberare());
+    b.innerHTML = nebbione(!a) +
+      (a ? "<span>" + (puoLiberare() ? "Libera <b>" + C.esc(a.nome) + "</b>!" : "Salva <b>" + C.esc(a.nome) + "</b>") + "</span><span class='lucine'>✨ " + Math.min(s.missione.lucine, a.lucine) + "/" + a.lucine + "</span>"
+         : "<span>Bosco salvo! <b>12/12</b></span>") +
+      "<span class='conta'>" + liberi + "/" + AMICI.length + "</span>" + (puoLiberare() ? "<i class='pallino'></i>" : "");
+    // finché ci sono amici nelle bolle, ai bordi del bosco resta un po' di nebbia
+    var n = $("nebbia-mondo");
+    if (n) n.style.opacity = (AMICI.length - liberi) / AMICI.length;
     disegnaAmici();
   }
 
@@ -269,8 +302,8 @@
   function apriMondo() {
     var s = stato(); if (!s) return;
     dati(); riempi(); disegna();
-    // la storia del Nebbione si racconta quando la casetta è pronta
-    if (!s.missione.storia && s.costruiti.indexOf("casetta") !== -1) setTimeout(function () { if ($("pannello").hidden) storia(); }, 1500);
+    // chi aveva già un Chiwinnie prima della missione vede la storia una volta, a tutto schermo
+    if (!s.missione.storia && !document.getElementById("racconto")) { s.missione.storia = true; setTimeout(function () { racconta(s.nome, function () { apri(); }); }, 900); }
   }
 
   function collega() {
@@ -281,13 +314,28 @@
       if (a === "apri-missione") apri();
       else if (a === "libera") libera(b.dataset.amico);
       else if (a === "cambia-missione") cambia(+b.dataset.i);
+      else if (a === "rileggi-storia") storia();
     });
     passeggiata();
   }
 
+  // lucine guadagnate fuori dalle missioni (sfide, livelli, zone)
+  function regalaLucine(n, perche) {
+    var s = stato(); if (!s) return;
+    dati(); s.missione.lucine += n; C.salva(); disegna();
+    festa(function () { C.toast("✨ +" + n + (n === 1 ? " lucina" : " lucine") + (perche ? " " + perche : "") + "!", 2400); Suoni.sfx("stella"); });
+  }
+  // il Chiwinnie ogni tanto pensa ai suoi amici
+  function frase() {
+    var s = stato(), a = prossimoAmico(); if (!s || !a) return null;
+    if (puoLiberare()) return "Abbiamo abbastanza lucine! Liberiamo " + a.nome + "!";
+    return scegli(["Mi manca " + a.nome + "… dove l'avrà portato il Nebbione?", "Troviamo le lucine per liberare i miei amici!", "Brrr, sento il Nebbione là in fondo…", "Con le lucine apriamo le bolle di nebbia!"]);
+  }
+
   window.Missione = {
     avvia: function (ctx) { C = ctx; collega(); if ($("s-mondo").classList.contains("attiva")) apriMondo(); },
-    evento: evento, apri: apri, apriMondo: apriMondo, disegna: disegna, storia: storia,
+    evento: evento, apri: apri, apriMondo: apriMondo, disegna: disegna, storia: storia, racconta: racconta,
+    regalaLucine: regalaLucine, frase: frase,
     nebbione: nebbione
   };
 })();

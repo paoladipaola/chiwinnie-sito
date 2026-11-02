@@ -210,7 +210,7 @@ var Minigiochi = (function () {
       api.info("⏱ " + Math.ceil(resta) + "  ·  " + punti + " lucciole");
       if (resta <= 0) termina();
     }
-    function nuova() {
+    function nuova(extra) {
       if (finito) return;
       var t = (Date.now() - inizio) / 1000;
       var el = document.createElement("div");
@@ -226,9 +226,10 @@ var Minigiochi = (function () {
         setTimeout(function () { el.remove(); }, 400);
       });
       timers.push(setTimeout(function () { if (!el.classList.contains("presa")) { el.style.transition = "opacity .25s"; el.style.opacity = "0"; setTimeout(function () { el.remove(); }, 260); } }, vita));
+      if (extra) return;   // la lucciola in più non ne fa nascere altre: prima si moltiplicavano all'infinito e il telefono si bloccava
       timers.push(setTimeout(nuova, Math.max(320, 700 - t * 13) * caso(0.7, 1.2)));
       // a volte ne arrivano due insieme
-      if (t > 10 && Math.random() < 0.25) timers.push(setTimeout(nuova, 150));
+      if (t > 10 && Math.random() < 0.25) timers.push(setTimeout(nuova, 150, true));
     }
     nuova();
     function termina() {
