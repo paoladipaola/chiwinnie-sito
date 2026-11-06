@@ -325,7 +325,7 @@
     var sc = stato.stellaCadente;
     if (!sc) sc = stato.stellaCadente = { t: Date.now() + STELLA_OGNI };
     if (Date.now() >= sc.t) {
-      if (sc.x == null) { var pr = z.prato; sc.x = pr.x1 + Math.random() * (pr.x2 - pr.x1); sc.y = pr.y1 + Math.random() * (pr.y2 - pr.y1); }
+      if (sc.x == null || sc.zona !== z.id) { var pr = z.prato || z.prati[Math.floor(Math.random() * z.prati.length)]; sc.zona = z.id; sc.x = pr.x1 + Math.random() * (pr.x2 - pr.x1); sc.y = pr.y1 + Math.random() * (pr.y2 - pr.y1); }
       var st = document.createElement("button");
       st.className = "bolla stellina"; st.dataset.k = "stella";
       st.style.left = sc.x + "%"; st.style.top = sc.y + "%";
