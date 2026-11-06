@@ -86,6 +86,8 @@ input[type=text] {
   pointer-events: auto; animation: galleggia-b 1.4s ease-in-out infinite;
 }
 .bolla img { width: 34px; height: 34px; object-fit: contain; }
+.bolla.stellina { background: #fff6cf; box-shadow: 0 0 18px 6px rgba(255, 214, 90, .75); animation: stellina 1.6s ease-in-out infinite; }
+@keyframes stellina { 0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-8deg); } 50% { transform: translate(-50%, -62%) scale(1.12) rotate(8deg); } }
 .bolla b { position: absolute; right: -6px; bottom: -4px; background: var(--verde); color: white; font-size: 13px; border-radius: 99px; padding: 0 6px; font-family: var(--font); }
 @keyframes galleggia-b { 50% { transform: translate(-50%, calc(-50% - 6px)); } }
 .voce.fatta { border-color: var(--oro); background: #fff8e2; }

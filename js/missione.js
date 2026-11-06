@@ -79,7 +79,7 @@
         C.guadagnaXp(p.xp);
         s.missioni.fatte = (s.missioni.fatte || 0) + 1;
         festa(function () {
-          C.toast("✨ Missione compiuta: " + testo(m, a.n) + "! +1 lucina", 2500);
+          C.toast("✨ Missione compiuta: " + testo(m, a.n) + "! +1 lucina e +1 ⭐", 2500);
           Suoni.sfx("stella"); C.coriandoli(window.innerWidth / 2, window.innerHeight * 0.35, "✨", 8);
         });
       }
@@ -145,7 +145,7 @@
       var m = def(a.id), fatta = a.fatti >= a.n;
       html += "<div class='riga-sfida missione" + (fatta ? " fatta" : "") + "'><div class='testo'>" + C.esc(testo(m, a.n)) +
         "<div class='barretta'><div style='width:" + Math.round(a.fatti / a.n * 100) + "%'></div></div><div class='nota'>" + (fatta ? "Fatta! ✓" : a.fatti + " / " + a.n) + "</div></div>" +
-        "<div class='premio'>+1 ✨</div>" +
+        "<div class='premio'>+1 ✨ +1 ⭐</div>" +
         (fatta ? "" : "<button class='btn piccolo bianco salta' data-azione='cambia-missione' data-i='" + i + "' title='Cambia missione'>Cambia<br>−1⭐</button>") + "</div>";
     });
 

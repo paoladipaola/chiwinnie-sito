@@ -321,6 +321,17 @@
       b.innerHTML = "<img src='" + MATERIALI[p.produce.materiale].img + "' alt=''><b>" + n + "</b>";
       bolle.appendChild(b);
     });
+    // ogni 3 minuti cade una stellina nel prato: basta toccarla
+    var sc = stato.stellaCadente;
+    if (!sc) sc = stato.stellaCadente = { t: Date.now() + STELLA_OGNI };
+    if (Date.now() >= sc.t) {
+      if (sc.x == null) { var pr = z.prato; sc.x = pr.x1 + Math.random() * (pr.x2 - pr.x1); sc.y = pr.y1 + Math.random() * (pr.y2 - pr.y1); }
+      var st = document.createElement("button");
+      st.className = "bolla stellina"; st.dataset.k = "stella";
+      st.style.left = sc.x + "%"; st.style.top = sc.y + "%";
+      st.innerHTML = "<img src='img/stella.png' alt='Una stella'>";
+      bolle.appendChild(st);
+    }
   }
 
   function disegnaHud() {
@@ -386,6 +397,15 @@
   });
 
   function raccogli(k, e) {
+    if (k === "stella") {
+      stato.stellaCadente = { t: Date.now() + STELLA_OGNI };
+      aggiungi("stelle", 1);
+      volaVerso("stelle", e.clientX, e.clientY);
+      toast("⭐ Una stella caduta dal cielo! +1 stella");
+      vibra(30); Suoni.sfx("stella");
+      disegnaTutto(); salva();
+      return;
+    }
     var p = zonaCorrente().pezzi[k], n = pronti(k);
     if (!n) return;
     aggiungi(p.produce.materiale, fioriAttivi() ? n * 2 : n);
@@ -834,6 +854,12 @@
       ris.messaggio = (ris.messaggio || "") + " ✨ Energia dei fiori: +50% di materiali!";
     }
     if (ris.completato) setTimeout(function () { Suoni.dici("Wii-chu!"); }, 800);
+    // ogni partita finita (tranne i disegni da colorare) regala almeno una stella; le avventure arrivate in fondo una in più
+    var stelleGioco = ris.bottino.stelle || 0;
+    if (ris.completato && k !== "colora") {
+      var bonus = g0.arcade ? 1 : (ris.bottino.stelle ? 0 : 1);
+      if (bonus) { ris.bottino.stelle = (ris.bottino.stelle || 0) + bonus; ris.messaggio = (ris.messaggio || "") + " ⭐ Stella del traguardo!"; }
+    }
     Object.keys(ris.bottino).forEach(function (m) { aggiungi(m, ris.bottino[m]); });
     var xp = Math.max(2, Math.round(ris.punti / 2));
     if (k === "raccolta") stato.record.raccolta = Math.max(+stato.record.raccolta || 0, ris.punti);
@@ -846,7 +872,7 @@
     }
     if (g0.rompicapo && ris.completato) {
       var c = stato.contatori;
-      if (k === "sudoku") { c.sudokuCompleti = (c.sudokuCompleti || 0) + 1; if (ris.bottino.stelle) c.sudokuPerfetti = (c.sudokuPerfetti || 0) + 1; }
+      if (k === "sudoku") { c.sudokuCompleti = (c.sudokuCompleti || 0) + 1; if (stelleGioco) c.sudokuPerfetti = (c.sudokuPerfetti || 0) + 1; }
       if (k === "puzzle") { c.puzzleCompleti = (c.puzzleCompleti || 0) + 1; if (ris.difficile) c.puzzleDifficili = (c.puzzleDifficili || 0) + 1; }
       if (k === "aggiustatutto") {
         c.aggiustati = (c.aggiustati || 0) + 1; if (ris.primoColpo) c.aggiustatiPrimo = (c.aggiustatiPrimo || 0) + 1;

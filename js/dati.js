@@ -359,7 +359,9 @@ var ZONE = [
 ];
 
 // Esperienza necessaria per raggiungere ogni livello (indice = livello).
-var LIVELLI_XP = [0, 0, 30, 80, 150, 250, 380, 550, 760, 1000, 1300, 1650, 2050, 2500, 3000, 3600, 4300, 5100, 6000, 7000];
+var LIVELLI_XP = [0, 0, 30, 80, 150, 240, 350, 480, 630, 800, 1000, 1220, 1470, 1750, 2060, 2400, 2780, 3200, 3660, 4160];
+// ogni quanto cade una stellina nel giardino
+var STELLA_OGNI = 3 * 60000;
 
 var MINIGIOCHI = {
   bosco: {
@@ -570,5 +572,5 @@ var MISSIONI = [
   { id: "arreda",    testo: "Arreda un pezzo nuovo", testoN: "Arreda {n} pezzi nuovi", ev: "costruito", n: [1, 1, 2] }
 ];
 // premio di ogni missione e del grado (crescono un po' a ogni grado)
-function premioMissione(grado) { return { lucine: 1, xp: 8 + grado * 2, materiali: { petali: 2 + grado, legnetti: 2 + grado } }; }
+function premioMissione(grado) { return { lucine: 1, xp: 8 + grado * 2, materiali: { petali: 2 + grado, legnetti: 2 + grado, stelle: 1 } }; }
 function premioGrado(grado) { return { lucine: 2, materiali: { legnetti: 5 + grado * 2, sassolini: 3 + grado, petali: 5 + grado * 2, spinaci: 4 }, stelle: grado % 3 === 0 ? 2 : 1 }; }
