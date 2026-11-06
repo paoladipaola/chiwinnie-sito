@@ -215,7 +215,7 @@
       materiali: JSON.parse(JSON.stringify(MATERIALI_INIZIALI)),
       zona: "radura", costruiti: [], prod: {}, zoneComplete: [],
       sfideFatte: 0, sfidaDaRitirare: [],
-      missione: { lucine: 0, liberati: [], storia: true, racconto2: true },
+      missione: { lucine: 0, liberati: [], storia: true, racconto2: true, racconto3: true },
       record: { raccolta: 0, lucciole: 0, memoryMosse: 0, boscoCompleto: 0, boscoStelle: 0 },
       contatori: { raccolti: 0, pasti: 0, coccole: 0, memoryCompleti: 0, partite: 0 }
     };
@@ -375,7 +375,7 @@
   function puntoLibero(p) {
     return prati().some(function (a) { return dentroPrato(p, a); }) && !pezzoSotto(p);
   }
-  function zonaAperta(i) { return i === 0 || stato.zoneComplete.indexOf(ZONE[i - 1].id) !== -1; }
+  function zonaAperta(i) { return zonaApertaIn(stato, i); }
   function vaiZona(id) {
     stato.zona = id; chiwiPos = null; pan = null;
     $("pezzi").innerHTML = ""; $("bolle").innerHTML = "";
@@ -472,9 +472,8 @@
       "<div class='centro'><img src='img/stella.png' style='width:90px'><h2>" + esc(zonaCorrente().nome) + " è completa!</h2>" +
       "<p>" + esc(stato.nome) + " non ha mai visto un posto così bello. Wonni-wonni!</p>" +
       (!prossima ? "<p><b>Hai arredato tutto il Bosco Giardino, dalla radura fino al cielo!</b> Ora il Chiwinnie Celeste ha un posto dove tornare.</p>" : "") +
-      (prossima ? "<p><b>Si apre una nuova zona: " + esc(prossima.nome) + ".</b> " + esc(prossima.descrizione) + "</p>" +
-        (prossima.inArrivo ? "<p class='nota'>La stiamo ancora dipingendo: arriverà nel prossimo aggiornamento.</p>" : "") : "") +
-      "<div class='azioni-pannello'>" + (prossima && prossima.pezzi ? "<button class='btn bianco' data-azione='chiudi'>Resto qui</button><button class='btn' data-azione='vai-zona' data-zona='" + prossima.id + "'>Andiamo!</button>" : "<button class='btn' data-azione='chiudi'>Evviva!</button>") + "</div></div>"
+      (prossima && zonaAperta(i + 1) ? "<div class='azioni-pannello'><button class='btn bianco' data-azione='chiudi'>Resto qui</button><button class='btn' data-azione='vai-zona' data-zona='" + prossima.id + "'>Vai a " + esc(prossima.nome) + "</button></div></div>"
+        : "<p>Il quadro è tutto arredato: la nebbia qui è sparita!</p><div class='azioni-pannello'><button class='btn' data-azione='apri-missione'>Il viaggio</button></div></div>")
     );
     coriandoli(window.innerWidth / 2, window.innerHeight / 2, "⭐", 14);
     Suoni.sfx("livello");
@@ -692,10 +691,10 @@
     });
     html += "</div><h3 style='margin-top:18px'>Le zone del Bosco Giardino</h3>";
     ZONE.forEach(function (zz, i) {
-      var completa = stato.zoneComplete.indexOf(zz.id) !== -1, aperta = i === 0 || stato.zoneComplete.indexOf(ZONE[i - 1].id) !== -1;
+      var completa = stato.zoneComplete.indexOf(zz.id) !== -1, aperta = zonaAperta(i);
       var qui = zz.id === z.id, puoiAndare = aperta && zz.pezzi && !qui;
       html += "<div class='riga-sfida" + (completa ? " fatta" : "") + "'><div class='testo'>" + esc(zz.nome) +
-        "<div class='nota'>" + esc(qui ? "Sei qui" + (completa ? " · completata!" : "") : completa ? "Completata!" : aperta ? (zz.inArrivo ? "Aperta! La stiamo dipingendo" : "Aperta") : "Si apre quando completi " + ZONE[i - 1].nome) + "</div></div>" +
+        "<div class='nota'>" + esc(qui ? "Sei qui" + (completa ? " · completata!" : "") : completa ? "Completata!" : aperta ? (zz.inArrivo ? "Aperta! La stiamo dipingendo" : "Aperta") : "Si apre dopo la sfida finale: " + ZONE[i - 1].nome) + "</div></div>" +
         (puoiAndare ? "<button class='btn piccolo' data-azione='vai-zona' data-zona='" + zz.id + "'>Vai</button>" : "<div class='premio'>" + (completa ? "⭐" : aperta ? "🔓" : "🔒") + "</div>") + "</div>";
     });
     apriPannello(html);
@@ -705,6 +704,7 @@
     aggiornaEnergia();
     var html = "<h2>Giochi</h2><p>Ogni gioco usa un po' dell'energia di " + esc(stato.nome) + ". Se è stanco, dagli gli spinaci!</p><div class='griglia'>";
     Object.keys(MINIGIOCHI).forEach(function (k) {
+      if (MINIGIOCHI[k].nascosto) return;
       var g = MINIGIOCHI[k], iz = g.zona ? ZONE.map(function (x) { return x.id; }).indexOf(g.zona) : 0;
       var chiusoZona = g.zona && !zonaAperta(iz), bloccato = stato.livello < g.livello || chiusoZona;
       html += "<button class='voce" + (bloccato ? " bloccata" : "") + "' data-azione='gioca' data-chiave='" + k + "'>" +
@@ -784,7 +784,7 @@
     if (a === "chiudi") chiudiPannello();
     else if (a === "costruisci") costruisci(b.dataset.chiave);
     else if (a === "vai-zona") vaiZona(b.dataset.zona);
-    else if (a === "gioca") avviaMinigioco(b.dataset.chiave);
+    else if (a === "gioca") avviaMinigioco(b.dataset.chiave, { capitolo: b.dataset.capitolo });
     else if (a === "ritira") ritiraSfida(+b.dataset.i);
     else if (a === "salta") saltaSfida(+b.dataset.i);
     else if (a === "entra-casa") Casa.apri();
@@ -806,8 +806,11 @@
   // ---------- Minigiochi ----------
   var fermaMinigioco = null, giocoCorrente = null;
 
-  function avviaMinigioco(k) {
+  var opzioniGioco = {};
+  function avviaMinigioco(k, opz) {
     var g = MINIGIOCHI[k];
+    opzioniGioco = opz || {};
+    var cap = opzioniGioco.capitolo ? capitoloDi(opzioniGioco.capitolo) : null;
     aggiornaEnergia();
     if (stato.livello < g.livello) { avviso("Si sblocca al livello " + g.livello); return; }
     if (g.zona) { var izz = ZONE.map(function (x) { return x.id; }).indexOf(g.zona); if (!zonaAperta(izz)) { avviso("Si apre quando arrivi a " + ZONE[izz].nome); return; } }
@@ -820,11 +823,11 @@
     giocoCorrente = k;
     $("app").classList.toggle("largo", !!g.arcade);   // l'avventura usa tutto lo schermo, anche in orizzontale
     mostra("s-minigioco");
-    $("mg-titolo").textContent = g.nome;
+    $("mg-titolo").textContent = cap ? (cap.finale ? "Battaglia finale" : "Sfida finale · " + nomeCapitolo(cap)) : g.nome;
     Suoni.musica(k);
     $("mg-info").textContent = "⚡ " + g.energia;
     var area = $("mg-area");
-    area.innerHTML = "<div class='" + (k === "lucciole" ? "notte-bosco" : g.arcade ? "sfondo-arcade" : "") + "'" + (g.arcade ? " style=\"background-image:url(img/" + (k === "fuga" ? "bosco" : k) + "/sfondo.jpg)\"" : "") + "></div>" +
+    area.innerHTML = "<div class='" + (k === "lucciole" ? "notte-bosco" : g.arcade ? "sfondo-arcade" : "") + "'" + (g.arcade ? " style=\"background-image:url(img/" + (cap ? cap.tema : k === "fuga" ? "bosco" : k) + "/sfondo.jpg)\"" : "") + "></div>" +
       "<div class='mg-intro'><img class='icona' src='" + g.img + "' alt=''><h2>" + esc(g.nome) + "</h2><p>" + esc(g.descrizione) + "</p>" +
       "<button class='btn verde' id='mg-via'>Gioca!</button></div>";
     $("mg-via").addEventListener("click", function () {
@@ -840,7 +843,8 @@
         look: stato.look || {},
         aggiustati: stato.aggiustati || [],
         zoneAperte: ZONE.filter(function (z, i) { return zonaAperta(i); }).map(function (z) { return z.id; }),
-        turbo: !!(g.arcade && fioriAttivi())   // con l'energia dei fiori l'avventura parte con la supervelocità
+        turbo: !!(g.arcade && fioriAttivi()),   // con l'energia dei fiori l'avventura parte con la supervelocità
+        tema: cap ? cap.tema : null, finale: !!(cap && cap.finale)
       });
     });
   }
@@ -889,8 +893,9 @@
     if (k === "conti" && ris.completato) { stato.contatori.contiCompleti = (stato.contatori.contiCompleti || 0) + 1; if (ris.perfetto) stato.contatori.contiPerfetti = (stato.contatori.contiPerfetti || 0) + 1; }
     if (k === "fuga" && ris.completato) stato.contatori.fughe = (stato.contatori.fughe || 0) + 1;
     guadagnaXp(xp);
+    if (ris.sfida && ris.completato && opzioniGioco.capitolo) vittoria = opzioniGioco.capitolo;
     Missione.evento("partita", {
-      gioco: k, arcade: !!g0.arcade, rompicapo: !!g0.rompicapo, completato: !!ris.completato, bottino: ris.bottino,
+      gioco: k, mosse: ris.mosse || 0, arcade: !!g0.arcade, rompicapo: !!g0.rompicapo, completato: !!ris.completato, bottino: ris.bottino,
       stelleLivello: ris.stelleLivello || 0, punti: ris.punti, file: ris.file || 0, giuste: ris.giuste || 0
     });
     controllaSfide();
@@ -905,17 +910,25 @@
       "<div class='bottino'>" + (voci.length ? voci.map(function (m) { return "<span><img src='" + MATERIALI[m].img + "' alt=''>+" + ris.bottino[m] + "</span>"; }).join("") : "<span>Nessun materiale questa volta</span>") +
       "<span>✨ +" + xp + " esp.</span></div>" +
       (ris.immagine ? "<p><a class='btn bianco piccolo' href='" + ris.immagine + "' download='" + esc(ris.nomeFile || "disegno.png") + "'>⬇ Scarica il disegno</a></p>" : "") +
-      "<div class='azioni-pannello'>" + ((g.energia === 0 || (stato.energia >= g.energia && !brontolone())) ? "<button class='btn bianco' id='mg-ancora'>Ancora!</button>" : "") +
+      "<div class='azioni-pannello'>" + (!vittoria && k !== "sfida" && (g.energia === 0 || (stato.energia >= g.energia && !brontolone())) ? "<button class='btn bianco' id='mg-ancora'>Ancora!</button>" : "") +
       "<button class='btn verde' id='mg-torna'>Torna al giardino</button></div>";
     area.appendChild(box);
     if ($("mg-ancora")) $("mg-ancora").addEventListener("click", function () { avviaMinigioco(k); });
+    if (k === "sfida" && !vittoria) {   // si può ritentare subito
+      var ri = document.createElement("button"); ri.className = "btn bianco"; ri.textContent = "Riprova!";
+      ri.addEventListener("click", function () { avviaMinigioco("sfida", opzioniGioco); });
+      $("mg-torna").before(ri);
+    }
+    if (vittoria) $("mg-torna").textContent = "Apri il forziere!";
     $("mg-torna").addEventListener("click", tornaDalGioco);
   }
+  var vittoria = null;   // il capitolo appena vinto: al ritorno si apre il forziere
   function tornaDalGioco() {
     if (fermaMinigioco) { fermaMinigioco(); fermaMinigioco = null; }
     $("mg-area").innerHTML = "";
     $("app").classList.remove("largo");
     apriMondo();
+    if (vittoria) { var v = vittoria; vittoria = null; Missione.vittoria(v); return; }
     parla(brontolone() ? "Che fame… spinaci?" : "Che divertimento!");
   }
   $("mg-esci").addEventListener("click", tornaDalGioco);
@@ -970,7 +983,8 @@
   });
   Missione.avvia({
     stato: function () { return stato; }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
-    apriPannello: apriPannello, guadagnaXp: guadagnaXp, disegnaHud: function () { disegnaTutto(); }
+    apriPannello: apriPannello, chiudiPannello: chiudiPannello, guadagnaXp: guadagnaXp, disegnaHud: function () { disegnaTutto(); },
+    vaiZona: vaiZona, mostra: mostra, parla: parla
   });
 
   // Per provare il gioco più in fretta dalla console del browser
