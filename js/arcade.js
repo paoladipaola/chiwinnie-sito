@@ -583,12 +583,19 @@
         }
         if (n.puff) n.puff += dt;
       });
-      // la calamita attira i materiali vicini
-      if (attivo("calamita")) L.oggetti.forEach(function (o) {
-        if (o.preso) return;
-        var dx = chiwi.x - o.x, dy = (chiwi.y - 35) - o.y;
-        if (dx * dx + dy * dy < 260 * 260) { o.x += dx * Math.min(1, dt * 7); o.y += dy * Math.min(1, dt * 7); }
-      });
+      // la calamita attira i materiali vicini, e anche le stelle (che stanno più in alto: le prende da più lontano)
+      if (attivo("calamita")) {
+        L.oggetti.forEach(function (o) {
+          if (o.preso) return;
+          var dx = chiwi.x - o.x, dy = (chiwi.y - 35) - o.y;
+          if (dx * dx + dy * dy < 260 * 260) { o.x += dx * Math.min(1, dt * 7); o.y += dy * Math.min(1, dt * 7); }
+        });
+        L.stelle.forEach(function (st) {
+          if (st.presa) return;
+          var dx = chiwi.x - st.x, dy = (chiwi.y - 35) - st.y;
+          if (dx * dx + dy * dy < 420 * 420) { st.x += dx * Math.min(1, dt * 6); st.y += dy * Math.min(1, dt * 6); }
+        });
+      }
       L.poteri.forEach(function (pw) {
         if (pw.preso) return;
         if (Math.abs(chiwi.x - pw.x) < 50 && Math.abs((chiwi.y - 35) - pw.y) < 60) { pw.preso = true; attiva(pw.tipo); }
