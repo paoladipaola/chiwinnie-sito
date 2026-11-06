@@ -376,7 +376,7 @@
     L.poteri = L.poteri || [];
     L.nebbiolini = L.nebbiolini || [];
     // nella fuga il Nebbione insegue: "distanza" è quanto è lontano dietro al Chiwinnie
-    var distanza = 420, DISTANZA_MAX = 520;
+    var distanza = 420, DISTANZA_MAX = 520, DISTANZA_SUPER = 1300;   // con la supervelocità si può staccarlo molto di più
     var canvas = document.createElement("canvas");
     area.appendChild(canvas);
     var ctx = canvas.getContext("2d");
@@ -416,6 +416,7 @@
     function attivo(tipo) { return potere && potere.tipo === tipo && tempo < potere.fino; }
     function attiva(tipo, durata) {
       potere = { tipo: tipo, fino: tempo + (durata || POTERI[tipo].durata) };
+      if (fuga && tipo === "super") { distanza = Math.min(DISTANZA_SUPER, Math.max(distanza, DISTANZA_MAX) + 150); scritta(chiwi.x, chiwi.y - 160, "Ciao ciao, Nebbione!", "#6b6f7c"); }
       chiwi.doppio = false;
       Suoni.sfx("livello");
       scritta(chiwi.x + 40, chiwi.y - 120, POTERI[tipo].icona + " " + POTERI[tipo].nome + "!", "#b5651d");
@@ -458,7 +459,11 @@
       chiwi.x += velocita * chiwi.spinta * turbo * dt;
       if (fuga) {
         // il Nebbione si avvicina piano piano; i salti sui trampolini e la supervelocità lo lasciano indietro
-        distanza = Math.min(DISTANZA_MAX, distanza + velocita * (chiwi.spinta * turbo - 1) * dt - 14 * dt);
+        // con la supervelocità si stacca di più (fino a DISTANZA_SUPER); dopo, il vantaggio in più si consuma piano
+        var tetto = attivo("super") ? DISTANZA_SUPER : DISTANZA_MAX;
+        var piu = velocita * (chiwi.spinta * (attivo("super") ? 2.6 : 1) - 1) * dt;
+        distanza = distanza + piu - (distanza > DISTANZA_MAX ? 45 : 14) * dt;
+        if (piu > 0) distanza = Math.min(Math.max(tetto, distanza - piu), distanza);
         if (distanza < 40) {
           distanza = 420;
           if (!(chiwi.invulnerabile > 0)) {
