@@ -667,3 +667,35 @@ input[type=text] {
 .battaglia.diradato .neb-cattivo { opacity: 0; filter: blur(14px) brightness(1.8); transform: scale(1.4); animation: none; }
 .battaglia.diradato .neb-buono { opacity: 1; }
 #racconto.buio:has(.battaglia.diradato) { background: radial-gradient(circle at 50% 35%, #fbe2ee, #b9a8e6 80%); transition: background 2s; }
+
+/* il cartone iniziale: il Castello delle nuvole, il temporale, i colori rubati */
+.racconto-quadro.moto-castello > img, .racconto-quadro.moto-castello-fermo > img { object-position: 68% 82%; transform-origin: 68% 70%; }
+.racconto-quadro.moto-castello > img { animation-name: verso-castello; }
+.racconto-quadro.moto-castello-fermo > img { transform: scale(1.6); }
+@keyframes verso-castello { from { transform: scale(1.05); } to { transform: scale(1.6); } }
+#racconto.film .racconto-quadro.temporale > img { animation: si-scurisce 4.5s ease-in forwards; }
+@keyframes si-scurisce { from { filter: none; transform: scale(1.6); } to { filter: grayscale(.85) brightness(.45) contrast(1.1); transform: scale(1.6); } }
+.racconto-quadro.grigio > img { filter: grayscale(.9) brightness(.75); }
+.pioggia { position: absolute; inset: -20% 0 0; pointer-events: none; opacity: .55;
+  background-image: repeating-linear-gradient(105deg, transparent 0 18px, rgba(200, 210, 230, .55) 18px 20px, transparent 20px 46px);
+  background-size: 120px 140px; animation: piove .5s linear infinite; }
+.racconto-quadro.temporale .pioggia { opacity: 0; animation: piove .5s linear infinite, compare 1s 2.5s ease forwards; }
+@keyframes piove { to { background-position: -30px 140px; } }
+@keyframes compare { to { opacity: .55; } }
+.nuvoloni { position: absolute; inset: 0; pointer-events: none; }
+.nuvoloni img { position: absolute; width: 58%; left: 21%; top: 4%; animation: nuvolone-arriva 3.2s ease-out both; filter: brightness(.8) drop-shadow(0 10px 30px rgba(0, 0, 0, .5)); }
+.nuvoloni i { position: absolute; width: 90%; height: 34%; border-radius: 50%; background: radial-gradient(ellipse, rgba(70, 76, 92, .9), rgba(70, 76, 92, 0) 70%); animation: nuvolone-arriva 3s ease-out both; }
+.nuvoloni i:nth-of-type(1) { left: -30%; top: -6%; animation-delay: .4s; }
+.nuvoloni i:nth-of-type(2) { right: -30%; top: 2%; animation-delay: .8s; }
+.nuvoloni i:nth-of-type(3) { left: 10%; top: -14%; animation-delay: 1.2s; }
+.racconto-quadro.temporale .nuvoloni img, .racconto-quadro.temporale .nuvoloni i { animation-delay: 1.4s; }
+@keyframes nuvolone-arriva { from { opacity: 0; transform: translateY(-40%) scale(.7); } }
+.racconto-quadro.rapiti .film-amici > div { animation: arriva-amico .6s ease both, rapito 2.4s ease-in both; animation-delay: 0s, calc(1.6s + var(--k, 0) * 0.15s) !important; }
+.racconto-quadro.rapiti .film-amici .vestito::after { content: ""; position: absolute; inset: -8%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .7), rgba(200, 205, 220, .35) 60%, rgba(160, 165, 180, .5)); }
+@keyframes rapito { to { transform: translateY(-420px) scale(.6); opacity: 0; } }
+
+/* il viaggio */
+.tappa.finale .numero { background: #f6e0ee; }
+.terre-arrivo { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 4px; }
+.terre-arrivo span { background: white; border: 2px dashed var(--bordo); border-radius: 99px; padding: 3px 10px; font-size: 13px; font-weight: 600; color: #8a7d6e; }
+.mg-fine .lucine-vinte { background: #fff8e2; border: 2px solid var(--oro); border-radius: 99px; padding: 2px 10px; font-weight: 800; }

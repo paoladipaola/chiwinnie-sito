@@ -417,8 +417,8 @@ var MINIGIOCHI = {
     descrizione: "Il Nebbione ti insegue! Corri più veloce che puoi in una lunga avventura che cambia ogni volta: salta le buche, schiaccia i nebbiolini grigi saltandoci sopra e prendi i superpoteri. Se il Nebbione ti raggiunge perdi un cuore. In fondo ti aspetta una lucina!"
   },
   sfida: {
-    nome: "Sfida finale", img: "img/nebbione/nebbione.png", livello: 1, energia: 0, arcade: true, nascosto: true,
-    descrizione: "Il Nebbione è qui! È l'avventura più lunga del capitolo: corri, salta i nebbiolini e arriva in fondo con la lanterna piena di lucine per scacciarlo via."
+    nome: "Il sentiero", img: "img/nebbione/nebbione.png", livello: 1, energia: 0, arcade: true, nascosto: true,
+    descrizione: "Il sentiero verso la terra dopo! È l'avventura più lunga: corri, salta i nebbiolini e non farti prendere dal Nebbione. In fondo ti aspetta un forziere."
   },
   tris: {
     nome: "Tris di fiori", img: "img/petali.png", livello: 2, energia: 10,
@@ -539,32 +539,20 @@ var ACCESSORI = {
 // Il Nebbione, una nuvola grigia e brontolona che non sopporta i colori, ha chiuso dodici Chiwinnie
 // in bolle di nebbia. Ogni bolla si apre con le lucine, che si guadagnano con le missioni.
 // Gli amici liberati vanno a vivere nella loro zona e portano un regalo.
-// Ogni amico si libera superando la sua prova: un minigioco con un obiettivo.
+// Ogni amico si libera con le lucine magiche (lucine), che si guadagnano giocando ai minigiochi.
 var AMICI = [
-  { id: "pimpi",     nome: "Pimpi", femmina: true,     colore: "rosa",   look: { testa: "fiocco" },          zona: "radura",   lucine: 2, regalo: { petali: 8 },
-    prova: { gioco: "raccolta", testo: "Prendi almeno 10 cose nella Raccolta nel bosco", ok: function (d) { return d.punti >= 10; } } },
-  { id: "mirtillo",  nome: "Mirtillo",  colore: "blu",    look: { viso: "occhiali" },         zona: "radura",   lucine: 2, regalo: { legnetti: 8 },
-    prova: { gioco: "conti", testo: "Indovina almeno 7 risposte negli Indovinelli dei numeri", ok: function (d) { return d.giuste >= 7; } } },
-  { id: "nuvoletta", nome: "Nuvoletta", femmina: true, colore: "bianco", look: { collo: "papillon" },        zona: "radura",   lucine: 3, regalo: { sassolini: 6, stelle: 1 },
-    prova: { gioco: "memory", testo: "Trova tutte le coppie nel Memory dei fiori", ok: function (d) { return d.completato; } } },
-  { id: "ciuffo",    nome: "Ciuffo",    colore: "verde",  look: { testa: "cappello_paglia" }, zona: "ruscello", lucine: 3, regalo: { spinaci: 8, petali: 6 },
-    prova: { gioco: "lucciole", testo: "Prendi almeno 12 lucciole", ok: function (d) { return d.punti >= 12; } } },
-  { id: "lulu",      nome: "Lulù", femmina: true,      colore: "viola",  look: { collo: "collana" },         zona: "ruscello", lucine: 3, regalo: { legnetti: 10 },
-    prova: { gioco: "tris", testo: "Vinci una partita a Tris di fiori", ok: function (d) { return d.completato; } } },
-  { id: "fagiolo",   nome: "Fagiolo",   colore: "verde",  look: { testa: "berretto_lana" },   zona: "ruscello", lucine: 4, regalo: { sassolini: 8, stelle: 1 },
-    prova: { gioco: "sudoku", testo: "Risolvi il Sudoku dei fiori", ok: function (d) { return d.completato; } } },
-  { id: "stellina",  nome: "Stellina", femmina: true,  colore: "rosa",   look: { testa: "coroncina_fiori" }, zona: "collina",  lucine: 4, regalo: { petali: 12, stelle: 1 },
-    prova: { gioco: "puzzle", testo: "Rimetti a posto il Puzzle del Bosco", ok: function (d) { return d.completato; } } },
-  { id: "brillo",    nome: "Brillo",    colore: "blu",    look: { testa: "cuffie" },          zona: "collina",  lucine: 4, regalo: { legnetti: 12 },
-    prova: { gioco: "labirinto", testo: "Esci dal Labirinto delle siepi", ok: function (d) { return d.completato; } } },
-  { id: "pervinca",  nome: "Pervinca", femmina: true,  colore: "viola",  look: { testa: "basco" },           zona: "collina",  lucine: 5, regalo: { sassolini: 10, stelle: 2 },
-    prova: { gioco: "aggiustatutto", testo: "Aggiusta una cosa con l'Aggiustatutto", ok: function (d) { return d.completato; } } },
-  { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 },
-    prova: { gioco: "memory", testo: "Finisci il Memory in meno di 22 mosse", ok: function (d) { return d.completato && d.mosse < 22; } } },
-  { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 },
-    prova: { gioco: "conti", testo: "Indovina almeno 9 risposte negli Indovinelli dei numeri", ok: function (d) { return d.giuste >= 9; } } },
-  { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 },
-    prova: { gioco: "lucciole", testo: "Prendi almeno 20 lucciole", ok: function (d) { return d.punti >= 20; } } }
+  { id: "pimpi",     nome: "Pimpi", femmina: true,     colore: "rosa",   look: { testa: "fiocco" },          zona: "radura",   lucine: 2, regalo: { petali: 8 } },
+  { id: "mirtillo",  nome: "Mirtillo",  colore: "blu",    look: { viso: "occhiali" },         zona: "radura",   lucine: 2, regalo: { legnetti: 8 } },
+  { id: "nuvoletta", nome: "Nuvoletta", femmina: true, colore: "bianco", look: { collo: "papillon" },        zona: "radura",   lucine: 3, regalo: { sassolini: 6, stelle: 1 } },
+  { id: "ciuffo",    nome: "Ciuffo",    colore: "verde",  look: { testa: "cappello_paglia" }, zona: "ruscello", lucine: 3, regalo: { spinaci: 8, petali: 6 } },
+  { id: "lulu",      nome: "Lulù", femmina: true,      colore: "viola",  look: { collo: "collana" },         zona: "ruscello", lucine: 3, regalo: { legnetti: 10 } },
+  { id: "fagiolo",   nome: "Fagiolo",   colore: "verde",  look: { testa: "berretto_lana" },   zona: "ruscello", lucine: 4, regalo: { sassolini: 8, stelle: 1 } },
+  { id: "stellina",  nome: "Stellina", femmina: true,  colore: "rosa",   look: { testa: "coroncina_fiori" }, zona: "collina",  lucine: 4, regalo: { petali: 12, stelle: 1 } },
+  { id: "brillo",    nome: "Brillo",    colore: "blu",    look: { testa: "cuffie" },          zona: "collina",  lucine: 4, regalo: { legnetti: 12 } },
+  { id: "pervinca",  nome: "Pervinca", femmina: true,  colore: "viola",  look: { testa: "basco" },           zona: "collina",  lucine: 5, regalo: { sassolini: 10, stelle: 2 } },
+  { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
+  { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
+  { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
 ];
 
 // Missioni rapide: tre alla volta, facili, sempre nuove. Finite tutte e tre si sale di grado.
@@ -593,29 +581,36 @@ function premioMissione(grado) { return { lucine: 1, xp: 8 + grado * 2, material
 function premioGrado(grado) { return { lucine: 2, materiali: { legnetti: 5 + grado * 2, sassolini: 3 + grado, petali: 5 + grado * 2, spinaci: 4 }, stelle: grado % 3 === 0 ? 2 : 1 }; }
 
 // ---------- Il viaggio ----------
-// Ogni zona è un capitolo: si liberano i suoi tre amici, si arreda almeno metà del quadro,
-// si riempie la lanterna di lucine e si affronta la sfida finale. Vinta la sfida si apre il forziere
-// e la zona dopo.
+// Il Giardino magico dei Chiwinnie è fatto di tante terre. In ogni terra il Nebbione ha nascosto tre amici:
+// si liberano con le lucine magiche guadagnate giocando ai minigiochi. Liberati tutti, si parte per la terra
+// dopo con un'avventura arcade (il sentiero), e alla fine del sentiero c'è un forziere.
+// Dopo l'ultima terra, il sentiero è la battaglia finale verso il Castello delle nuvole.
+// Le stelle invece servono ad arredare: è la parte tranquilla del gioco, non serve per andare avanti.
 var CAPITOLI = [
-  { zona: "radura", tema: "bosco", lanterna: 3, accessorio: "corona", premio: { stelle: 8, petali: 20, legnetti: 20, sassolini: 10 },
-    arrivo: "La Radura è grigia di nebbia. Qui il Nebbione ha nascosto Pimpi, Mirtillo e Nuvoletta.",
-    fine: "La lanterna si accende, il Nebbione strilla \"Che luce!\" e scappa verso il Ruscello. La Radura è di nuovo piena di colori!" },
-  { zona: "ruscello", tema: "ruscello", lanterna: 4, accessorio: "cappello_mago", premio: { stelle: 10, petali: 25, legnetti: 25, sassolini: 15 },
+  { zona: "radura", tema: "bosco", accessorio: "corona", premio: { stelle: 8, petali: 20, legnetti: 20, sassolini: 10 },
+    arrivo: "La Radura ha perso i suoi colori. Qui il Nebbione ha nascosto Pimpi, Mirtillo e Nuvoletta.",
+    fine: "Pimpi, Mirtillo e Nuvoletta sono liberi e la Radura è di nuovo piena di colori!" },
+  { zona: "ruscello", tema: "ruscello", accessorio: "cappello_mago", premio: { stelle: 10, petali: 25, legnetti: 25, sassolini: 15 },
     arrivo: "Lungo il Ruscello l'acqua non brilla più. Il Nebbione ha chiuso nelle bolle Ciuffo, Lulù e Fagiolo.",
-    fine: "La luce rimbalza sull'acqua e il Nebbione vola via, su verso la Collina. Il Ruscello torna a cantare!" },
-  { zona: "collina", tema: "collina", lanterna: 5, accessorio: "ali_fata", premio: { stelle: 12, petali: 30, legnetti: 25, sassolini: 20 },
-    arrivo: "Sulla Collina i fiori sono chiusi per la nebbia. Qui sono prigionieri Stellina, Brillo e Pervinca.",
-    fine: "Tutti i fiori si aprono insieme e il Nebbione fugge in alto, fino al Cielo!" },
-  { zona: "cielo", tema: "cielo", lanterna: 6, accessorio: "mantello", premio: { stelle: 15, petali: 35, legnetti: 30, sassolini: 25 },
-    arrivo: "Lassù, tra le nuvole del Celeste, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
-    fine: "La lanterna brilla come il sole. Il Nebbione scappa lontano, oltre le nuvole… ma prima o poi lo troveremo!" },
-  // nuovi quadri da dipingere: si vedono nella mappa, ma non si visitano ancora
-  { nome: "La Palude della nebbia", inArrivo: true, arrivo: "Una palude dove la nebbia è fitta fitta. La stiamo dipingendo!" },
-  // la battaglia finale: niente arredi, solo il Nebbione. Alla fine arrivano tutti i Chiwinnie e insieme fanno l'arcobaleno.
-  { zona: "castello", nome: "Il Castello del Nebbione", finale: true, tema: "cielo", dopo: "cielo", lanterna: 8,
-    premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
-    arrivo: "In cima alle nuvole grigie c'è il Castello del Nebbione. È il momento della battaglia finale!" }
+    fine: "Il Ruscello torna a cantare: Ciuffo, Lulù e Fagiolo sono salvi!" },
+  { zona: "collina", tema: "collina", accessorio: "ali_fata", premio: { stelle: 12, petali: 30, legnetti: 25, sassolini: 20 },
+    arrivo: "Sulla Collina i fiori sono chiusi e grigi. Qui sono prigionieri Stellina, Brillo e Pervinca.",
+    fine: "Tutti i fiori della Collina si aprono insieme: Stellina, Brillo e Pervinca sono liberi!" },
+  { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
+    arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
+    fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
+// le terre del Giardino magico che stiamo ancora dipingendo: si vedono nella mappa
+var TERRE_IN_ARRIVO = ["La foresta delle lucciole", "Le isole fluttuanti", "Le terre del nord", "Il deserto dei fiori di cactus",
+  "I cappelli di fata", "Le colline di panna", "La città di pietre preziose"];
+// le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
+function lucinePartita(d) {
+  if (!d || d.gioco === "colora" || d.gioco === "sfida") return 0;
+  var bene = d.completato || (d.punti || 0) >= 10, benissimo = (d.stelle || 0) > 0 || (d.stelleLivello || 0) >= 3;
+  return bene ? (benissimo ? 2 : 1) : 0;
+}
+// il paesaggio dell'avventura del sentiero: quello della terra dove si sta andando
+function temaSentiero(c) { var d = CAPITOLI[CAPITOLI.indexOf(c) + 1]; return c.finale || !d ? c.tema : d.tema; }
 function capitoloDi(zona) { return CAPITOLI.filter(function (c) { return c.zona === zona; })[0] || null; }
 function nomeCapitolo(c) { if (c.nome) return c.nome; var z = ZONE.filter(function (x) { return x.id === c.zona; })[0]; return z ? z.nome : ""; }
 function forziereAperto(s, zona) { return !!(s.viaggio && s.viaggio.battuti && s.viaggio.battuti.indexOf(zona) !== -1); }

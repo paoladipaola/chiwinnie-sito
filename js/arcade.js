@@ -879,7 +879,7 @@
     var L = function () { return mettiPoteri(livelloFuga(T, 30000), ["super", "calamita", "ali", "super", "ali", "calamita", "super"], [0.1, 0.22, 0.36, 0.5, 0.64, 0.77, 0.9]); };
     return avventura(area, api, L, T, true, tema);
   };
-  // la sfida finale di un capitolo: una Fuga più lunga nel paesaggio della zona, con il Nebbione alle calcagna
+  // il sentiero verso la terra dopo: una Fuga più lunga nel paesaggio dove si va, con il Nebbione alle calcagna
   Minigiochi.sfida = function (area, api) {
     var tema = TEMI[api.tema] ? api.tema : "bosco", T = TEMI[tema];
     var lungo = api.finale ? 42000 : 36000;
@@ -888,8 +888,8 @@
     var api2 = Object.assign({}, api, {
       fine: function (ris) {
         ris.sfida = true; ris.tema = null;   // la sfida finale non conta come avventura del paesaggio
-        ris.titolo = ris.completato ? (api.finale ? "Sei arrivato al Castello!" : "Hai scacciato il Nebbione!") : "Il Nebbione ti ha preso!";
-        ris.messaggio = ris.completato ? (api.finale ? "Ora tocca a tutti i Chiwinnie insieme…" : "La lanterna si è accesa e il Nebbione è scappato!")
+        ris.titolo = ris.completato ? (api.finale ? "Sei arrivato al Castello delle nuvole!" : "Sei arrivato!") : "Il Nebbione ti ha preso!";
+        ris.messaggio = ris.completato ? (api.finale ? "Ora tocca a tutti i Chiwinnie insieme…" : "Sei sfuggito al Nebbione: la terra nuova ti aspetta, e anche un forziere!")
           : "Non arrenderti: tutto quello che hai raccolto resta tuo. Riprova!";
         fine(ris);
       }
