@@ -440,80 +440,80 @@ var ZONE = [
   {
     id: "nord", nome: "Le terre del nord", musica: "casa", sfondo: "img/zona7/vuota.jpg", cartella: "img/zona7/", senzaIcone: true,
     descrizione: "Una terra di neve soffice, con l'aurora nel cielo e il lago ghiacciato.",
-    prati: [{ x1: 24, x2: 74, y1: 62, y2: 86 }],
+    prati: [{ x1: 26, x2: 68, y1: 70, y2: 86 }],
     pezzi: {
       nor_casetta: {
         nome: "Baita di legno", livello: 16, costo: { legnetti: 18, sassolini: 6 }, xp: 32,
-        pos: [28, 49.25, 24, 13.75], tocco: [[29.9, 50.4, 50.1, 62.3]],
+        pos: [14, 45.66, 32, 18.34], tocco: [[16.56, 47.12, 43.44, 62.53]],
         descrizione: "Una baita calda con il camino acceso e la neve sul tetto."
       },
       nor_legna: {
         nome: "Catasta di legna", livello: 16, costo: { legnetti: 6 }, xp: 16,
-        pos: [20, 63.09, 9, 4.91], tocco: [[20.7, 63.5, 28.3, 67.8]], bolla: [24.5, 65.1],
+        pos: [6, 65.44, 12, 6.56], tocco: [[6.96, 65.97, 17.04, 71.48]], bolla: [12, 68.13],
         produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
         descrizione: "La legna per il camino: qui se ne trova sempre un po'."
       },
       nor_pupazzo: {
         nome: "Pupazzo di neve", livello: 16, costo: { petali: 8 }, xp: 18,
-        pos: [45, 62.75, 10, 7.75], tocco: [[45.8, 63.4, 54.2, 70.1]],
+        pos: [62, 64.92, 13, 10.08], tocco: [[63.04, 65.73, 73.96, 74.19]],
         descrizione: "Un pupazzo di neve sorridente con la sciarpa rossa e il naso di carota."
       },
       nor_igloo: {
         nome: "Igloo", livello: 17, costo: { sassolini: 14, petali: 6 }, xp: 28,
-        pos: [55, 56.52, 20, 5.48], tocco: [[56.6, 57.0, 73.4, 61.7]], bolla: [65.0, 58.5],
+        pos: [52, 56.33, 28, 7.67], tocco: [[54.24, 56.94, 77.76, 63.39]], bolla: [66, 59.1],
         produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
         descrizione: "Una casetta di blocchi di neve, calda dentro."
       },
       nor_cioccolata: {
         nome: "Chiosco della cioccolata", livello: 17, costo: { legnetti: 10, petali: 8 }, xp: 26,
-        pos: [16, 74.23, 15, 9.77], tocco: [[17.2, 75.0, 29.8, 83.5]], bolla: [23.5, 76.2],
+        pos: [76, 78.08, 16, 10.42], tocco: [[77.28, 78.91, 90.72, 87.67]], bolla: [84, 80.18],
         produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
         descrizione: "Cioccolata calda con i marshmallow per tutti! E qualche spinacino per il Chiwinnie."
       },
       nor_renna: {
         nome: "Cartello della renna", livello: 17, costo: { legnetti: 8 }, xp: 16,
-        pos: [60, 62.39, 6, 6.61], tocco: [[60.5, 62.9, 65.5, 68.7]],
+        pos: [40, 63.11, 9, 9.89], tocco: [[40.72, 63.9, 48.28, 72.21]],
         descrizione: "Un cartello di legno a forma di renna sorridente."
       },
       nor_lanterna: {
         nome: "Lanterna di neve", livello: 17, costo: { sassolini: 8, petali: 4 }, xp: 18,
-        pos: [71, 63.61, 6, 5.89], tocco: [[71.5, 64.1, 76.5, 69.2]],
+        pos: [86, 66.15, 7, 6.85], tocco: [[86.56, 66.7, 92.44, 72.45]],
         descrizione: "Palle di neve una sull'altra con una candela dentro."
       },
       nor_falo: {
         nome: "Falò con i tronchetti", livello: 18, costo: { legnetti: 12, sassolini: 8 }, xp: 28,
-        pos: [28, 69.28, 19, 6.72], tocco: [[29.5, 69.8, 45.5, 75.7]],
+        pos: [20, 71.8, 26, 9.2], tocco: [[22.08, 72.53, 43.92, 80.26]],
         descrizione: "Un falò dentro un cerchio di sassi, con i tronchetti per sedersi al caldo."
       },
       nor_slitta: {
         nome: "Slitta rossa", livello: 18, costo: { legnetti: 12, stelle: 2 }, xp: 26,
-        pos: [55, 72.18, 15, 3.82], tocco: [[56.2, 72.5, 68.8, 75.8]],
+        pos: [50, 76.9, 20, 5.1], tocco: [[51.6, 77.31, 68.4, 81.59]],
         descrizione: "Una slitta rossa con la copertina a righe, pronta per scivolare."
       },
       nor_sci: {
         nome: "Rastrelliera degli sci", livello: 18, costo: { legnetti: 10, stelle: 2 }, xp: 22,
-        pos: [6, 70.28, 7, 6.72], tocco: [[6.6, 70.8, 12.4, 76.7]],
+        pos: [44, 58.36, 8, 7.64], tocco: [[44.64, 58.97, 51.36, 65.39]],
         descrizione: "Sci e bastoncini colorati per scendere dalle colline di neve."
       },
       nor_pino: {
         nome: "Pino con le lucine", livello: 18, costo: { petali: 14, stelle: 2 }, xp: 26,
-        pos: [78, 48.74, 12, 14.26], tocco: [[79.0, 49.9, 89.0, 62.3]], bolla: [84.0, 50.7],
+        pos: [80, 47.04, 16, 18.96], tocco: [[81.28, 48.56, 94.72, 64.48]], bolla: [88, 49.65],
         produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Un pino innevato con le lucine e la stella in cima."
       },
       nor_altalena: {
         nome: "Altalena del ghiaccio", livello: 19, costo: { legnetti: 12, stelle: 3 }, xp: 30,
-        pos: [40, 73.94, 13, 9.56], tocco: [[41.0, 74.7, 52.0, 83.0]],
+        pos: [70, 67.46, 17, 12.54], tocco: [[71.36, 68.46, 85.64, 79]],
         descrizione: "Un'altalena con il cuscino di lana e i ghiaccioli sulla trave."
       },
       nor_panchina: {
         nome: "Panchina dei pattini", livello: 19, costo: { legnetti: 10, sassolini: 6, stelle: 2 }, xp: 26,
-        pos: [36, 84.87, 12, 5.63], tocco: [[37.0, 85.3, 47.0, 90.2]],
+        pos: [36, 81.01, 16, 7.49], tocco: [[37.28, 81.61, 50.72, 87.9]],
         descrizione: "Una panchina sul lago ghiacciato, con i pattini appesi."
       },
       nor_ponte: {
         nome: "Ponticello innevato", livello: 19, costo: { legnetti: 16, sassolini: 10, stelle: 3 }, xp: 34,
-        pos: [4, 88.89, 20, 6.61], tocco: [[5.6, 89.4, 22.4, 95.2]],
+        pos: [4, 80.56, 24, 7.94], tocco: [[5.92, 81.2, 26.08, 87.86]],
         descrizione: "Un ponticello sul lago ghiacciato, con le lanterne sui pali."
       }
     }
@@ -521,80 +521,80 @@ var ZONE = [
   {
     id: "deserto", nome: "Il deserto dei fiori di cactus", musica: "prato", sfondo: "img/zona8/vuota.jpg", cartella: "img/zona8/", senzaIcone: true,
     descrizione: "Un deserto caldo e gentile, dove i cactus sono pieni di fiori.",
-    prati: [{ x1: 30, x2: 76, y1: 66, y2: 92 }],
+    prati: [{ x1: 30, x2: 70, y1: 72, y2: 86 }],
     pezzi: {
       des_casa: {
         nome: "Casetta di argilla", livello: 18, costo: { sassolini: 14, legnetti: 8 }, xp: 32,
-        pos: [30, 54.73, 19, 11.27], tocco: [[31.5, 55.6, 47.5, 65.4]],
+        pos: [26, 48.57, 26, 15.43], tocco: [[28.08, 49.8, 49.92, 62.77]],
         descrizione: "Una casetta tonda di argilla calda, con la porta blu e un cactus sul tetto."
       },
       des_vasi: {
         nome: "Vasi con i cactus", livello: 18, costo: { sassolini: 8, petali: 4 }, xp: 18,
-        pos: [66, 65.85, 10, 6.15], tocco: [[66.8, 66.3, 75.2, 71.7]],
+        pos: [68, 64.62, 12, 7.38], tocco: [[68.96, 65.21, 79.04, 71.41]],
         descrizione: "Tre vasi di terracotta con dentro piccoli cactus fioriti."
       },
       des_bancarella: {
         nome: "Bancarella della frutta", livello: 18, costo: { legnetti: 10, petali: 6 }, xp: 24,
-        pos: [33, 64.89, 14, 8.11], tocco: [[34.1, 65.5, 45.9, 72.6]], bolla: [40.0, 66.9],
+        pos: [30, 63.55, 18, 10.45], tocco: [[31.44, 64.39, 46.56, 73.16]], bolla: [39, 66.14],
         produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
         descrizione: "Arance, datteri, meloni e fichi: e per il Chiwinnie anche qualche spinacino."
       },
       des_tenda: {
         nome: "Tenda a righe", livello: 19, costo: { petali: 14, legnetti: 8 }, xp: 28,
-        pos: [53, 56.7, 20, 7.8], tocco: [[54.6, 57.3, 71.4, 64.1]],
+        pos: [54, 53.07, 28, 10.93], tocco: [[56.24, 53.95, 79.76, 63.13]],
         descrizione: "Una tenda colorata con le bandierine e il tappeto all'ingresso."
       },
       des_pozzo: {
         nome: "Pozzo di pietra", livello: 19, costo: { sassolini: 14 }, xp: 24,
-        pos: [80, 57.52, 9, 6.98], tocco: [[80.7, 58.1, 88.3, 64.2]],
+        pos: [82, 54.68, 12, 9.32], tocco: [[82.96, 55.42, 93.04, 63.25]],
         descrizione: "Un pozzo con il tettuccio e il secchio: l'acqua più fresca del deserto."
       },
       des_fontana: {
         nome: "Fontana di piastrelle", livello: 19, costo: { sassolini: 12, stelle: 2 }, xp: 26,
-        pos: [50, 65.68, 12, 6.82], tocco: [[51.0, 66.2, 61.0, 72.2]], bolla: [56.0, 67.7],
+        pos: [52, 63.93, 16, 9.07], tocco: [[53.28, 64.66, 66.72, 72.27]], bolla: [60, 66.62],
         produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
         descrizione: "Una fontana rotonda di piastrelle turchesi."
       },
       des_fiori: {
         nome: "Fiori del deserto", livello: 19, costo: { petali: 10 }, xp: 18,
-        pos: [46, 88.63, 16, 5.37], tocco: [[47.3, 89.1, 60.7, 93.7]], bolla: [54.0, 90.6],
+        pos: [68, 60.63, 16, 5.37], tocco: [[69.28, 61.06, 82.72, 65.57]], bolla: [76, 62.6],
         produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Fiorellini e piante grasse tra i sassolini lisci."
       },
       des_oasi: {
         nome: "Oasi con le palme", livello: 20, costo: { sassolini: 10, petali: 10, stelle: 2 }, xp: 32,
-        pos: [32, 71.75, 26, 9.25], tocco: [[34.1, 72.5, 55.9, 80.5]],
+        pos: [28, 72.62, 32, 11.38], tocco: [[30.56, 73.53, 57.44, 83.09]],
         descrizione: "Un laghetto turchese con due palme: il posto più fresco del deserto."
       },
       des_carretto: {
         nome: "Carretto dei tappeti", livello: 20, costo: { legnetti: 14, petali: 6 }, xp: 26,
-        pos: [62, 72.9, 14, 6.1], tocco: [[63.1, 73.4, 74.9, 78.7]], bolla: [69.0, 74.9],
+        pos: [62, 73.15, 18, 7.85], tocco: [[63.44, 73.78, 78.56, 80.37]], bolla: [71, 75.72],
         produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Un carretto pieno di tappeti colorati e melograni."
       },
       des_lanterna: {
         nome: "Lanterna di vetri colorati", livello: 20, costo: { sassolini: 8, stelle: 2 }, xp: 22,
-        pos: [22, 71.56, 5, 7.44], tocco: [[22.4, 72.2, 26.6, 78.6]],
+        pos: [51, 57.07, 6, 8.93], tocco: [[51.48, 57.78, 56.52, 65.29]],
         descrizione: "Una lanterna di vetri rossi, verdi e blu che brilla la sera."
       },
       des_castello: {
         nome: "Castello di sabbia", livello: 20, costo: { sassolini: 10, petali: 4 }, xp: 22,
-        pos: [24, 84.11, 13, 5.89], tocco: [[25.0, 84.6, 36.0, 89.7]],
+        pos: [26, 81.68, 15, 6.82], tocco: [[27.2, 82.23, 39.8, 87.95]],
         descrizione: "Un castello di sabbia con le conchiglie, il secchiello e la paletta."
       },
       des_ombrellone: {
         nome: "Ombrellone con i cuscini", livello: 21, costo: { petali: 12, stelle: 2 }, xp: 26,
-        pos: [62, 79.92, 13, 7.08], tocco: [[63.0, 80.5, 74.0, 86.6]],
+        pos: [66, 79.76, 16, 8.74], tocco: [[67.28, 80.46, 80.72, 87.8]],
         descrizione: "Un ombrellone a righe sopra un tappeto con due cuscini."
       },
       des_amaca: {
         nome: "Amaca tra le palme", livello: 21, costo: { legnetti: 12, stelle: 3 }, xp: 30,
-        pos: [40, 81.07, 20, 6.93], tocco: [[41.6, 81.6, 58.4, 87.7]],
+        pos: [42, 80.19, 24, 8.31], tocco: [[43.92, 80.85, 64.08, 87.84]],
         descrizione: "Un'amaca a righe tra due palme, per dondolarsi al sole."
       },
       des_cactus: {
         nome: "Grande cactus fiorito", livello: 21, costo: { petali: 16, sassolini: 6, stelle: 3 }, xp: 34,
-        pos: [82, 84.11, 11, 8.89], tocco: [[82.9, 84.8, 92.1, 92.6]],
+        pos: [80, 78.01, 13, 10.49], tocco: [[81.04, 78.85, 91.96, 87.66]],
         descrizione: "Un cactus alto alto con le braccia piene di fiori rosa."
       }
     }
@@ -602,48 +602,48 @@ var ZONE = [
   {
     id: "fata", nome: "I cappelli di fata", musica: "prato", sfondo: "img/zona9/vuota.jpg", cartella: "img/zona9/", senzaIcone: true,
     descrizione: "Una valle di camini di roccia a forma di cappello, con le mongolfiere che volano all'alba.",
-    prati: [{ x1: 28, x2: 72, y1: 66, y2: 92 }],
+    prati: [{ x1: 26, x2: 70, y1: 72, y2: 86 }],
     pezzi: {
       fat_casa: {
         nome: "Casetta nel cappello di fata", livello: 19, costo: { sassolini: 16, legnetti: 10 }, xp: 34,
-        pos: [62, 57.43, 22, 14.57], tocco: [[63.8, 58.6, 82.2, 71.3]],
+        pos: [56, 52.16, 30, 19.84], tocco: [[58.4, 53.75, 83.6, 70.41]],
         descrizione: "Una casetta scavata in un camino di roccia a forma di cappello, con le finestrelle fiorite."
       },
       fat_scala: {
         nome: "Scalinata di pietra", livello: 19, costo: { sassolini: 10 }, xp: 18,
-        pos: [14, 63.34, 11, 9.66], tocco: [[14.9, 64.1, 24.1, 72.5]],
+        pos: [14, 58.6, 13, 11.4], tocco: [[15.04, 59.51, 25.96, 69.09]],
         descrizione: "Una scalinata di pietra chiara con i vasetti di fiori sugli scalini."
       },
       fat_lavanda: {
         nome: "Cespugli di lavanda", livello: 19, costo: { petali: 10 }, xp: 20,
-        pos: [46, 63.92, 15, 7.08], tocco: [[47.2, 64.5, 59.8, 70.6]], bolla: [53.5, 65.9],
+        pos: [28, 60.56, 20, 9.44], tocco: [[29.6, 61.32, 46.4, 69.24]], bolla: [38, 63.2],
         produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Lavanda profumata, con le farfalle che ci girano intorno."
       },
       fat_tappeti: {
         nome: "Bancarella dei tappeti", livello: 20, costo: { legnetti: 10, petali: 10 }, xp: 26,
-        pos: [30, 63.45, 14, 7.55], tocco: [[31.1, 64.1, 42.9, 70.6]],
+        pos: [6, 70.83, 17, 9.17], tocco: [[7.36, 71.56, 21.64, 79.27]],
         descrizione: "Tappeti colorati appesi e arrotolati, tutti diversi."
       },
       fat_pozzo: {
         nome: "Pozzo antico", livello: 20, costo: { sassolini: 12 }, xp: 22,
-        pos: [34, 80.88, 11, 5.12], tocco: [[34.9, 81.3, 44.1, 85.7]], bolla: [39.5, 82.9],
+        pos: [49, 82, 14, 6.5], tocco: [[50.12, 82.52, 61.88, 87.98]], bolla: [56, 84.56],
         produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
         descrizione: "Un vecchio pozzo di pietra con la manovella e il secchiello."
       },
       fat_ponte: {
         nome: "Ponticello di pietra", livello: 20, costo: { sassolini: 14, stelle: 2 }, xp: 26,
-        pos: [24, 76.54, 20, 3.46], tocco: [[25.6, 76.8, 42.4, 79.8]],
+        pos: [24, 81.84, 24, 4.16], tocco: [[25.92, 82.18, 46.08, 85.67]],
         descrizione: "Un ponte ad arco di pietre chiare con le piantine sopra."
       },
       fat_te: {
         nome: "Tavolino del tè", livello: 20, costo: { legnetti: 8, petali: 10 }, xp: 26,
-        pos: [47, 72.94, 17, 6.56], tocco: [[48.4, 73.5, 62.6, 79.2]],
+        pos: [26, 71.52, 22, 8.48], tocco: [[27.76, 72.2, 46.24, 79.32]],
         descrizione: "Un tavolino basso con la teiera, i bicchierini e i cuscini ricamati."
       },
       fat_vigna: {
         nome: "Filare di uva", livello: 21, costo: { legnetti: 12, spinaci: 6 }, xp: 26,
-        pos: [66, 74.04, 19, 4.96], tocco: [[67.5, 74.4, 83.5, 78.8]], bolla: [75.5, 76.0],
+        pos: [66, 74.73, 24, 6.27], tocco: [[67.92, 75.23, 88.08, 80.5]], bolla: [78, 77.21],
         produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
         descrizione: "Grappoli d'uva viola sui pali di legno. E sotto, qualche spinacino!"
       },
@@ -654,28 +654,28 @@ var ZONE = [
       },
       fat_fontana: {
         nome: "Fontanella nella roccia", livello: 21, costo: { sassolini: 12, stelle: 2 }, xp: 28,
-        pos: [24, 86.97, 13, 7.03], tocco: [[25.0, 87.5, 36.0, 93.6]],
+        pos: [6, 79.82, 16, 8.68], tocco: [[7.28, 80.52, 20.72, 87.81]],
         descrizione: "Una fontanella scavata nella pietra, con l'edera intorno."
       },
       fat_terrazza: {
         nome: "Terrazza dei gerani", livello: 21, costo: { sassolini: 12, petali: 12, stelle: 2 }, xp: 30,
-        pos: [46, 86.59, 20, 6.41], tocco: [[47.6, 87.1, 64.4, 92.7]],
+        pos: [64, 82.09, 20, 6.41], tocco: [[65.6, 82.6, 82.4, 87.99]],
         descrizione: "Una terrazza di pietra piena di vasi di gerani rossi e rosa."
       },
       fat_altalena: {
         nome: "Altalena dell'albicocco", livello: 22, costo: { legnetti: 14, stelle: 3 }, xp: 30,
-        pos: [80, 83.06, 17, 11.94], tocco: [[81.4, 84.0, 95.6, 94.4]], bolla: [88.5, 85.1],
+        pos: [80, 77.99, 15, 10.51], tocco: [[81.2, 78.83, 93.8, 87.66]], bolla: [87.5, 79.79],
         produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Un grande albicocco con l'altalena: dai rami cadono legnetti."
       },
       fat_lanterne: {
         nome: "Albero delle lanterne", livello: 22, costo: { petali: 14, stelle: 3 }, xp: 32,
-        pos: [3, 74.65, 17, 12.35], tocco: [[4.4, 75.6, 18.6, 86.4]],
+        pos: [48, 69.13, 15, 10.87], tocco: [[49.2, 70, 61.8, 79.13]],
         descrizione: "Un albero pieno di lanternine colorate che brillano."
       },
       fat_mongolfiere: {
         nome: "Mongolfiere dell'alba", livello: 22, costo: { petali: 16, legnetti: 12, stelle: 4 }, xp: 38,
-        pos: [30, 30.11, 22, 11.89], tocco: [[31.8, 31.1, 50.2, 41.4]],
+        pos: [26, 26.9, 28, 15.1], tocco: [[28.24, 28.11, 51.76, 40.79]],
         descrizione: "Tre mongolfiere a righe che volano sopra la valle all'alba."
       }
     }
@@ -683,80 +683,80 @@ var ZONE = [
   {
     id: "panna", nome: "Le colline di panna", musica: "radura", sfondo: "img/zona10/vuota.jpg", cartella: "img/zona10/", senzaIcone: true,
     descrizione: "Colline di panna montata, lecca-lecca giganti e un fiume di cioccolato.",
-    prati: [{ x1: 28, x2: 80, y1: 74, y2: 90 }],
+    prati: [{ x1: 40, x2: 72, y1: 76, y2: 84 }],
     pezzi: {
       pan_casetta: {
         nome: "Casetta di pan di zenzero", livello: 20, costo: { legnetti: 16, petali: 10 }, xp: 34,
-        pos: [52, 64.3, 20, 10.7], tocco: [[53.6, 65.2, 70.4, 74.5]],
+        pos: [30, 60.09, 26, 13.91], tocco: [[32.08, 61.21, 53.92, 72.89]],
         descrizione: "Una casetta di biscotto con la glassa sul tetto e i bottoni di zucchero."
       },
       pan_lecca: {
         nome: "Albero dei lecca-lecca", livello: 20, costo: { petali: 12 }, xp: 22,
-        pos: [31, 65.3, 12, 9.2], tocco: [[32.0, 66.0, 42.0, 74.0]],
+        pos: [18, 64.83, 12, 9.17], tocco: [[18.96, 65.56, 29.04, 73.27]],
         descrizione: "Un albero tutto di lecca-lecca colorati."
       },
       pan_fontana: {
         nome: "Fontana cupcake", livello: 20, costo: { sassolini: 10, petali: 8 }, xp: 26,
-        pos: [42, 72.64, 10, 7.86], tocco: [[42.8, 73.3, 51.2, 80.1]],
+        pos: [56, 72.36, 11, 8.64], tocco: [[56.88, 73.05, 66.12, 80.31]],
         descrizione: "Una fontana a forma di cupcake da cui scende latte alla fragola."
       },
       pan_staccionata: {
         nome: "Staccionata di bastoncini", livello: 20, costo: { legnetti: 10 }, xp: 20,
-        pos: [62, 72.76, 15, 7.24], tocco: [[63.2, 73.3, 75.8, 79.6]], bolla: [69.5, 74.8],
+        pos: [70, 72.35, 20, 9.65], tocco: [[71.6, 73.12, 88.4, 81.23]], bolla: [80, 75.07],
         produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Una staccionata di bastoncini di zucchero a righe bianche e rosse."
       },
       pan_fragola: {
         nome: "Casetta fragola", livello: 21, costo: { petali: 14, sassolini: 6 }, xp: 28,
-        pos: [84, 73.95, 11, 7.55], tocco: [[84.9, 74.6, 94.1, 81.1]], bolla: [89.5, 76.0],
+        pos: [82, 66.78, 12, 8.22], tocco: [[82.96, 67.44, 93.04, 74.34]], bolla: [88, 69.01],
         produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
         descrizione: "Una fragola gigante con la porticina: e dentro ci sono anche gli spinaci!"
       },
       pan_panchina: {
         nome: "Sedia di biscotto", livello: 21, costo: { legnetti: 8, petali: 6 }, xp: 20,
-        pos: [30, 78.83, 9, 6.67], tocco: [[30.7, 79.4, 38.3, 85.2]],
+        pos: [44, 73.58, 10, 7.42], tocco: [[44.8, 74.17, 53.2, 80.41]],
         descrizione: "Una sedia fatta di due biscotti con le gocce di cioccolato."
       },
       pan_ciambella: {
         nome: "Laghetto ciambella", livello: 21, costo: { sassolini: 12, petali: 10 }, xp: 30,
-        pos: [46, 81.56, 17, 5.94], tocco: [[47.4, 82.0, 61.6, 87.2]],
+        pos: [22, 73.72, 18, 6.28], tocco: [[23.44, 74.22, 38.56, 79.5]],
         descrizione: "Un laghetto dentro una ciambella rosa con gli zuccherini, e una paperella di gelatina."
       },
       pan_gommose: {
         nome: "Giardino delle gommose", livello: 21, costo: { petali: 10, sassolini: 6 }, xp: 24,
-        pos: [64, 87.14, 16, 6.36], tocco: [[65.3, 87.6, 78.7, 93.2]], bolla: [72.0, 89.1],
+        pos: [52, 81.36, 18, 7.14], tocco: [[53.44, 81.93, 68.56, 87.93]], bolla: [61, 83.56],
         produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Fiori di gelatina e caramelle gommose che crescono sulla panna."
       },
       pan_waffle: {
         nome: "Tavolino waffle", livello: 21, costo: { legnetti: 10, stelle: 2 }, xp: 26,
-        pos: [48, 86.13, 11, 6.87], tocco: [[48.9, 86.7, 58.1, 92.7]],
+        pos: [4, 80.39, 13, 8.11], tocco: [[5.04, 81.04, 15.96, 87.85]],
         descrizione: "Un tavolino di waffle con fragole e panna, e due sgabelli cupcake."
       },
       pan_ponte: {
         nome: "Ponte di cioccolato", livello: 22, costo: { legnetti: 14, sassolini: 8, stelle: 2 }, xp: 30,
-        pos: [6, 79.11, 19, 5.89], tocco: [[7.5, 79.6, 23.5, 84.7]],
+        pos: [26, 80.55, 24, 7.45], tocco: [[27.92, 81.15, 48.08, 87.4]],
         descrizione: "Un ponte di cioccolato e wafer sul fiume di cioccolata."
       },
       pan_macaron: {
         nome: "Sentiero di macaron", livello: 22, costo: { sassolini: 14, stelle: 2 }, xp: 28,
-        pos: [26, 85.87, 18, 10.13], tocco: [[27.4, 86.7, 42.6, 95.5]], bolla: [35.0, 87.9],
+        pos: [2, 68.98, 16, 9.02], tocco: [[3.28, 69.7, 16.72, 77.28]], bolla: [10, 70.79],
         produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
         descrizione: "Macaron colorati per attraversare il fiume di cioccolato."
       },
       pan_altalena: {
         nome: "Altalena marshmallow", livello: 22, costo: { legnetti: 12, stelle: 3 }, xp: 30,
-        pos: [71, 78.49, 11, 9.51], tocco: [[71.9, 79.3, 81.1, 87.5]],
+        pos: [57, 64.51, 11, 9.49], tocco: [[57.88, 65.27, 67.12, 73.24]],
         descrizione: "Un'altalena con il seggiolino di marshmallow e le corde di liquirizia."
       },
       pan_gelati: {
         nome: "Chiosco dei gelati", livello: 22, costo: { legnetti: 12, petali: 12, stelle: 2 }, xp: 32,
-        pos: [84, 86.06, 13, 7.44], tocco: [[85.0, 86.7, 96.0, 93.1]],
+        pos: [74, 79.31, 16, 9.19], tocco: [[75.28, 80.05, 88.72, 87.77]],
         descrizione: "Gelato alla fragola, al limone e ai mirtilli, con i coni croccanti."
       },
       pan_torta: {
         nome: "Torre di torta", livello: 22, costo: { petali: 18, sassolini: 10, stelle: 4 }, xp: 40,
-        pos: [78, 64.2, 13, 10.8], tocco: [[79.0, 65.1, 90.0, 74.5]],
+        pos: [68, 62.33, 14, 11.67], tocco: [[69.12, 63.27, 80.88, 73.07]],
         descrizione: "Una torta a tre piani con le fragole e la bandierina in cima."
       }
     }
@@ -764,80 +764,80 @@ var ZONE = [
   {
     id: "gemme", nome: "La città di pietre preziose", musica: "nuvole", sfondo: "img/zona11/vuota.jpg", cartella: "img/zona11/", senzaIcone: true,
     descrizione: "Una città scintillante fatta di gemme e cristalli, con l'arcobaleno nel cielo.",
-    prati: [{ x1: 26, x2: 70, y1: 66, y2: 90 }],
+    prati: [{ x1: 28, x2: 70, y1: 72, y2: 86 }],
     pezzi: {
       gem_casa: {
         nome: "Casetta di cristallo", livello: 21, costo: { sassolini: 18, petali: 10 }, xp: 36,
-        pos: [38, 53.34, 18, 11.16], tocco: [[39.4, 54.2, 54.6, 63.9]],
+        pos: [30, 51.84, 26, 16.16], tocco: [[32.08, 53.14, 53.92, 66.71]],
         descrizione: "Una casetta di cristalli rosa e lilla con le finestre che brillano."
       },
       gem_lampione: {
         nome: "Lampione di cristallo", livello: 21, costo: { sassolini: 8 }, xp: 18,
-        pos: [37, 59.98, 4, 11.52], tocco: [[37.3, 60.9, 40.7, 70.9]],
+        pos: [26, 61.53, 5, 14.47], tocco: [[26.4, 62.69, 30.6, 74.84]],
         descrizione: "Un lampione trasparente con una gemma che fa luce."
       },
       gem_fontana: {
         nome: "Fontana di zaffiro", livello: 21, costo: { sassolini: 14, stelle: 2 }, xp: 28,
-        pos: [45, 67.02, 13, 5.48], tocco: [[46.0, 67.5, 57.0, 72.2]],
+        pos: [34, 69.55, 20, 8.45], tocco: [[35.6, 70.22, 52.4, 77.32]],
         descrizione: "Una fontana blu zaffiro piena di gemme che luccicano nell'acqua."
       },
       gem_albero: {
         nome: "Albero di smeraldi", livello: 22, costo: { petali: 12, sassolini: 8 }, xp: 28,
-        pos: [25, 67.68, 12, 9.82], tocco: [[26.0, 68.5, 36.0, 77.0]], bolla: [31.0, 69.7],
+        pos: [60, 55.76, 15, 12.24], tocco: [[61.2, 56.74, 73.8, 67.02]], bolla: [67.5, 58.28],
         produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
         descrizione: "Un albero con le foglie di smeraldo. Ai suoi piedi crescono gli spinaci!"
       },
       gem_torre: {
         nome: "Torre di ametista", livello: 22, costo: { sassolini: 16, stelle: 2 }, xp: 32,
-        pos: [22, 50.82, 8, 16.18], tocco: [[22.6, 52.1, 29.4, 66.2]],
+        pos: [16, 47.69, 10, 20.31], tocco: [[16.8, 49.31, 25.2, 66.37]],
         descrizione: "Una torre viola di ametista con un balconcino."
       },
       gem_bancarella: {
         nome: "Bancarella delle gemme", livello: 22, costo: { legnetti: 12, petali: 8 }, xp: 28,
-        pos: [63, 74.8, 13, 7.7], tocco: [[64.0, 75.4, 75.0, 82.1]], bolla: [69.5, 76.8],
+        pos: [58, 67.9, 17, 10.1], tocco: [[59.36, 68.71, 73.64, 77.19]], bolla: [66.5, 70.52],
         produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Rubini, smeraldi e zaffiri in tante cassettine."
       },
       gem_giardino: {
         nome: "Giardino di fiori di vetro", livello: 22, costo: { petali: 14 }, xp: 24,
-        pos: [49, 82.09, 15, 6.41], tocco: [[50.2, 82.6, 62.8, 88.2]], bolla: [56.5, 84.1],
+        pos: [44, 80.81, 18, 7.69], tocco: [[45.44, 81.43, 60.56, 87.88]], bolla: [53, 83.22],
         produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Fiori di vetro colorato che brillano al sole."
       },
       gem_carrello: {
         nome: "Carrello della miniera", livello: 23, costo: { legnetti: 12, sassolini: 10 }, xp: 28,
-        pos: [29, 84.76, 12, 5.74], tocco: [[30.0, 85.2, 40.0, 90.2]], bolla: [35.0, 86.8],
+        pos: [62, 79.85, 15, 7.15], tocco: [[63.2, 80.42, 75.8, 86.43]], bolla: [69.5, 82.39],
         produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
         descrizione: "Un carrello pieno di pietre preziose sulle rotaie."
       },
       gem_panchina: {
         nome: "Panchina di diamante", livello: 23, costo: { sassolini: 14, stelle: 2 }, xp: 30,
-        pos: [38, 80.16, 12, 4.34], tocco: [[39.0, 80.5, 49.0, 84.3]],
+        pos: [44, 75.31, 13, 4.69], tocco: [[45.04, 75.69, 55.96, 79.62]],
         descrizione: "Una panchina di diamante con un cuscino rosa morbido."
       },
       gem_ponte: {
         nome: "Ponte di rubini", livello: 23, costo: { sassolini: 16, stelle: 3 }, xp: 32,
-        pos: [52, 73.42, 17, 4.08], tocco: [[53.4, 73.7, 67.6, 77.3]],
+        pos: [22, 80.21, 20, 4.79], tocco: [[23.6, 80.59, 40.4, 84.62]],
         descrizione: "Un ponte ad arco fatto di rubini rossi."
       },
       gem_scrigno: {
         nome: "Negozio portagioie", livello: 23, costo: { petali: 16, legnetti: 10, stelle: 2 }, xp: 32,
-        pos: [76, 68.49, 12, 8.01], tocco: [[77.0, 69.1, 87.0, 76.1]],
+        pos: [76, 60.68, 14, 9.32], tocco: [[77.12, 61.43, 88.88, 69.25]],
         descrizione: "Un negozio a forma di scrigno pieno di collane e anelli."
       },
       gem_arco: {
         nome: "Arco di topazio", livello: 24, costo: { sassolini: 14, petali: 10, stelle: 3 }, xp: 34,
-        pos: [65, 83.73, 10, 6.77], tocco: [[65.8, 84.3, 74.2, 90.2]],
+        pos: [77, 79.7, 13, 8.8], tocco: [[78.04, 80.4, 88.96, 87.8]],
         descrizione: "Un arco di topazi dorati che luccicano."
       },
       gem_scala: {
         nome: "Scala di acquamarina", livello: 24, costo: { sassolini: 12, stelle: 3 }, xp: 30,
-        pos: [77, 87.21, 8, 7.29], tocco: [[77.6, 87.8, 84.4, 94.1]],
+        pos: [80, 70.85, 10, 9.15], tocco: [[80.8, 71.58, 89.2, 79.27]],
         descrizione: "Una scala di cristallo azzurro che sale verso il cielo."
       },
       gem_laghetto: {
         nome: "Laghetto arcobaleno", livello: 24, costo: { sassolini: 16, petali: 16, stelle: 4 }, xp: 40,
-        pos: [33, 91.64, 18, 6.36], tocco: [[34.4, 92.1, 49.6, 97.7]],
+        pos: [18, 79.51, 24, 8.49], tocco: [[19.92, 80.19, 40.08, 87.32]],
         descrizione: "Un laghetto con l'acqua di tutti i colori, circondato da gemme."
       }
     }
