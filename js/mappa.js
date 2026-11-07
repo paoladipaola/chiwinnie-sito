@@ -1,5 +1,5 @@
 // La mappa del Giardino magico: è la pagina iniziale del gioco.
-// Dal basso verso l'alto: la Casa del Chiwinnie e il Parco dei Giochi, poi le terre una dopo l'altra lungo il sentiero
+// Dal basso verso l'alto: la Casa del Chiwinnie e la Palestra, poi le terre una dopo l'altra lungo il sentiero
 // di lucine, fino al Castello delle nuvole. Le terre ancora prigioniere dei nuvoloni hanno il lucchetto;
 // quelle aperte si possono visitare tutte le volte che si vuole.
 // Usa le funzioni del gioco che gioco.js passa in Mappa.avvia(ctx) e quelle del viaggio (Missione.terre).
@@ -68,7 +68,8 @@ var Mappa = (function () {
     if (primaChiusa && !fine) html += "<div class='mappa-nuvoloni' style='height:" + (primaChiusa.y + 90) + "px'></div>";
 
     // il sentiero di lucine
-    var punti = [{ x: 50, y: H - BASSO + 10 }].concat(nodi.slice(0, CAPITOLI.length + 1));
+    // parte dalla casa del Chiwinnie e porta alla Radura, poi su di terra in terra
+    var punti = [{ x: 24, y: H - BASSO - 40 }].concat(nodi.slice(0, CAPITOLI.length + 1));
     var svg = "<svg class='mappa-sentiero' width='" + W + "' height='" + H + "' viewBox='0 0 " + W + " " + H + "'>";
     for (i = 1; i < punti.length; i++) {
       var dest = punti[i], ok = dest.tipo === "castello" ? fine : T.aperto(dest.c);
@@ -78,12 +79,12 @@ var Mappa = (function () {
     svg += "<path class='chiuso' d='" + curva(nodi[nodi.length - 2], nodi[nodi.length - 1], W) + "'/>";
     html += svg + "</svg>";
 
-    // la Casa e il Parco dei Giochi, all'inizio del sentiero
+    // la Casa e la Palestra, all'inizio del sentiero
     var casa = s.costruiti.indexOf("casetta") !== -1;
     html += "<button class='mappa-posto casa" + (casa ? "" : " chiusa") + "' data-mappa='casa' style='left:24%;top:" + (H - BASSO - 30) + "px'>" +
       "<img src='img/mappa/casa.png' alt=''><span class='nome'>La casa di " + C.esc(s.nome) + "</span></button>";
     html += "<button class='mappa-posto parco' data-mappa='parco' style='left:76%;top:" + (H - BASSO - 30) + "px'>" +
-      "<img src='img/mappa/parco.png' alt=''><span class='nome'>Il Parco dei Giochi</span></button>";
+      "<img src='img/mappa/parco.png' alt=''><span class='nome'>La Palestra<small>Presto!</small></span></button>";
 
     // le terre
     var cor = T.capitoloCorrente();
@@ -171,7 +172,8 @@ var Mappa = (function () {
       if (s.costruiti.indexOf("casetta") === -1) { C.avviso("Prima costruisci la casetta nella Radura! 🏡", 2800); scuoti(el); return; }
       C.tornaA("mappa"); Casa.apri(); return;
     }
-    if (id === "parco") { C.tornaA("mappa"); C.apriGiochi(); return; }
+    // la palestra: un'avventura dove il Chiwinnie si allena e diventa più forte (la stiamo preparando)
+    if (id === "parco") { C.toast("💪 Qui " + s.nome + " potrà allenarsi e diventare più forte: la palestra la stiamo costruendo!", 3200); scuoti(el); return; }
     if (id === "crea") { C.toast(forziereAperto(s, "cielo") ? "Qui potrai inventare la tua terra: la stiamo preparando! 🎨" : "Si apre dopo il Castello delle nuvole… 🎨", 3000); scuoti(el); return; }
     if (id === "castello") {
       var ultimo = CAPITOLI[CAPITOLI.length - 1];

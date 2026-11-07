@@ -343,7 +343,6 @@
   function disegnaHud() {
     $("hud-nome").textContent = stato.nome;
     $("hud-livello").textContent = stato.livello;
-    $("btn-casa").hidden = stato.costruiti.indexOf("casetta") === -1;
     var base = LIVELLI_XP[stato.livello], prossimo = LIVELLI_XP[stato.livello + 1] || (base + 400);
     $("barra-xp").style.width = Math.min(100, (stato.xp - base) / (prossimo - base) * 100) + "%";
     var en = $("barra-energia");
@@ -516,7 +515,11 @@
     chiwi.style.zIndex = Math.round(y * 10) + 1;
   }
   // Il Chiwinnie dice ad alta voce una parola in chiwinnese; nel fumetto c'è anche la traduzione.
+  // il Chiwinnie mangia nella casetta: lì parla con il fumetto della casa
+  function inCasa() { return $("s-casa").classList.contains("attiva"); }
+  function chiwiVisibile() { return inCasa() ? $("casa-chiwi") : chiwi; }
   function esclama(chiwinnese, italiano, ms) {
+    if (inCasa()) { Casa.dice(chiwinnese + (italiano ? " (" + italiano + ")" : ""), ms || 3000); Suoni.dici(chiwinnese); return; }
     var f = $("fumetto-mondo");
     f.textContent = chiwinnese + (italiano ? " (" + italiano + ")" : ""); f.classList.add("su");
     Suoni.dici(chiwinnese);
@@ -524,6 +527,7 @@
   }
   var ESCLAMAZIONI = [["Wii-chu!", "Ciao!"], ["Nimmi-nimmi!", "Che bello!"], ["Wonni-wonni!", "Ho tanta energia!"], ["Pum-pum winni!", "Siamo amici!"]];
   function parla(testo, ms) {
+    if (inCasa()) { Casa.dice(testo, ms); Suoni.voce(testo); return; }
     var f = $("fumetto-mondo");
     f.textContent = testo; f.classList.add("su");
     Suoni.voce(testo);
@@ -586,7 +590,7 @@
     stato.contatori.fiori = (stato.contatori.fiori || 0) + 1;
     chiudiPannello();
     Suoni.sfx("magia");
-    var r = chiwi.getBoundingClientRect();
+    var r = chiwiVisibile().getBoundingClientRect();
     coriandoli(r.left + r.width / 2, r.top + r.height / 3, "🌸", 8);
     setTimeout(function () { coriandoli(r.left + r.width / 2, r.top, "✨", 8); }, 300);
     esclama("Nimmi-nimmi!", "che profumo, mi sento magico!");
@@ -607,7 +611,7 @@
     stato.contatori.pasti++;
     Missione.evento("pasto");
     Suoni.sfx("pasto");
-    var r = chiwi.getBoundingClientRect();
+    var r = chiwiVisibile().getBoundingClientRect();
     coriandoli(r.left + r.width / 2, r.top + r.height / 3, "🥬", 4);
     if (eraBrontolone && !brontolone()) esclama("Gnam gnam! Wonni-wonni!", "sono tornato dolce come prima!");
     else esclama("Gnam gnam! Wonni-wonni!", "che buoni gli spinaci!");
@@ -615,7 +619,6 @@
     chiudiPannello();
     disegnaTutto();
   }
-  $("btn-nutri").addEventListener("click", apriNutri);
 
   // ---------- Sfide ----------
   // le prossime tre sfide ancora da completare (in ordine), da mostrare nel pannello
@@ -707,7 +710,7 @@
 
   function apriGiochi() {
     aggiornaEnergia();
-    var html = "<h2>Giochi</h2><p>Ogni bella partita accende una <b>lucina magica ✨</b> (due se è perfetta): servono per liberare i Chiwinnie. Prima di giocare scegli <b>Facile, Medio o Difficile</b>: più è difficile, più lucine e premi! Ogni gioco usa un po' dell'energia di " + esc(stato.nome) + ": se è stanco, dagli gli spinaci!</p><div class='griglia'>";
+    var html = "<h2>Giochi</h2><p>Ogni bella partita accende una <b>lucina magica ✨</b> (due se è perfetta): servono per liberare i Chiwinnie. Prima di giocare scegli <b>Facile, Medio o Difficile</b>: più è difficile, più lucine e premi! Ogni gioco usa un po' dell'energia di " + esc(stato.nome) + ": se è stanco, portalo a casa a mangiare!</p><div class='griglia'>";
     Object.keys(MINIGIOCHI).forEach(function (k) {
       if (MINIGIOCHI[k].nascosto) return;
       var g = MINIGIOCHI[k], iz = g.zona ? ZONE.map(function (x) { return x.id; }).indexOf(g.zona) : 0;
@@ -763,7 +766,8 @@
       "<h2>" + esc(stato.nome) + " <svg viewBox='0 0 32 29' width='24' style='vertical-align:middle'><path fill='" + stato.cuore.hex + "' d='M16 28 C 6 20 0 14 0 8 A 8 8 0 0 1 16 5 A 8 8 0 0 1 32 8 C 32 14 26 20 16 28 Z'/></svg></h2>" +
       "<p>Energia: " + Math.round(stato.energia) + "/100" + (brontolone() ? " — è brontolone, ha fame di spinaci!" : "") + "</p></div>" +
       "<div class='scheda'>" + righe.map(function (r) { return "<b>" + r[0] + "</b><span>" + esc(r[1]) + "</span>"; }).join("") + "</div>" +
-      "<div class='azioni-pannello'><button class='btn verde' data-azione='apri-nutri'>🥬🌸 Dagli da mangiare</button></div>" +
+      (stato.costruiti.indexOf("casetta") === -1 ? "<div class='azioni-pannello'><button class='btn verde' data-azione='apri-nutri'>🥬🌸 Dagli da mangiare</button></div>"
+        : "<p class='nota centro'>🏡 Per dargli da mangiare portalo nella sua casa: la trovi sulla mappa.</p>") +
       "<div class='area-genitori'><b>Area genitori</b><p class='nota'>Per rivedere il gioco come un bambino che lo apre per la prima volta: cartone, scelta del Chiwinnie e viaggio dall'inizio.</p>" +
       "<button class='btn bianco' data-azione='reset'>🔄 Ricomincia da capo</button></div>"
     );
@@ -782,7 +786,6 @@
   $("btn-mappa").addEventListener("click", function () { Mappa.apri(); });
   $("btn-sfide").addEventListener("click", apriSfide);
   $("btn-avatar").addEventListener("click", apriScheda);
-  $("btn-casa").addEventListener("click", function () { Casa.apri(); });
 
   $("pannello").addEventListener("click", function (e) {
     var b = e.target.closest("[data-azione]");
@@ -842,7 +845,7 @@
     if (stato.livello < g.livello) { avviso("Si sblocca al livello " + g.livello); return; }
     if (g.zona) { var izz = ZONE.map(function (x) { return x.id; }).indexOf(g.zona); if (!zonaAperta(izz)) { avviso("Si apre quando arrivi a " + ZONE[izz].nome); return; } }
     if (g.energia > 0 && (brontolone() || stato.energia < g.energia)) {
-      avviso(stato.nome + " è troppo stanco e brontolone: dagli gli spinaci!", 3000);
+      avviso(stato.nome + " è troppo stanco e brontolone: " + (stato.costruiti.indexOf("casetta") === -1 ? "dagli gli spinaci!" : "portalo a casa a mangiare gli spinaci!"), 3200);
       chiudiPannello(); parla("Grrr… prima gli spinaci!");
       return;
     }
@@ -1034,7 +1037,7 @@
   Casa.avvia({
     stato: function () { return stato; }, gioca: function (k, o) { avviaMinigioco(k, o || {}); }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
     mostra: mostra, apriPannello: apriPannello, chiudiPannello: chiudiPannello, apriMondo: apriMondoOMappa, aggiornaEnergia: aggiornaEnergia,
-    disegnaHud: function () { disegnaTutto(); }
+    disegnaHud: function () { disegnaTutto(); }, apriNutri: apriNutri
   });
   Missione.avvia({
     stato: function () { return stato; }, gioca: function (k, o) { avviaMinigioco(k, o || {}); }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,

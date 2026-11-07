@@ -180,6 +180,7 @@ var Look = (function () {
       var b = e.target.closest("button"); if (!b) return;
       var a = b.dataset.casa;
       if (a === "letto") riposa(); else if (a === "tavolo") biscotto(); else if (a === "armadio") vai(POSTI.armadio, apriArmadio);
+      else if (a === "mangia") vai(POSTI.tavolo, C.apriNutri);
     });
     $("pannello").addEventListener("click", function (e) {
       var b = e.target.closest("[data-azione='armadio']"); if (b) toccaAccessorio(b.dataset.acc);
@@ -188,6 +189,6 @@ var Look = (function () {
 
   window.Casa = {
     avvia: function (ctx) { C = ctx; collega(); },
-    apri: apri, apriArmadio: apriArmadio, aggiornaLook: aggiornaLook, controllaPremi: controllaPremi
+    apri: apri, dice: dice, apriArmadio: apriArmadio, aggiornaLook: aggiornaLook, controllaPremi: controllaPremi
   };
 })();
