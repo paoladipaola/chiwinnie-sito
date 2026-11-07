@@ -89,6 +89,10 @@
     }
   };
 
+  // la battaglia finale: i pezzi del Cielo, ma sotto il temporale del Castello delle nuvole
+  TEMI.castello = Object.assign({}, TEMI.cielo, { sfondo: "img/castello/sfondo.jpg", nebbia: "150,150,165",
+    arrivo: "Sei arrivato al Castello delle nuvole!", perfetto: "Castello raggiunto con tutte le stelle!" });
+
   function carica(src) { var i = new Image(); i.src = src; return i; }
 
   // ---------- Il livello del Bosco ----------
@@ -443,7 +447,7 @@
     window.addEventListener("resize", misura);
 
     var I = {
-      sfondo: carica(T.cartella + "sfondo.jpg"), terreno: carica(T.cartella + T.terreno.img),
+      sfondo: carica(T.sfondo || T.cartella + "sfondo.jpg"), terreno: carica(T.cartella + T.terreno.img),
       fungo: carica(T.cartella + T.trampolino.img), cestino: carica(T.cartella + T.traguardo.img),
       rovo: T.ostacolo ? carica(T.cartella + T.ostacolo.img) : null,
       pigna: T.rotolante ? carica(T.cartella + T.rotolante.img) : null,

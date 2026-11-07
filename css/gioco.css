@@ -669,12 +669,16 @@ input[type=text] {
 #racconto.buio:has(.battaglia.diradato) { background: radial-gradient(circle at 50% 35%, #fbe2ee, #b9a8e6 80%); transition: background 2s; }
 
 /* il cartone iniziale: il Castello delle nuvole, il temporale, i colori rubati */
-.racconto-quadro.moto-castello > img, .racconto-quadro.moto-castello-fermo > img { object-position: 68% 82%; transform-origin: 68% 70%; }
+.racconto-quadro.moto-castello > img, .racconto-quadro.moto-castello-fermo > img { object-position: 50% 30%; transform-origin: 50% 30%; }
 .racconto-quadro.moto-castello > img { animation-name: verso-castello; }
-.racconto-quadro.moto-castello-fermo > img { transform: scale(1.6); }
-@keyframes verso-castello { from { transform: scale(1.05); } to { transform: scale(1.6); } }
-#racconto.film .racconto-quadro.temporale > img { animation: si-scurisce 4.5s ease-in forwards; }
-@keyframes si-scurisce { from { filter: none; transform: scale(1.6); } to { filter: grayscale(.85) brightness(.45) contrast(1.1); transform: scale(1.6); } }
+.racconto-quadro.moto-castello-fermo > img { transform: scale(1.25); }
+@keyframes verso-castello { from { transform: scale(1.02); } to { transform: scale(1.25); } }
+/* il castello rosa che diventa grigio quando arriva il temporale */
+#racconto.film .racconto-quadro > img.dissolvenza { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%;
+  transform-origin: 50% 30%; transform: scale(1.25); opacity: 0; animation: dissolvenza 3.5s 1s ease-in-out forwards; }
+@keyframes dissolvenza { to { opacity: 1; } }
+#racconto.film .racconto-quadro.temporale > img:not(.dissolvenza) { animation: si-scurisce 4.5s ease-in forwards; }
+@keyframes si-scurisce { from { filter: none; transform: scale(1.25); } to { filter: grayscale(.85) brightness(.45) contrast(1.1); transform: scale(1.25); } }
 .racconto-quadro.grigio > img { filter: grayscale(.9) brightness(.75); }
 .pioggia { position: absolute; inset: -20% 0 0; pointer-events: none; opacity: .55;
   background-image: repeating-linear-gradient(105deg, transparent 0 18px, rgba(200, 210, 230, .55) 18px 20px, transparent 20px 46px);

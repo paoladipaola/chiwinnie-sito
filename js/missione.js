@@ -215,7 +215,8 @@
   // ---------- il film: scene a tutto schermo che si muovono da sole ----------
   // ogni scena: img, testo, buio (sfondo scuro), moto (zoom, destra, sinistra, su), nebbia (true: nebbia che passa, "via": nebbia che si dirada),
   // amici (Chiwinnie da far comparire), arcobaleno (la scena finale), ultima (testo del bottone finale),
-  // temporale (il cielo si scurisce e arrivano i nuvoloni), grigio (colori rubati), pioggia, nuvolone, rapiti (gli amici volano via).
+  // temporale (il cielo si scurisce e arrivano i nuvoloni), grigio (colori rubati), pioggia, nuvolone, rapiti (gli amici volano via),
+  // dissolvi (un'altra immagine che compare piano piano sopra la prima).
   function film(scene, poi) {
     var box = document.createElement("div");
     box.id = "racconto"; box.className = "film";
@@ -228,6 +229,7 @@
       box.innerHTML = "<div class='racconto-quadro " + (ritaglio ? "ritaglio" : "moto-" + (p.moto || ["zoom", "destra", "sinistra", "su"][i % 4])) +
         (p.temporale ? " temporale" : "") + (p.grigio ? " grigio" : "") + (p.rapiti ? " rapiti" : "") + "'>" +
         (p.arcobaleno ? arcobalenoHtml() : "<img src='" + p.img + "' alt=''>") +
+        (p.dissolvi ? "<img class='dissolvenza' src='" + p.dissolvi + "' alt=''>" : "") +
         (p.temporale || p.pioggia ? "<div class='pioggia'></div>" : "") +
         (p.temporale || p.nuvolone ? "<div class='nuvoloni'><img src='img/nebbione/nebbione.png' alt=''><i></i><i></i><i></i></div>" : "") +
         (p.nebbia ? "<div class='nebbia-film" + (p.nebbia === "via" ? " via" : "") + "'><i></i><i></i><i></i></div>" : "") +
@@ -262,8 +264,8 @@
       { img: "img/zona1/finale.jpg", moto: "zoom", musica: "radura", testo: "C'era una volta il <b>Giardino magico dei Chiwinnie</b>, dove tanti Chiwinnie morbidi e colorati vivevano felici e contenti." },
       { img: "img/zona2/finale.jpg", moto: "destra", testo: "Il Giardino è un mondo fatto di tante terre: la Radura, il Ruscello, la foresta delle lucciole, il deserto dei fiori di cactus, le colline di panna, la città di pietre preziose…" },
       { img: "img/zona3/finale.jpg", moto: "su", testo: "…e ancora le isole fluttuanti, le terre del nord, i cappelli di fata. In ogni terra i Chiwinnie giocavano, ridevano e guardavano le lucciole insieme." },
-      { img: "img/zona4/finale.jpg", moto: "castello", testo: "Lassù nel cielo c'era il <b>Castello delle nuvole</b>, dove le nuvole rosa sono gentili e carine.", amici: AMICI.slice(0, 6) },
-      { img: "img/zona4/finale.jpg", moto: "castello-fermo", temporale: true, musica: "notte", suono: "errore", durata: 6500,
+      { img: "img/castello/rosa.jpg", moto: "castello", testo: "Lassù nel cielo c'era il <b>Castello delle nuvole</b>, dove le nuvole rosa sono gentili e carine.", amici: AMICI.slice(0, 6) },
+      { img: "img/castello/rosa.jpg", moto: "castello-fermo", temporale: true, dissolvi: "img/castello/temporale.jpg", musica: "notte", suono: "errore", durata: 6500,
         testo: "Ma proprio lì, all'improvviso, il cielo si scurì. Pesanti nuvoloni carichi di pioggia si addensarono sopra il castello…" },
       { img: "img/zona1/finale.jpg", moto: "zoom", grigio: true, pioggia: true, nuvolone: true, testo: "Il <b>Nebbione</b> e i suoi nuvoloni si rubarono tutti i colori, tutta la bellezza del Giardino…" },
       { img: "img/nebbione/storia.jpg", moto: "zoom", grigio: true, pioggia: true, amici: AMICI, rapiti: true, durata: 6500, testo: "…e infine si rubarono anche i Chiwinnie, chiusi in bolle di nebbia e nascosti in ogni terra." },
@@ -298,11 +300,11 @@
   function finale(poi) {
     var s = stato();
     film([
-      { img: "img/nebbione/nebbione.png", buio: true, nebbia: true, musica: "notte", suono: "errore", testo: "Sei arrivato al Castello delle nuvole, avvolto dai nuvoloni. Il Nebbione gonfia le guance: «Nessuno porterà i colori quassù!»" },
+      { img: "img/castello/temporale.jpg", moto: "castello", pioggia: true, nuvolone: true, musica: "notte", suono: "errore", testo: "Sei arrivato al Castello delle nuvole, avvolto dai nuvoloni. Il Nebbione gonfia le guance: «Nessuno porterà i colori quassù!»" },
       { img: immagineChiwi(s.colore, "corsa1"), buio: true, testo: "Ma " + C.esc(s.nome) + " non è più solo. Da tutte le terre del Giardino arrivano di corsa gli amici liberati…" },
       { arcobaleno: true, buio: true, durata: 8500, musica: "nuvole", testo: "Tutti i Chiwinnie si prendono per la zampetta e insieme fanno un enorme <b>arcobaleno</b>, che investe il Nebbione!" },
       { img: "img/nebbione/nebbione_buono.png", testo: "I nuvoloni si diradano. Al posto del Nebbione c'è una nuvola rosa e buona: «Che colori! Non li avevo mai visti così da vicino…»" },
-      { img: "img/zona4/finale.jpg", moto: "su", nebbia: "via", testo: "I colori tornano in tutto il Giardino magico! Il Castello delle nuvole è di nuovo rosa, e ogni sera tutti i Chiwinnie guardano le lucciole insieme.", amici: AMICI, ultima: "Che festa!" }
+      { img: "img/castello/rosa.jpg", moto: "su", nebbia: "via", testo: "I colori tornano in tutto il Giardino magico! Il Castello delle nuvole è di nuovo rosa, e ogni sera tutti i Chiwinnie guardano le lucciole insieme.", amici: AMICI, ultima: "Che festa!" }
     ], poi);
   }
 

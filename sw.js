@@ -1,7 +1,7 @@
 // Service worker: permette di giocare anche senza internet.
 // Al primo avvio salva i file principali; le immagini si salvano man mano che il gioco le usa.
 // Quando si pubblica una nuova versione basta cambiare VERSIONE: i telefoni scaricano i file nuovi.
-var VERSIONE = "chiwinnie-0.29.0";
+var VERSIONE = "chiwinnie-0.30.0";
 var ESSENZIALI = [
   "./", "index.html", "manifest.webmanifest", "css/gioco.css",
   "js/dati.js", "js/audio.js", "js/minigiochi.js", "js/arcade.js", "js/colora.js", "js/rompicapi.js", "js/aggiustatutto.js", "js/casa.js", "js/missione.js", "js/giochini.js", "js/gioco.js",

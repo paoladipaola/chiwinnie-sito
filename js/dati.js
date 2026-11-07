@@ -1213,7 +1213,7 @@ var CAPITOLI = [
   { zona: "gemme", tema: "gemme", premio: { stelle: 22, petali: 50, legnetti: 45, sassolini: 40 },
     arrivo: "Nella città di pietre preziose le gemme hanno smesso di brillare. Qui il Nebbione ha nascosto Gemma, Rubino e Zaffiro.",
     fine: "Tutte le gemme tornano a scintillare: Gemma, Rubino e Zaffiro sono liberi!" },
-  { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
+  { zona: "cielo", tema: "cielo", temaFinale: "castello", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
     arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
     fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
@@ -1226,7 +1226,7 @@ function lucinePartita(d) {
   return bene ? (benissimo ? 2 : 1) : 0;
 }
 // il paesaggio dell'avventura del sentiero: quello della terra dove si sta andando
-function temaSentiero(c) { var d = CAPITOLI[CAPITOLI.indexOf(c) + 1]; return c.finale || !d ? c.tema : d.tema; }
+function temaSentiero(c) { var d = CAPITOLI[CAPITOLI.indexOf(c) + 1]; return c.finale ? (c.temaFinale || c.tema) : !d ? c.tema : d.tema; }
 function zonaId(id) { return ZONE.filter(function (z) { return z.id === id; })[0]; }
 function capitoloDi(zona) { return CAPITOLI.filter(function (c) { return c.zona === zona; })[0] || null; }
 function nomeCapitolo(c) { if (c.nome) return c.nome; var z = ZONE.filter(function (x) { return x.id === c.zona; })[0]; return z ? z.nome : ""; }
