@@ -519,6 +519,87 @@ var ZONE = [
     }
   },
   {
+    id: "deserto", nome: "Il deserto dei fiori di cactus", musica: "prato", sfondo: "img/zona8/vuota.jpg", cartella: "img/zona8/",
+    descrizione: "Un deserto caldo e gentile, dove i cactus sono pieni di fiori.",
+    prati: [{ x1: 30, x2: 76, y1: 66, y2: 92 }],
+    pezzi: {
+      des_casa: {
+        nome: "Casetta di argilla", livello: 18, costo: { sassolini: 14, legnetti: 8 }, xp: 32,
+        pos: [30, 54.73, 19, 11.27], tocco: [[31.5, 55.6, 47.5, 65.4]],
+        descrizione: "Una casetta tonda di argilla calda, con la porta blu e un cactus sul tetto."
+      },
+      des_vasi: {
+        nome: "Vasi con i cactus", livello: 18, costo: { sassolini: 8, petali: 4 }, xp: 18,
+        pos: [66, 65.85, 10, 6.15], tocco: [[66.8, 66.3, 75.2, 71.7]],
+        descrizione: "Tre vasi di terracotta con dentro piccoli cactus fioriti."
+      },
+      des_bancarella: {
+        nome: "Bancarella della frutta", livello: 18, costo: { legnetti: 10, petali: 6 }, xp: 24,
+        pos: [33, 64.89, 14, 8.11], tocco: [[34.1, 65.5, 45.9, 72.6]], bolla: [40.0, 66.9],
+        produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
+        descrizione: "Arance, datteri, meloni e fichi: e per il Chiwinnie anche qualche spinacino."
+      },
+      des_tenda: {
+        nome: "Tenda a righe", livello: 19, costo: { petali: 14, legnetti: 8 }, xp: 28,
+        pos: [53, 56.7, 20, 7.8], tocco: [[54.6, 57.3, 71.4, 64.1]],
+        descrizione: "Una tenda colorata con le bandierine e il tappeto all'ingresso."
+      },
+      des_pozzo: {
+        nome: "Pozzo di pietra", livello: 19, costo: { sassolini: 14 }, xp: 24,
+        pos: [80, 57.52, 9, 6.98], tocco: [[80.7, 58.1, 88.3, 64.2]],
+        descrizione: "Un pozzo con il tettuccio e il secchio: l'acqua più fresca del deserto."
+      },
+      des_fontana: {
+        nome: "Fontana di piastrelle", livello: 19, costo: { sassolini: 12, stelle: 2 }, xp: 26,
+        pos: [50, 65.68, 12, 6.82], tocco: [[51.0, 66.2, 61.0, 72.2]], bolla: [56.0, 67.7],
+        produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
+        descrizione: "Una fontana rotonda di piastrelle turchesi."
+      },
+      des_fiori: {
+        nome: "Fiori del deserto", livello: 19, costo: { petali: 10 }, xp: 18,
+        pos: [46, 88.63, 16, 5.37], tocco: [[47.3, 89.1, 60.7, 93.7]], bolla: [54.0, 90.6],
+        produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Fiorellini e piante grasse tra i sassolini lisci."
+      },
+      des_oasi: {
+        nome: "Oasi con le palme", livello: 20, costo: { sassolini: 10, petali: 10, stelle: 2 }, xp: 32,
+        pos: [32, 71.75, 26, 9.25], tocco: [[34.1, 72.5, 55.9, 80.5]],
+        descrizione: "Un laghetto turchese con due palme: il posto più fresco del deserto."
+      },
+      des_carretto: {
+        nome: "Carretto dei tappeti", livello: 20, costo: { legnetti: 14, petali: 6 }, xp: 26,
+        pos: [62, 72.9, 14, 6.1], tocco: [[63.1, 73.4, 74.9, 78.7]], bolla: [69.0, 74.9],
+        produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Un carretto pieno di tappeti colorati e melograni."
+      },
+      des_lanterna: {
+        nome: "Lanterna di vetri colorati", livello: 20, costo: { sassolini: 8, stelle: 2 }, xp: 22,
+        pos: [22, 71.56, 5, 7.44], tocco: [[22.4, 72.2, 26.6, 78.6]],
+        descrizione: "Una lanterna di vetri rossi, verdi e blu che brilla la sera."
+      },
+      des_castello: {
+        nome: "Castello di sabbia", livello: 20, costo: { sassolini: 10, petali: 4 }, xp: 22,
+        pos: [24, 84.11, 13, 5.89], tocco: [[25.0, 84.6, 36.0, 89.7]],
+        descrizione: "Un castello di sabbia con le conchiglie, il secchiello e la paletta."
+      },
+      des_ombrellone: {
+        nome: "Ombrellone con i cuscini", livello: 21, costo: { petali: 12, stelle: 2 }, xp: 26,
+        pos: [62, 79.92, 13, 7.08], tocco: [[63.0, 80.5, 74.0, 86.6]],
+        descrizione: "Un ombrellone a righe sopra un tappeto con due cuscini."
+      },
+      des_amaca: {
+        nome: "Amaca tra le palme", livello: 21, costo: { legnetti: 12, stelle: 3 }, xp: 30,
+        pos: [40, 81.07, 20, 6.93], tocco: [[41.6, 81.6, 58.4, 87.7]],
+        descrizione: "Un'amaca a righe tra due palme, per dondolarsi al sole."
+      },
+      des_cactus: {
+        nome: "Grande cactus fiorito", livello: 21, costo: { petali: 16, sassolini: 6, stelle: 3 }, xp: 34,
+        pos: [82, 84.11, 11, 8.89], tocco: [[82.9, 84.8, 92.1, 92.6]],
+        descrizione: "Un cactus alto alto con le braccia piene di fiori rosa."
+      }
+    }
+  },
+  {
     id: "cielo", nome: "Il Cielo del Celeste", musica: "nuvole", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
     descrizione: "Sopra le nuvole, dove vola il rarissimo Chiwinnie Celeste.",
     prati: [{ x1: 14, x2: 86, y1: 47, y2: 94 }],
@@ -602,7 +683,7 @@ var ZONE = [
 ];
 
 // Esperienza necessaria per raggiungere ogni livello (indice = livello).
-var LIVELLI_XP = [0, 0, 30, 80, 150, 240, 350, 480, 630, 800, 1000, 1220, 1470, 1750, 2060, 2400, 2780, 3200, 3660, 4160];
+var LIVELLI_XP = [0, 0, 30, 80, 150, 240, 350, 480, 630, 800, 1000, 1220, 1470, 1750, 2060, 2400, 2780, 3200, 3660, 4160, 4700, 5300, 6000];
 // ogni quanto cade una stellina nel giardino
 var STELLA_OGNI = 3 * 60000;
 
@@ -721,7 +802,8 @@ var SFIDE = [
   // le sfide nuove vanno sempre in fondo: il salvataggio ricorda le sfide per posizione
   { testo: "Completa la foresta delle lucciole", stelle: 8, xp: 80, ordine: 29.5, verifica: function (s) { return Object.keys(zonaId("foresta").pezzi).every(function (k) { return costruito(s, k); }); } },
   { testo: "Completa le isole fluttuanti", stelle: 8, xp: 85, ordine: 29.7, verifica: function (s) { return Object.keys(zonaId("isole").pezzi).every(function (k) { return costruito(s, k); }); } },
-  { testo: "Completa le terre del nord", stelle: 8, xp: 90, ordine: 29.8, verifica: function (s) { return Object.keys(zonaId("nord").pezzi).every(function (k) { return costruito(s, k); }); } }
+  { testo: "Completa le terre del nord", stelle: 8, xp: 90, ordine: 29.8, verifica: function (s) { return Object.keys(zonaId("nord").pezzi).every(function (k) { return costruito(s, k); }); } },
+  { testo: "Completa il deserto dei fiori di cactus", stelle: 8, xp: 95, ordine: 29.85, verifica: function (s) { return Object.keys(zonaId("deserto").pezzi).every(function (k) { return costruito(s, k); }); } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,
@@ -806,6 +888,9 @@ var AMICI = [
   { id: "brina",     nome: "Brina", femmina: true,     colore: "bianco", look: { collo: "sciarpa" },         zona: "nord",     lucine: 5, regalo: { sassolini: 12, stelle: 1 } },
   { id: "pinolo",    nome: "Pinolo",    colore: "verde",  look: { testa: "berretto_lana" },   zona: "nord",     lucine: 6, regalo: { legnetti: 16, petali: 8 } },
   { id: "aurora",    nome: "Aurora", femmina: true,    colore: "viola",  look: { corpo: "tutu" },            zona: "nord",     lucine: 6, regalo: { petali: 16, stelle: 2 } },
+  { id: "dattero",   nome: "Dattero",   colore: "verde",  look: { testa: "cappello_paglia" }, zona: "deserto",  lucine: 6, regalo: { spinaci: 12, petali: 10 } },
+  { id: "zaffera",   nome: "Zaffera", femmina: true,   colore: "rosa",   look: { viso: "occhiali_cuore" },  zona: "deserto",  lucine: 6, regalo: { petali: 18, stelle: 2 } },
+  { id: "cactino",   nome: "Cactino",   colore: "blu",    look: { testa: "cuffie" },          zona: "deserto",  lucine: 6, regalo: { sassolini: 14, stelle: 2 } },
   { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
   { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
   { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
@@ -861,13 +946,15 @@ var CAPITOLI = [
   { zona: "nord", tema: "nord", premio: { stelle: 15, petali: 35, legnetti: 35, sassolini: 25 },
     arrivo: "Nelle terre del nord l'aurora si è spenta e la neve è tutta grigia. Qui il Nebbione ha nascosto Brina, Pinolo e Aurora.",
     fine: "L'aurora torna a danzare nel cielo: Brina, Pinolo e Aurora sono liberi!" },
+  { zona: "deserto", tema: "deserto", premio: { stelle: 16, petali: 40, legnetti: 35, sassolini: 30 },
+    arrivo: "Nel deserto i fiori dei cactus si sono chiusi e la sabbia è grigia. Qui il Nebbione ha nascosto Dattero, Zaffera e Cactino.",
+    fine: "Tutti i cactus fioriscono insieme: Dattero, Zaffera e Cactino sono liberi!" },
   { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
     arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
     fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
 // le terre del Giardino magico che stiamo ancora dipingendo: si vedono nella mappa
-var TERRE_IN_ARRIVO = ["Il deserto dei fiori di cactus",
-  "I cappelli di fata", "Le colline di panna", "La città di pietre preziose"];
+var TERRE_IN_ARRIVO = ["I cappelli di fata", "Le colline di panna", "La città di pietre preziose"];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
   if (!d || d.gioco === "colora" || d.gioco === "sfida") return 0;

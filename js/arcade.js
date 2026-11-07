@@ -52,6 +52,13 @@
       rotolante: { img: "../pigna.png" }, traguardo: { img: "porta.png", w: 140, h: 104 },
       arrivo: "Sei arrivato alla porta rossa!", perfetto: "Nord perfetto: tutte le stelle!"
     },
+    deserto: {
+      cartella: "img/deserto/", terreno: { img: "terreno.png", h: 104, su: 30 }, colTerra: "#b5744a", nebbia: "245,220,190",
+      piatt: { roccia: { img: "roccia.png", top: 0.08 }, cassa: { img: "cassa.png", top: 0.22 } },
+      trampolino: { img: "fiorecactus.png", w: 100, h: 98, top: 90 }, ostacolo: { img: "cespuglio.png", w: 84, h: 80 },
+      rotolante: { img: "cespuglio.png" }, traguardo: { img: "arco.png", w: 130, h: 132 },
+      arrivo: "Sei arrivato all'oasi!", perfetto: "Deserto perfetto: tutte le stelle!"
+    },
     cielo: {
       cartella: "img/cielo/", terreno: { img: "terreno.png", h: 92, su: 14 }, colTerra: "#f6e1e4", nebbia: "245,215,225",
       piatt: { arcobaleno: { img: "arcobaleno.png", top: 0.18 }, ponte: { img: "ponte.png", top: 0.4 }, nuvola: { img: "nuvola.png", top: 0.3 } },
