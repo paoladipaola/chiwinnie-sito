@@ -256,8 +256,45 @@
     return box;
   }
 
-  // il cartone iniziale: si vede prima di ogni cosa (prima di svegliare il Chiwinnie) e si può rivedere dal viaggio
+  // il cartone iniziale: si vede prima di ogni cosa (prima di svegliare il Chiwinnie) e si può rivedere dal viaggio.
+  // È un video con la musica (video/apertura.mp4, fatto con Remotion); se non si carica, si vedono le scene disegnate.
   function racconta(nome, poi) {
+    var colore = (stato() && stato().colore) || "viola";
+    var box = document.createElement("div");
+    box.id = "racconto"; box.className = "cartone";
+    box.innerHTML = "<video playsinline preload='auto' poster='video/apertura.jpg' src='video/apertura.mp4'></video>" +
+      "<div class='cartone-copertina'><button class='btn verde cartone-play' data-c='play'>▶ Guarda il cartone</button></div>" +
+      "<button class='btn bianco piccolo cartone-salta' data-c='salta'>Salta ⏭</button>" +
+      "<div class='cartone-fine' hidden><img src='" + immagineChiwi(colore, "fronte") + "' alt=''>" +
+      "<p>Salva tutti i Chiwinnie con le <b>lucine magiche ✨</b> e riporta i colori nel Giardino magico!</p>" +
+      "<button class='btn verde' data-c='fine'>" + (nome ? "Andiamo!" : "Comincia!") + "</button></div>";
+    document.getElementById("app").appendChild(box);
+    var v = box.querySelector("video"), finito = false, cambiato = false;
+    Suoni.musica(null);
+    function chiudi() {
+      if (finito) return; finito = true;
+      try { v.pause(); } catch (e) {}
+      box.remove();
+      var s = stato(); if (s) { dati(); s.missione.storia = true; C.salva(); }
+      if (poi) poi();
+    }
+    function schede() { if (finito || cambiato) return; cambiato = true; box.remove(); raccontaSchede(nome, poi); }
+    function guarda() {
+      box.querySelector(".cartone-copertina").hidden = true;
+      v.muted = Suoni.muto();
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { v.muted = true; v.play().catch(schede); });
+    }
+    v.addEventListener("error", schede);
+    v.addEventListener("ended", function () { box.querySelector(".cartone-fine").hidden = false; box.querySelector(".cartone-salta").hidden = true; Suoni.sfx("magia"); });
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-c]");
+      if (!b) { if (!v.paused || v.ended) return; return guarda(); }
+      if (b.dataset.c === "play") guarda();
+      else chiudi();
+    });
+  }
+  function raccontaSchede(nome, poi) {
     var chi = nome ? "<b>" + C.esc(nome) + "</b>" : "uno solo";
     var colore = (stato() && stato().colore) || "viola";
     film([
