@@ -493,17 +493,12 @@ input[type=text] {
 .tris-obiettivi .mosse { padding-left: 12px; background: var(--lilla-scuro); color: white; }
 .tris-tavola { position: relative; width: min(94vw, 440px, 62vh); aspect-ratio: 1; flex: none; border-radius: 18px; box-shadow: var(--ombra); touch-action: none;
   background: repeating-conic-gradient(#f4ead8 0% 25%, #fbf4e8 0% 50%) 0 0 / calc(200% / 7) calc(200% / 7); border: 4px solid #fff; overflow: hidden; }
-.tris-t { position: absolute; display: flex; align-items: center; justify-content: center; padding: 0; transition: left .18s ease-out, top .22s ease-in; cursor: pointer; }
+.tris-t { position: absolute; display: flex; align-items: center; justify-content: center; padding: 0; transition: left .18s ease-out, top .3s cubic-bezier(.35, 1.35, .6, 1); cursor: pointer; }
 .tris-t img { width: 82%; height: 82%; object-fit: contain; pointer-events: none; filter: drop-shadow(0 2px 2px rgba(60, 40, 20, .25)); }
 .tris-t.scelta { background: rgba(138, 120, 194, .25); border-radius: 12px; }
 .tris-t.scelta img { transform: scale(1.12); }
 .tris-t.via img { transform: scale(0); opacity: 0; transition: transform .2s, opacity .2s; }
 .tris-t.suggerita img { animation: festa .7s ease-in-out infinite; }
-.tris-t.soffione { background: radial-gradient(circle, rgba(255, 243, 160, .9), rgba(255, 243, 160, 0) 70%); }
-.tris-t.soffione::after { content: "✦"; position: absolute; right: 6%; top: 2%; font-size: 14px; color: #c98a12; }
-.tris-t.soffione.riga::before, .tris-t.soffione.colonna::before { content: ""; position: absolute; background: rgba(255, 210, 63, .5); border-radius: 4px; }
-.tris-t.soffione.riga::before { left: 4%; right: 4%; top: 46%; height: 8%; }
-.tris-t.soffione.colonna::before { top: 4%; bottom: 4%; left: 46%; width: 8%; }
 .tris-tavola.vinto .tris-t img { animation: festa .6s ease-in-out 2; }
 
 /* ---------- Indovinelli dei numeri ---------- */
@@ -808,3 +803,41 @@ input[type=text] {
 .scegli-diff .diff-difficile.scelta { border-color: #ef8a6a; background: #ffece4; }
 .bottino .diff-fatta { font-size: 15px; background: #fff6d8; border-radius: 99px; padding: 2px 10px; }
 .lucciola.piccola { width: 46px; height: 46px; }
+
+/* ---------- Tris: pezzi speciali ed effetti ---------- */
+.tris-legenda { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; font-size: 13px; font-weight: 800; color: var(--testo); }
+.tris-legenda span { display: flex; align-items: center; gap: 3px; background: var(--carta); border-radius: 99px; padding: 2px 10px 2px 3px; box-shadow: var(--ombra); }
+.tris-legenda img { width: 26px; height: 26px; object-fit: contain; }
+.tris-t img { position: relative; z-index: 1; }
+.tris-t img.dietro { position: absolute; z-index: 0; width: 100%; height: 100%; opacity: .85; animation: gira-girandola 2.4s linear infinite; filter: none; }
+.tris-t.sp-girandola img:not(.dietro) { width: 62%; height: 62%; }
+.tris-t.sp-girandola::before { content: ""; position: absolute; z-index: 2; background: rgba(255, 255, 255, .85); border-radius: 4px; box-shadow: 0 0 6px #ffd23f; }
+.tris-t.sp-girandola.riga::before { left: 2%; right: 2%; top: 47%; height: 6%; }
+.tris-t.sp-girandola.colonna::before { top: 2%; bottom: 2%; left: 47%; width: 6%; }
+.tris-t.sp-bomba img:first-child { width: 92%; height: 92%; animation: pulsa-bomba 1s ease-in-out infinite; }
+.tris-t.sp-bomba img.segno { position: absolute; z-index: 2; width: 42%; height: 42%; right: 2%; bottom: 2%; background: rgba(255, 250, 242, .9); border-radius: 50%; padding: 3%; }
+.tris-t.sp-arcobaleno img { width: 90%; height: 90%; animation: gira-girandola 5s linear infinite; filter: drop-shadow(0 0 6px rgba(255, 255, 255, .9)) drop-shadow(0 0 12px rgba(255, 210, 120, .7)); }
+.tris-t.nasce img { animation: nasce .5s cubic-bezier(.3, 1.6, .5, 1); }
+.tris-t.colpita img { transform: scale(1.25); filter: brightness(1.5) drop-shadow(0 0 10px #fff6b0); transition: transform .2s, filter .2s; }
+.tris-t.via img { transform: scale(0) rotate(90deg); opacity: 0; transition: transform .22s ease-in, opacity .22s; }
+@keyframes gira-girandola { to { transform: rotate(360deg); } }
+@keyframes pulsa-bomba { 50% { transform: scale(1.08); } }
+@keyframes nasce { 0% { transform: scale(.2); } 100% { transform: scale(1); } }
+.tris-fx { position: absolute; pointer-events: none; z-index: 5; }
+.tris-fx.raggio { background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff8c8 20%, #fff 50%, #fff8c8 80%, rgba(255, 255, 255, 0)); box-shadow: 0 0 18px 6px rgba(255, 220, 90, .7); border-radius: 99px; }
+.tris-fx.raggio.riga { left: 0; right: 0; height: 9%; transform: translateY(-50%) scaleX(0); animation: raggio-x .6s ease-out forwards; }
+.tris-fx.raggio.colonna { top: 0; bottom: 0; width: 9%; transform: translateX(-50%) scaleY(0); animation: raggio-y .6s ease-out forwards;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff8c8 20%, #fff 50%, #fff8c8 80%, rgba(255, 255, 255, 0)); }
+@keyframes raggio-x { 30% { transform: translateY(-50%) scaleX(1); opacity: 1; } 100% { transform: translateY(-50%) scaleX(1); opacity: 0; } }
+@keyframes raggio-y { 30% { transform: translateX(-50%) scaleY(1); opacity: 1; } 100% { transform: translateX(-50%) scaleY(1); opacity: 0; } }
+.tris-fx.onda { border-radius: 50%; transform: translate(-50%, -50%) scale(.2); border: 6px solid #ffc1cf;
+  background: radial-gradient(circle, rgba(255, 255, 255, .9), rgba(255, 180, 200, .55) 45%, rgba(255, 180, 200, 0) 70%); animation: onda .7s ease-out forwards; }
+@keyframes onda { 40% { opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0; } }
+.tris-fx.scintilla { width: 9px; height: 9px; border-radius: 50%; margin: -4px 0 0 -4px; box-shadow: 0 0 6px rgba(255, 255, 255, .9); animation: scintilla .6s ease-out forwards; }
+@keyframes scintilla { to { transform: translate(var(--dx), var(--dy)) scale(.3); opacity: 0; } }
+.tris-fx.lampo { inset: 0; border-radius: 18px; background: linear-gradient(120deg, rgba(255, 90, 90, .35), rgba(255, 200, 60, .35), rgba(120, 210, 90, .35), rgba(90, 160, 255, .35), rgba(180, 110, 230, .35)); animation: lampo .6s ease-out forwards; }
+.tris-fx.lampo.grande { animation-duration: .8s; }
+@keyframes lampo { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
+.tris-fx.tris-scritta { transform: translate(-50%, -50%); white-space: nowrap; font-weight: 800; font-size: 28px; color: #fff; z-index: 6;
+  text-shadow: 0 2px 0 #8a6fc0, 0 0 10px rgba(138, 111, 192, .8), 2px 0 0 #8a6fc0, -2px 0 0 #8a6fc0, 0 -2px 0 #8a6fc0; animation: scritta-tris 1.1s ease-out forwards; }
+@keyframes scritta-tris { 0% { transform: translate(-50%, -50%) scale(.3); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; } 70% { transform: translate(-50%, -80%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -120%) scale(1); opacity: 0; } }

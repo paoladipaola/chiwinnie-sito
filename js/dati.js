@@ -989,7 +989,7 @@ var MINIGIOCHI = {
   },
   tris: {
     nome: "Tris di fiori", img: "img/petali.png", livello: 2, energia: 10,
-    descrizione: "Scambia due simboli vicini per metterne tre uguali in fila: spariscono e ne cadono di nuovi. Con quattro in fila nasce un soffione che pulisce tutta la riga! Raccogli quello che chiede il Chiwinnie prima che finiscano le mosse."
+    descrizione: "Scambia due simboli vicini per metterne tre uguali in fila: spariscono e ne cadono di nuovi. Con quattro in fila nasce una girandola che pulisce la riga, con una L o una T una bomba di fiori, con cinque in fila un arcobaleno che fa sparire tutti i simboli uguali. E se scambi due speciali fra loro… sorpresa! Raccogli quello che chiede il Chiwinnie prima che finiscano le mosse."
   },
   conti: {
     nome: "Indovinelli dei numeri", img: "img/stella.png", livello: 1, energia: 0, rompicapo: true,
