@@ -276,7 +276,7 @@ var ZONE = [
     }
   },
   {
-    id: "foresta", nome: "La foresta delle lucciole", musica: "notte", sfondo: "img/zona5/vuota.jpg", cartella: "img/zona5/", senzaIcone: true,
+    id: "foresta", nome: "La foresta delle lucciole", musica: "notte", sfondo: "img/zona5/vuota.jpg", cartella: "img/zona5/", senzaIcone: true, amalgama: "notte",
     descrizione: "Una foresta dove è sempre notte e la luce la fanno le lucciole.",
     prati: [{ x1: 28, x2: 72, y1: 68, y2: 82 }],
     pezzi: {
@@ -307,7 +307,7 @@ var ZONE = [
         descrizione: "Un fiore gigante che si apre di notte e lascia cadere petali luminosi."
       },
       for_amaca: {
-        nome: "Amaca delle lucciole", livello: 13, costo: { legnetti: 10, petali: 6 }, xp: 22,
+        nome: "Amaca delle lucciole", senzaOmbra: true, livello: 13, costo: { legnetti: 10, petali: 6 }, xp: 22,
         pos: [37, 59.65, 32, 10.85], tocco: [[39.56, 60.52, 66.44, 69.63]],
         descrizione: "Un'amaca a righe tra due pali con le lucine: per dondolarsi sotto le stelle."
       },

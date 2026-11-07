@@ -273,6 +273,7 @@
     Suoni.musica(new Date().getHours() >= 20 || new Date().getHours() < 7 ? "notte" : (z.musica || "radura"));
     aggiornaEnergia();
     if ($("sfondo").getAttribute("src") !== z.sfondo) $("sfondo").setAttribute("src", z.sfondo);
+    $("scena").dataset.luce = z.amalgama || "";
     $("chiwi-img").src = immagineChiwi(stato.colore, "fronte");
     Casa.aggiornaLook();
     adattaScena();
@@ -310,12 +311,22 @@
         el = document.createElement("img");
         el.className = "pezzo" + (k === nuovo ? " nascita" : "");
         el.dataset.k = k; el.alt = "";
-        el.src = z.cartella + k + ".png";
+        // nelle terre "amalgamate" gli arredi hanno la luce del quadro (img/<zona>/scena/) e un'ombra morbida a terra
+        el.src = z.cartella + (z.amalgama ? "scena/" : "") + k + ".png";
         el.style.left = p.pos[0] + "%"; el.style.top = p.pos[1] + "%";
         el.style.width = p.pos[2] + "%"; el.style.height = p.pos[3] + "%";
         el.style.zIndex = i + 1;
         box.appendChild(el);
-      } else if (!fatto(k) && el) el.remove();
+        if (z.amalgama && !p.senzaOmbra) {
+          var om = document.createElement("div");
+          om.className = "ombra-pezzo"; om.dataset.ombra = k;
+          var basso = p.pos[3] / p.pos[2] < 0.35;   // le cose piatte (laghetti, sentieri) fanno poca ombra
+          om.style.left = (p.pos[0] + p.pos[2] * 0.1) + "%"; om.style.width = (p.pos[2] * 0.8) + "%";
+          om.style.top = (p.pos[1] + p.pos[3] - 1.4) + "%"; om.style.height = "2.6%";
+          if (basso) om.style.opacity = 0.45;
+          box.insertBefore(om, box.firstChild);
+        }
+      } else if (!fatto(k) && el) { el.remove(); var o = box.querySelector('[data-ombra="' + k + '"]'); if (o) o.remove(); }
     });
     bolle.innerHTML = "";
     chiavi.forEach(function (k) {
