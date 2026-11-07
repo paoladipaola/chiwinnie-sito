@@ -40,7 +40,7 @@
     },
     isole: {
       cartella: "img/isole/", terreno: { img: "terreno.png", h: 100, su: 30 }, colTerra: "#6b5a4c", nebbia: "200,225,245",
-      piatt: { isoletta: { img: "isoletta.png", top: 0.08 }, asse: { img: "asse.png", top: 0.7 } },
+      piatt: { isoletta: { img: "isoletta.png", top: 0.08 }, asse: { img: "asse.png", top: 0.7, appesa: true, corde: [0.205, 0.862], corda: 0.012 } },
       trampolino: { img: "molla.png", w: 96, h: 108, top: 100 }, ostacolo: { img: "temporale.png", w: 100, h: 48 },
       traguardo: { img: "cancello.png", w: 110, h: 148 },
       arrivo: "Sei arrivato al cancello fiorito!", perfetto: "Isole perfette: tutte le stelle!"
@@ -544,6 +544,13 @@
       var g = GRAVITA;
       if (premuto && chiwi.vy < 0 && chiwi.tenuto < 0.26) { g *= 0.42; chiwi.tenuto += dt; }
       chiwi.vy = Math.min(CADUTA_MAX, chiwi.vy + g * dt);
+      // le altalene ondeggiano piano (sono appese in alto, oltre lo schermo): chi ci sta sopra si muove con loro
+      L.piattaforme.forEach(function (p) {
+        if (!T.piatt[p.tipo].appesa) return;
+        var prec = p.dx || 0;
+        p.dx = 16 * Math.sin(tempo * 1.4 + p.x * 0.013);
+        if (chiwi.aTerra && chiwi.su === p) chiwi.x += p.dx - prec;
+      });
       var prima = chiwi.y;
       chiwi.y += chiwi.vy * dt;
 
@@ -552,9 +559,11 @@
       chiwi.aTerra = false;
       if (chiwi.vy >= 0) {
         if (prima <= TERRA_Y && chiwi.y >= TERRA_Y && suTerra(chiwi.x)) { chiwi.y = TERRA_Y; chiwi.vy = 0; chiwi.aTerra = true; controllo = chiwi.x; }
+        chiwi.su = null;
         L.piattaforme.forEach(function (p) {
           // si atterra anche appena oltre il bordo: i salti perdonano un po'
-          if (prima <= p.y && chiwi.y >= p.y && chiwi.x > p.x - 25 && chiwi.x < p.x + p.w + 25) { chiwi.y = p.y; chiwi.vy = 0; chiwi.aTerra = true; }
+          var px = p.x + (p.dx || 0);
+          if (prima <= p.y && chiwi.y >= p.y && chiwi.x > px - 25 && chiwi.x < px + p.w + 25) { chiwi.y = p.y; chiwi.vy = 0; chiwi.aTerra = true; chiwi.su = p; }
         });
       }
       // funghi: sono trampolini, basta toccarli per fare un salto altissimo
@@ -780,8 +789,20 @@
       // piattaforme
       L.piattaforme.forEach(function (p) {
         if (p.x > cam + vistaW || p.x + p.w < cam) return;
-        var im = I[p.tipo], h = p.w / (im.naturalWidth / im.naturalHeight || 3);
-        img(im, p.x, p.y - h * T.piatt[p.tipo].top, p.w, h);
+        var im = I[p.tipo], h = p.w / (im.naturalWidth / im.naturalHeight || 3), TP = T.piatt[p.tipo];
+        if (!TP.appesa) { img(im, p.x, p.y - h * TP.top, p.w, h); return; }
+        // altalena: le corde salgono fino in cima allo schermo; tutto ruota intorno a un punto lassù, come un pendolo
+        var su = -alzo - 40, cx = p.x + p.w / 2, giu = p.y - h * TP.top, lungo = giu - su;
+        var ang = Math.asin(Math.max(-0.2, Math.min(0.2, (p.dx || 0) / lungo)));
+        ctx.save(); ctx.translate(cx, su); ctx.rotate(-ang); ctx.translate(-cx, -su);
+        var spess = Math.max(2, p.w * TP.corda), x1 = p.x + p.w * TP.corde[0], x2 = p.x + p.w * TP.corde[1];
+        ctx.lineCap = "round";
+        [x1, x2].forEach(function (x) {
+          ctx.strokeStyle = "#6c5238"; ctx.lineWidth = spess + 1.2; ctx.beginPath(); ctx.moveTo(x, su); ctx.lineTo(x, giu + 3); ctx.stroke();
+          ctx.strokeStyle = "#a8865c"; ctx.lineWidth = spess * 0.55; ctx.setLineDash([4, 5]); ctx.beginPath(); ctx.moveTo(x, su); ctx.lineTo(x, giu + 3); ctx.stroke(); ctx.setLineDash([]);
+        });
+        img(im, p.x, giu, p.w, h);
+        ctx.restore();
       });
       // funghi
       L.funghi.forEach(function (f) {

@@ -924,6 +924,18 @@ var ZONE = [
     }
   }
 ];
+// Costruire costa di più di come è scritto sopra: così una terra non si arreda tutta appena arrivati.
+// Radura ×2 (casetta e orto, i primi, solo ×1,5), le altre terre ×2,5; le stelle, più rare, ×1,5.
+// I numeri grandi si arrotondano a 5 per essere facili da leggere.
+(function () {
+  function tondo(q) { return q < 10 ? Math.round(q) : Math.round(q / 5) * 5; }
+  ZONE.forEach(function (z, i) {
+    Object.keys(z.pezzi || {}).forEach(function (k) {
+      var p = z.pezzi[k], f = i === 0 ? (k === "casetta" || k === "orto" ? 1.5 : 2) : 2.5;
+      Object.keys(p.costo || {}).forEach(function (m) { p.costo[m] = m === "stelle" ? Math.ceil(p.costo[m] * 1.5) : tondo(p.costo[m] * f); });
+    });
+  });
+})();
 
 // Esperienza necessaria per raggiungere ogni livello (indice = livello).
 var LIVELLI_XP = [0, 0, 30, 80, 150, 240, 350, 480, 630, 800, 1000, 1220, 1470, 1750, 2060, 2400, 2780, 3200, 3660, 4160, 4700, 5300, 6000, 6800, 7700];
