@@ -276,7 +276,7 @@ var ZONE = [
     }
   },
   {
-    id: "foresta", nome: "La foresta delle lucciole", musica: "notte", sfondo: "img/zona5/vuota.jpg", cartella: "img/zona5/",
+    id: "foresta", nome: "La foresta delle lucciole", musica: "notte", sfondo: "img/zona5/vuota.jpg", cartella: "img/zona5/", senzaIcone: true,
     descrizione: "Una foresta dove è sempre notte e la luce la fanno le lucciole.",
     prati: [{ x1: 26, x2: 74, y1: 64, y2: 84 }],
     pezzi: {
@@ -357,7 +357,7 @@ var ZONE = [
     }
   },
   {
-    id: "isole", nome: "Le isole fluttuanti", musica: "nuvole", sfondo: "img/zona6/vuota.jpg", cartella: "img/zona6/",
+    id: "isole", nome: "Le isole fluttuanti", musica: "nuvole", sfondo: "img/zona6/vuota.jpg", cartella: "img/zona6/", senzaIcone: true,
     descrizione: "Isolette di prato che galleggiano nel cielo, con le cascate che cadono tra le nuvole.",
     prati: [{ x1: 10, x2: 90, y1: 56, y2: 62 }],
     pezzi: {
@@ -438,7 +438,7 @@ var ZONE = [
     }
   },
   {
-    id: "nord", nome: "Le terre del nord", musica: "casa", sfondo: "img/zona7/vuota.jpg", cartella: "img/zona7/",
+    id: "nord", nome: "Le terre del nord", musica: "casa", sfondo: "img/zona7/vuota.jpg", cartella: "img/zona7/", senzaIcone: true,
     descrizione: "Una terra di neve soffice, con l'aurora nel cielo e il lago ghiacciato.",
     prati: [{ x1: 24, x2: 74, y1: 62, y2: 86 }],
     pezzi: {
@@ -519,7 +519,7 @@ var ZONE = [
     }
   },
   {
-    id: "deserto", nome: "Il deserto dei fiori di cactus", musica: "prato", sfondo: "img/zona8/vuota.jpg", cartella: "img/zona8/",
+    id: "deserto", nome: "Il deserto dei fiori di cactus", musica: "prato", sfondo: "img/zona8/vuota.jpg", cartella: "img/zona8/", senzaIcone: true,
     descrizione: "Un deserto caldo e gentile, dove i cactus sono pieni di fiori.",
     prati: [{ x1: 30, x2: 76, y1: 66, y2: 92 }],
     pezzi: {
@@ -600,7 +600,7 @@ var ZONE = [
     }
   },
   {
-    id: "fata", nome: "I cappelli di fata", musica: "prato", sfondo: "img/zona9/vuota.jpg", cartella: "img/zona9/",
+    id: "fata", nome: "I cappelli di fata", musica: "prato", sfondo: "img/zona9/vuota.jpg", cartella: "img/zona9/", senzaIcone: true,
     descrizione: "Una valle di camini di roccia a forma di cappello, con le mongolfiere che volano all'alba.",
     prati: [{ x1: 28, x2: 72, y1: 66, y2: 92 }],
     pezzi: {
@@ -681,7 +681,7 @@ var ZONE = [
     }
   },
   {
-    id: "panna", nome: "Le colline di panna", musica: "radura", sfondo: "img/zona10/vuota.jpg", cartella: "img/zona10/",
+    id: "panna", nome: "Le colline di panna", musica: "radura", sfondo: "img/zona10/vuota.jpg", cartella: "img/zona10/", senzaIcone: true,
     descrizione: "Colline di panna montata, lecca-lecca giganti e un fiume di cioccolato.",
     prati: [{ x1: 28, x2: 80, y1: 74, y2: 90 }],
     pezzi: {

@@ -231,6 +231,8 @@
   var PROPORZIONE = 1080 / 1934;   // larghezza / altezza del quadro
   var pan = null;                  // spostamento orizzontale della scena (px, sempre <= 0)
 
+  // le terre nuove non hanno le icone a parte: si usa il disegno dell'arredo, che è già piccolo
+  function iconaPezzo(z, k) { return z.cartella + (z.senzaIcone ? "" : "icone/") + k + ".png"; }
   function zonaCorrente() { return ZONE.filter(function (z) { return z.id === stato.zona; })[0] || ZONE[0]; }
   function fatto(k) { return stato.costruiti.indexOf(k) !== -1; }
   function totalePezzi(z) { return Object.keys(z.pezzi).length; }
@@ -421,7 +423,7 @@
 
   function apriPannelloPezzo(k) {
     var z = zonaCorrente(), p = z.pezzi[k];
-    var html = "<div class='centro'><img src='" + z.cartella + "icone/" + k + ".png' style='height:120px;max-width:100%;object-fit:contain'><h2>" + esc(p.nome) + "</h2><p>" + esc(p.descrizione) + "</p>";
+    var html = "<div class='centro'><img src='" + iconaPezzo(z, k) + "' style='height:120px;max-width:100%;object-fit:contain'><h2>" + esc(p.nome) + "</h2><p>" + esc(p.descrizione) + "</p>";
     if (p.produce) {
       var resto = p.produce.ogni - ((Date.now() - stato.prod[k]) % p.produce.ogni);
       html += "<p><b>Produce:</b> 1 <img src='" + MATERIALI[p.produce.materiale].img + "' style='width:22px;vertical-align:middle'> ogni " +
@@ -685,7 +687,7 @@
         : manca ? "<div class='lucchetto'>Prima: " + esc(z.pezzi[p.richiede].nome) + "</div>"
         : htmlCosto(p.costo);
       html += "<button class='voce" + (giaFatto ? " fatta" : bloccato || manca ? " bloccata" : "") + "' data-azione='costruisci' data-chiave='" + k + "'>" +
-        "<img class='anteprima' src='" + z.cartella + "icone/" + k + ".png' alt=''><h3>" + esc(p.nome) + "</h3>" + stato_ + "</button>";
+        "<img class='anteprima' src='" + iconaPezzo(z, k) + "' alt=''><h3>" + esc(p.nome) + "</h3>" + stato_ + "</button>";
     });
     html += "</div><h3 style='margin-top:18px'>Le zone del Bosco Giardino</h3>";
     ZONE.forEach(function (zz, i) {
