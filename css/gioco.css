@@ -158,7 +158,7 @@ input[type=text] {
 @keyframes pop { 50% { transform: scale(1.2); } }
 
 #barra-sotto {
-  position: absolute; left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); display: flex; gap: 8px;
+  position: absolute; left: 8px; right: 8px; bottom: max(10px, env(safe-area-inset-bottom)); display: flex; gap: 2px;
   background: rgba(255, 250, 242, .94); border-radius: 24px; padding: 6px; box-shadow: var(--ombra);
 }
 #barra-sotto button { flex: 1; font: inherit; font-weight: 700; font-size: 14px; border: 0; background: none; color: var(--testo); display: flex; flex-direction: column; align-items: center; gap: 0; padding: 4px 0; border-radius: 18px; position: relative; cursor: pointer; }
@@ -706,3 +706,87 @@ input[type=text] {
 
 .area-genitori { margin-top: 18px; padding: 12px; border: 2px dashed var(--bordo); border-radius: 16px; text-align: center; }
 .area-genitori p { margin: 4px 0 10px; }
+
+/* ============ la mappa del Giardino magico ============ */
+#s-mappa { background: #fde6ef; }
+#mappa-scorri { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+#mappa-tela { position: relative; width: 100%; overflow: hidden; }
+.mappa-testa {
+  position: absolute; left: 10px; right: 10px; top: max(10px, env(safe-area-inset-top)); z-index: 30;
+  display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 6px; border-radius: 99px;
+  background: rgba(255, 250, 242, .93); box-shadow: var(--ombra);
+}
+.mappa-testa .avatar { width: 52px; height: 52px; }
+.mappa-titolo { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.mappa-titolo > b { font-size: 19px; color: var(--lilla-scuro); line-height: 1.1; }
+.mappa-titolo > span { display: flex; gap: 6px; margin-top: 2px; }
+.mappa-testa .chip { background: #f6ecdc; border-radius: 99px; padding: 0 9px; font-size: 14px; font-weight: 700; }
+.mappa-viaggio { width: 52px; height: 52px; border-radius: 50%; border: 0; background: #efe7f7; padding: 4px; cursor: pointer; flex: none; }
+.mappa-viaggio img { width: 100%; height: 100%; object-fit: contain; }
+
+.mappa-sentiero { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; }
+.mappa-sentiero path { fill: none; stroke-linecap: round; stroke-width: 9; stroke-dasharray: 0.1 17; transition: stroke 1s, filter 1s; }
+.mappa-sentiero path.chiuso { stroke: rgba(255, 255, 255, .75); }
+.mappa-sentiero path.fatto { stroke: #f7c64a; filter: drop-shadow(0 0 4px rgba(255, 214, 90, .9)); animation: lucine-sentiero 1.6s linear infinite; }
+@keyframes lucine-sentiero { to { stroke-dashoffset: -34; } }
+
+.mappa-nuvola { position: absolute; width: 30%; opacity: .55; pointer-events: none; z-index: 0; animation: nuvola-mappa 9s ease-in-out infinite alternate; }
+@keyframes nuvola-mappa { to { transform: translateX(14px); } }
+.mappa-lucciola { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #fff6c8; box-shadow: 0 0 8px 3px rgba(255, 236, 150, .8); pointer-events: none; z-index: 0; animation: lucciola-mappa 3.4s ease-in-out infinite; }
+@keyframes lucciola-mappa { 50% { opacity: .15; transform: translateY(-10px); } }
+.mappa-nuvoloni { position: absolute; left: 0; right: 0; top: 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(140, 135, 160, .30), rgba(140, 135, 160, .22) 75%, rgba(140, 135, 160, 0)); }
+.mappa-nebbione { position: absolute; width: 120px; transform: translate(-50%, -50%); z-index: 12; pointer-events: none; animation: nebbione-mappa 4s ease-in-out infinite; }
+.mappa-nebbione.buono { width: 110px; }
+@keyframes nebbione-mappa { 50% { transform: translate(-50%, -58%) rotate(-3deg); } }
+
+.isola, .mappa-posto { position: absolute; transform: translate(-50%, -50%); border: 0; background: none; padding: 0; cursor: pointer; font: inherit; color: var(--testo); display: flex; flex-direction: column; align-items: center; z-index: 5; }
+.isola .tondo { position: relative; width: 132px; height: 132px; display: block; transition: filter 1.2s, transform .3s; filter: drop-shadow(0 8px 10px rgba(70, 50, 40, .25)); }
+.isola .tondo img { width: 100%; height: 100%; display: block; }
+.isola.castello .tondo { width: 160px; height: 160px; }
+.isola .nome { margin-top: -10px; background: rgba(255, 250, 242, .95); border-radius: 99px; padding: 1px 12px; font-weight: 800; font-size: 14.5px; line-height: 1.25; box-shadow: 0 3px 8px rgba(60, 40, 20, .15); white-space: nowrap; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+.isola .nome small { font-weight: 600; font-size: 12px; color: #9b8a7a; }
+.isola .amici { display: flex; gap: 3px; margin-top: 3px; }
+.isola .amici i { width: 24px; height: 24px; border-radius: 50%; background-size: cover; background-position: center 20%; border: 2px solid white; filter: grayscale(1) brightness(1.1); opacity: .65; box-shadow: 0 2px 4px rgba(0,0,0,.15); }
+.isola .amici i.si { filter: none; opacity: 1; }
+.isola .badge { position: absolute; top: 2px; right: 8px; min-width: 34px; height: 34px; border-radius: 99px; background: white; display: grid; place-items: center; font-weight: 800; font-size: 17px; box-shadow: 0 3px 8px rgba(60, 40, 20, .2); z-index: 3; color: var(--lilla-scuro); }
+.isola.castello .badge { right: 18px; }
+.isola .nebbia { position: absolute; left: 50%; top: 66px; width: 150px; height: 150px; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity 1.4s;
+  background: radial-gradient(circle, rgba(225, 222, 232, .55) 30%, rgba(200, 196, 214, .35) 60%, rgba(200, 196, 214, 0) 72%); z-index: 1; }
+.isola.castello .nebbia { top: 80px; width: 180px; height: 180px; }
+.isola.chiusa .tondo { filter: grayscale(.9) brightness(1.05) contrast(.85) drop-shadow(0 8px 10px rgba(70, 50, 40, .18)); }
+.isola.chiusa .nebbia { opacity: 1; }
+.isola.chiusa .nome { color: #8a7f86; }
+.isola.vinta .badge { background: #fff4c6; }
+.isola.corrente .tondo::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 4px solid rgba(255, 220, 110, .9); box-shadow: 0 0 18px rgba(255, 210, 90, .8); animation: anello 1.8s ease-in-out infinite; }
+@keyframes anello { 50% { transform: scale(1.06); opacity: .55; } }
+.isola:active .tondo { transform: scale(.95); }
+.isola.entra .tondo { transform: scale(1.5); transition: transform .45s ease-in; }
+.isola.entra { z-index: 40; }
+.isola.sblocco .badge { animation: pop .5s ease; }
+.isola.sblocco .tondo { animation: sblocco 1.2s ease; }
+@keyframes sblocco { 30% { transform: scale(1.15) rotate(-3deg); } 60% { transform: scale(.97) rotate(2deg); } }
+.isola.scuoti { animation: scuoti .45s ease; }
+@keyframes scuoti { 20%, 60% { transform: translate(calc(-50% - 7px), -50%); } 40%, 80% { transform: translate(calc(-50% + 7px), -50%); } }
+.isola.crea .tondo { width: 96px; height: 96px; border-radius: 50%; border: 4px dashed rgba(138, 120, 194, .6); background: rgba(255, 255, 255, .55); display: grid; place-items: center; font-size: 40px; }
+.isola.crea .badge { right: -4px; }
+.fumetto-mappa { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #7fae6e; color: white; font-weight: 800; font-size: 14px; border-radius: 99px; padding: 2px 12px; white-space: nowrap; box-shadow: 0 3px 8px rgba(40, 70, 30, .3); z-index: 4; animation: dondola-mappa 1.4s ease-in-out infinite; }
+@keyframes dondola-mappa { 50% { transform: translateX(-50%) translateY(-5px); } }
+
+.mappa-posto img { width: 120px; filter: drop-shadow(0 6px 8px rgba(60, 50, 30, .25)); }
+.mappa-posto.casa img { width: 104px; }
+.mappa-posto .nome { margin-top: -6px; background: rgba(255, 250, 242, .95); border-radius: 99px; padding: 1px 12px; font-weight: 800; font-size: 14px; box-shadow: 0 3px 8px rgba(60, 40, 20, .15); white-space: nowrap; }
+.mappa-posto.chiusa img { filter: grayscale(.8) opacity(.7); }
+.mappa-posto:active img { transform: scale(.95); }
+
+#mappa-chiwi { position: absolute; width: 54px; z-index: 20; transform: translate(calc(-50% - 74px), -10%); pointer-events: none; transition: left 1s ease-in-out, top 1s ease-in-out; }
+#mappa-chiwi.subito { transition: none; }
+#mappa-chiwi .vestito { animation: saltella-mappa 1.6s ease-in-out infinite; }
+#mappa-chiwi.salta-mappa .vestito { animation: balzo-mappa .5s ease-in-out 2; }
+#mappa-chiwi.sinistra .vestito { transform: scaleX(-1); }
+@keyframes saltella-mappa { 50% { transform: translateY(-4px); } }
+@keyframes balzo-mappa { 50% { transform: translateY(-26px); } }
+.mappa-nebbione.scappa { animation: nebbione-scappa 1.4s ease-in forwards; }
+@keyframes nebbione-scappa { to { transform: translate(-50%, -260%) scale(.5); opacity: 0; } }
+.mappa-nuvoloni { transition: opacity 1.5s; }
+.mappa-nuvoloni.scappa { opacity: 0; }

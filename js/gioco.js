@@ -262,7 +262,12 @@
   });
   window.addEventListener("pointerup", function () { setTimeout(function () { trascina = null; }, 0); });
 
+  // da dove si è partiti: se dalla mappa, chiudendo la casetta o un gioco si torna lì
+  var tornaA = null;
+  function tornoAllaMappa() { if (tornaA !== "mappa") return false; tornaA = null; Mappa.apri(); return true; }
+  function apriMondoOMappa() { if (!tornoAllaMappa()) apriMondo(); }
   function apriMondo() {
+    tornaA = null;
     mostra("s-mondo");
     var z = zonaCorrente();
     Suoni.musica(new Date().getHours() >= 20 || new Date().getHours() < 7 ? "notte" : (z.musica || "radura"));
@@ -774,6 +779,7 @@
 
   $("btn-costruisci").addEventListener("click", apriCostruisci);
   $("btn-giochi").addEventListener("click", apriGiochi);
+  $("btn-mappa").addEventListener("click", function () { Mappa.apri(); });
   $("btn-sfide").addEventListener("click", apriSfide);
   $("btn-avatar").addEventListener("click", apriScheda);
   $("btn-casa").addEventListener("click", function () { Casa.apri(); });
@@ -930,6 +936,8 @@
     if (fermaMinigioco) { fermaMinigioco(); fermaMinigioco = null; }
     $("mg-area").innerHTML = "";
     $("app").classList.remove("largo");
+    if (!vittoria && tornoAllaMappa()) return;
+    tornaA = null;
     apriMondo();
     if (vittoria) { var v = vittoria; vittoria = null; Missione.vittoria(v); return; }
     parla(brontolone() ? "Che fame… spinaci?" : "Che divertimento!");
@@ -965,7 +973,11 @@
   function avvia() {
   stato = carica();
   var idUrl = new URLSearchParams(location.search).get("id");
-  if (stato && stato.versione === 3) { apriMondo(); setTimeout(function () { parla("Wii-chu, " + stato.bambino + "!"); }, 600); }
+  if (stato && stato.versione === 3) {
+    // chi deve ancora vedere il cartone lo vede nel mondo; tutti gli altri partono dalla mappa
+    if (stato.missione && stato.missione.storia && stato.missione.racconto4) { Mappa.apri(); setTimeout(function () { toast("Wii-chu, " + stato.bambino + "! Tocca una terra per entrare", 3000); }, 700); }
+    else { apriMondo(); setTimeout(function () { parla("Wii-chu, " + stato.bambino + "!"); }, 600); }
+  }
   // chi inizia ascolta prima la storia del Nebbione, poi sveglia il Chiwinnie che è riuscito a scappare
   else if (idUrl) setTimeout(function () { Missione.racconta(null, function () { iniziaImprinting(idUrl.slice(0, 32)); }); }, 0);
   else { mostra("s-benvenuto"); setTimeout(function () { Missione.racconta(null); }, 0); }
@@ -981,13 +993,17 @@
   // la casetta e il guardaroba (js/casa.js) usano queste funzioni del gioco
   Casa.avvia({
     stato: function () { return stato; }, gioca: function (k, o) { avviaMinigioco(k, o || {}); }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
-    mostra: mostra, apriPannello: apriPannello, chiudiPannello: chiudiPannello, apriMondo: apriMondo, aggiornaEnergia: aggiornaEnergia,
+    mostra: mostra, apriPannello: apriPannello, chiudiPannello: chiudiPannello, apriMondo: apriMondoOMappa, aggiornaEnergia: aggiornaEnergia,
     disegnaHud: function () { disegnaTutto(); }
   });
   Missione.avvia({
     stato: function () { return stato; }, gioca: function (k, o) { avviaMinigioco(k, o || {}); }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
     apriPannello: apriPannello, chiudiPannello: chiudiPannello, guadagnaXp: guadagnaXp, disegnaHud: function () { disegnaTutto(); },
     vaiZona: vaiZona, mostra: mostra, parla: parla
+  });
+  Mappa.avvia({
+    stato: function () { return stato; }, esc: esc, toast: toast, avviso: avviso, vibra: vibra, coriandoli: coriandoli, mostra: mostra,
+    chiudiPannello: chiudiPannello, vaiZona: vaiZona, apriGiochi: apriGiochi, apriScheda: apriScheda, tornaA: function (x) { tornaA = x; }
   });
 
   // Per provare il gioco più in fretta dalla console del browser

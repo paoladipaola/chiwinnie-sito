@@ -208,8 +208,8 @@
     var d = c && !c.finale ? dopo(c) : null;
     if (!d) { apri(); return; }
     dati().viaggio.visti.push(d.zona);
-    C.vaiZona(d.zona);
-    setTimeout(function () { arrivo(d, true); }, 400);
+    // sulla mappa i nuvoloni si diradano e il lucchetto si apre, poi si entra nella terra nuova
+    Mappa.apri({ sblocca: d.zona, poi: function () { C.vaiZona(d.zona); setTimeout(function () { arrivo(d, true); }, 400); } });
   }
 
   // ---------- il film: scene a tutto schermo che si muovono da sole ----------
@@ -413,6 +413,7 @@
 
   window.Missione = {
     avvia: function (ctx) { C = ctx; collega(); if ($("s-mondo").classList.contains("attiva")) apriMondo(); },
+    terre: { aperto: aperto, vinto: vinto, amiciDi: amiciDi, libero: libero, numero: numero, capitoloCorrente: capitoloCorrente, puoLiberare: puoLiberare, pronto: pronto },
     evento: evento, apri: apri, apriMondo: apriMondo, disegna: disegna, storia: storia, racconta: racconta, vittoria: vittoria, film: film,
     frase: frase, nebbione: nebbione, nomeSentiero: function (zona) { var c = capitoloDi(zona); return c ? nomeSentiero(c) : ""; }
   };
