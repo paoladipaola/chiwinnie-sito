@@ -84,7 +84,7 @@ var Mappa = (function () {
     html += "<button class='mappa-posto casa" + (casa ? "" : " chiusa") + "' data-mappa='casa' style='left:24%;top:" + (H - BASSO - 30) + "px'>" +
       "<img src='img/mappa/casa.png' alt=''><span class='nome'>La casa di " + C.esc(s.nome) + "</span></button>";
     html += "<button class='mappa-posto parco' data-mappa='parco' style='left:76%;top:" + (H - BASSO - 30) + "px'>" +
-      "<img src='img/mappa/parco.png' alt=''><span class='nome'>La Palestra<small>Presto!</small></span></button>";
+      "<img src='img/mappa/parco.png' alt=''><span class='nome'>La Palestra<small>Allenati!</small></span></button>";
 
     // le terre
     var cor = T.capitoloCorrente();
@@ -173,7 +173,7 @@ var Mappa = (function () {
       C.tornaA("mappa"); Casa.apri(); return;
     }
     // la palestra: un'avventura dove il Chiwinnie si allena e diventa più forte (la stiamo preparando)
-    if (id === "parco") { C.toast("💪 Qui " + s.nome + " potrà allenarsi e diventare più forte: la palestra la stiamo costruendo!", 3200); scuoti(el); return; }
+    if (id === "parco") { C.tornaA("mappa"); C.apriPalestra(); return; }
     if (id === "crea") { C.toast(forziereAperto(s, "cielo") ? "Qui potrai inventare la tua terra: la stiamo preparando! 🎨" : "Si apre dopo il Castello delle nuvole… 🎨", 3000); scuoti(el); return; }
     if (id === "castello") {
       var ultimo = CAPITOLI[CAPITOLI.length - 1];
@@ -188,7 +188,8 @@ var Mappa = (function () {
     }
     // il Chiwinnie ci salta sopra, poi si entra
     var chiwi = $("mappa-chiwi"), giaQui = s.zona === id;
-    function dentro() { if (el) el.classList.add("entra"); setTimeout(function () { C.vaiZona(id); }, 450); }
+    // nella terra dove si è già si entra subito; per andare in un'altra si corre l'avventura del viaggio
+    function dentro() { if (el) el.classList.add("entra"); setTimeout(function () { if (giaQui) C.vaiZona(id); else { C.tornaA("mappa"); C.viaggia(id); } }, 450); }
     if (giaQui || !chiwi) dentro(); else cammina(n, dentro);
   }
   function scuoti(el) { if (!el) return; el.classList.remove("scuoti"); void el.offsetWidth; el.classList.add("scuoti"); }

@@ -962,6 +962,12 @@
     var L = function () { return mettiPoteri(livelloFuga(T, 30000), ["super", "calamita", "ali", "super", "ali", "calamita", "super"], [0.1, 0.22, 0.36, 0.5, 0.64, 0.77, 0.9]); };
     return avventura(area, api, L, T, true, tema);
   };
+  // il viaggio da una terra all'altra (per le terre che non hanno un'avventura tutta loro): una Fuga breve nel paesaggio dove si va
+  Minigiochi.viaggio = function (area, api) {
+    var tema = TEMI[api.tema] ? api.tema : "bosco", T = TEMI[tema];
+    var L = function () { return mettiPoteri(livelloFuga(T, 24000), ["super", "calamita", "ali", "super"], [0.15, 0.38, 0.6, 0.82]); };
+    return avventura(area, api, L, T, true, tema);
+  };
   // il sentiero verso la terra dopo: una Fuga più lunga nel paesaggio dove si va, con il Nebbione alle calcagna
   Minigiochi.sfida = function (area, api) {
     var tema = TEMI[api.tema] ? api.tema : "bosco", T = TEMI[tema];

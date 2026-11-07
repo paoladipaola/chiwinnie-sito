@@ -719,14 +719,23 @@
     apriPannello(html);
   }
 
-  function apriGiochi() {
+  // ---------- Viaggi: da una terra all'altra si va correndo l'avventura della terra dove si arriva ----------
+  var ARCADE_TERRA = { radura: "bosco", ruscello: "ruscello", collina: "collina", cielo: "cielo" };
+  function arcadeDiViaggio(k) { return k === "viaggio" || Object.keys(ARCADE_TERRA).some(function (t) { return ARCADE_TERRA[t] === k; }); }
+  function viaggia(id) {
+    if (!stato.zona || id === stato.zona) { vaiZona(id); return; }
+    avviaMinigioco(ARCADE_TERRA[id] || "viaggio", { viaggio: id });
+  }
+
+  // ---------- La Palestra (sulla mappa): tutti i minigiochi tranne ChiwiCrush e le avventure dei viaggi ----------
+  function apriPalestra() {
     aggiornaEnergia();
-    var html = "<h2>Giochi</h2><p>Ogni bella partita accende una <b>lucina magica ✨</b> (due se è perfetta): servono per liberare i Chiwinnie. Prima di giocare scegli <b>Facile, Medio o Difficile</b>: più è difficile, più lucine e premi! Ogni gioco usa un po' dell'energia di " + esc(stato.nome) + ": se è stanco, portalo a casa a mangiare!</p><div class='griglia'>";
+    var html = "<h2>💪 La Palestra</h2><p>Qui " + esc(stato.nome) + " si allena! Ogni bella partita accende una <b>lucina magica ✨</b> (due se è perfetta): servono per liberare i Chiwinnie. Più è difficile, più lucine e premi! Se è stanco, portalo a casa a mangiare.</p><div class='griglia'>";
     Object.keys(MINIGIOCHI).forEach(function (k) {
-      if (MINIGIOCHI[k].nascosto) return;
+      if (MINIGIOCHI[k].nascosto || k === "tris" || arcadeDiViaggio(k)) return;
       var g = MINIGIOCHI[k], iz = g.zona ? ZONE.map(function (x) { return x.id; }).indexOf(g.zona) : 0;
       var chiusoZona = g.zona && !zonaAperta(iz), bloccato = stato.livello < g.livello || chiusoZona;
-      html += "<button class='voce" + (bloccato ? " bloccata" : "") + "' data-azione='gioca' data-chiave='" + k + "'>" +
+      html += "<button class='voce" + (bloccato ? " bloccata" : "") + "' data-azione='gioca' data-palestra='1' data-chiave='" + k + "'>" +
         "<img class='anteprima' src='" + g.img + "' alt=''><h3>" + esc(g.nome) + "</h3>" +
         (chiusoZona ? "<div class='lucchetto'>Si apre con " + esc(ZONE[iz].nome) + "</div>" : bloccato ? "<div class='lucchetto'>Livello " + g.livello + "</div>" : "<div class='costo'><span>" + (g.energia ? "⚡ " + g.energia : "senza energia") + "</span></div>") +
         "</button>";
@@ -793,7 +802,9 @@
   disegnaAudio();
 
   $("btn-costruisci").addEventListener("click", apriCostruisci);
-  $("btn-giochi").addEventListener("click", apriGiochi);
+  // il gioco principale: ChiwiCrush
+  function giocaCrush() { avviaMinigioco("tris"); }
+  $("btn-giochi").addEventListener("click", giocaCrush);
   $("btn-mappa").addEventListener("click", function () { Mappa.apri(); });
   $("btn-sfide").addEventListener("click", apriSfide);
   $("btn-avatar").addEventListener("click", apriScheda);
@@ -804,9 +815,9 @@
     var a = b.dataset.azione;
     if (a === "chiudi") chiudiPannello();
     else if (a === "costruisci") costruisci(b.dataset.chiave);
-    else if (a === "vai-zona") vaiZona(b.dataset.zona);
-    else if (a === "gioca") avviaMinigioco(b.dataset.chiave, { capitolo: b.dataset.capitolo });
-    else if (a === "apri-giochi") apriGiochi();
+    else if (a === "vai-zona") viaggia(b.dataset.zona);
+    else if (a === "gioca") avviaMinigioco(b.dataset.chiave, { capitolo: b.dataset.capitolo, palestra: !!b.dataset.palestra });
+    else if (a === "apri-giochi") giocaCrush();
     else if (a === "ritira") ritiraSfida(+b.dataset.i);
     else if (a === "salta") saltaSfida(+b.dataset.i);
     else if (a === "entra-casa") Casa.apri();
@@ -852,10 +863,13 @@
     var g = MINIGIOCHI[k];
     opzioniGioco = opz || {};
     var cap = opzioniGioco.capitolo ? capitoloDi(opzioniGioco.capitolo) : null;
+    var verso = opzioniGioco.viaggio ? zonaId(opzioniGioco.viaggio) : null;   // il viaggio verso un'altra terra
+    var costo = verso ? 0 : g.energia;   // viaggiare non stanca: così non si resta mai bloccati in una terra
+    var temaArcade = cap ? temaSentiero(cap) : verso ? (opzioniGioco.viaggio === "radura" ? "bosco" : opzioniGioco.viaggio) : k === "fuga" ? "bosco" : k;
     aggiornaEnergia();
-    if (stato.livello < g.livello) { avviso("Si sblocca al livello " + g.livello); return; }
-    if (g.zona) { var izz = ZONE.map(function (x) { return x.id; }).indexOf(g.zona); if (!zonaAperta(izz)) { avviso("Si apre quando arrivi a " + ZONE[izz].nome); return; } }
-    if (g.energia > 0 && (brontolone() || stato.energia < g.energia)) {
+    if (!verso && stato.livello < g.livello) { avviso("Si sblocca al livello " + g.livello); return; }
+    if (g.zona && !verso) { var izz = ZONE.map(function (x) { return x.id; }).indexOf(g.zona); if (!zonaAperta(izz)) { avviso("Si apre quando arrivi a " + ZONE[izz].nome); return; } }
+    if (costo > 0 && (brontolone() || stato.energia < costo)) {
       avviso(stato.nome + " è troppo stanco e brontolone: " + (stato.costruiti.indexOf("casetta") === -1 ? "dagli gli spinaci!" : "portalo a casa a mangiare gli spinaci!"), 3200);
       chiudiPannello(); parla("Grrr… prima gli spinaci!");
       return;
@@ -864,12 +878,14 @@
     giocoCorrente = k;
     $("app").classList.toggle("largo", !!g.arcade);   // l'avventura usa tutto lo schermo, anche in orizzontale
     mostra("s-minigioco");
-    $("mg-titolo").textContent = cap ? Missione.nomeSentiero(cap.zona) : g.nome;
+    var titolo = cap ? Missione.nomeSentiero(cap.zona) : verso ? "Verso " + verso.nome.replace(/^(La|Il|Le|I|Lo|Gli) /, function (x) { return x.toLowerCase(); }) : g.nome;
+    $("mg-titolo").textContent = titolo;
     Suoni.musica(k);
-    $("mg-info").textContent = "⚡ " + g.energia;
+    $("mg-info").textContent = costo ? "⚡ " + costo : "";
     var area = $("mg-area");
-    area.innerHTML = "<div class='" + (k === "lucciole" ? "notte-bosco" : g.arcade ? "sfondo-arcade" : "") + "'" + (g.arcade ? " style=\"background-image:url(img/" + (cap ? temaSentiero(cap) : k === "fuga" ? "bosco" : k) + "/sfondo.jpg)\"" : "") + "></div>" +
-      "<div class='mg-intro'><img class='icona' src='" + g.img + "' alt=''><h2>" + esc(cap ? Missione.nomeSentiero(cap.zona) : g.nome) + "</h2><p>" + esc(g.descrizione) + "</p>" +
+    area.innerHTML = "<div class='" + (k === "lucciole" ? "notte-bosco" : g.arcade ? "sfondo-arcade" : "") + "'" + (g.arcade ? " style=\"background-image:url(img/" + temaArcade + "/sfondo.jpg)\"" : "") + "></div>" +
+      "<div class='mg-intro'><img class='icona' src='" + g.img + "' alt=''><h2>" + esc(titolo) + "</h2>" +
+      (verso ? "<p><b>🏁 Si parte per: " + esc(verso.nome) + "!</b> Per arrivarci bisogna correre.</p>" : "") + "<p>" + esc(g.descrizione) + "</p>" +
       (conDifficolta(k) ? htmlDifficolta(k) : "") +
       "<button class='btn verde' id='mg-via'>Gioca!</button></div>";
     var scegliD = area.querySelector(".scegli-diff");
@@ -881,7 +897,7 @@
     });
     $("mg-via").addEventListener("click", function () {
       difficoltaPartita = conDifficolta(k) ? difficoltaDi(k) : null;
-      stato.energia -= g.energia;
+      stato.energia -= costo;
       stato.contatori.partite++;
       salva();
       area.querySelector(".mg-intro").remove();
@@ -894,7 +910,7 @@
         aggiustati: stato.aggiustati || [],
         zoneAperte: ZONE.filter(function (z, i) { return zonaAperta(i); }).map(function (z) { return z.id; }),
         turbo: !!(g.arcade && fioriAttivi()),   // con l'energia dei fiori l'avventura parte con la supervelocità
-        tema: cap ? temaSentiero(cap) : null, finale: !!(cap && cap.finale),
+        tema: cap ? temaSentiero(cap) : verso ? temaArcade : null, finale: !!(cap && cap.finale),
         difficolta: difficoltaPartita
       });
     });
@@ -973,10 +989,22 @@
       "<div class='bottino'>" + (voci.length ? voci.map(function (m) { return "<span><img src='" + MATERIALI[m].img + "' alt=''>+" + ris.bottino[m] + "</span>"; }).join("") : "<span>Nessun materiale questa volta</span>") +
       "<span>+" + xp + " esp.</span>" + (dif ? "<span class='diff-fatta'>" + dif.icona + " " + dif.nome + "</span>" : "") + (lucine ? "<span class='lucine-vinte'>✨ +" + lucine + (lucine === 1 ? " lucina magica" : " lucine magiche") + "</span>" : "") + "</div>" +
       (ris.immagine ? "<p><a class='btn bianco piccolo' href='" + ris.immagine + "' download='" + esc(ris.nomeFile || "disegno.png") + "'>⬇ Scarica il disegno</a></p>" : "") +
-      "<div class='azioni-pannello'>" + (!vittoria && k !== "sfida" && (g.energia === 0 || (stato.energia >= g.energia && !brontolone())) ? "<button class='btn bianco' id='mg-ancora'>Ancora!</button>" : "") +
+      "<div class='azioni-pannello'>" + (!vittoria && k !== "sfida" && !opzioniGioco.viaggio && (g.energia === 0 || (stato.energia >= g.energia && !brontolone())) ? "<button class='btn bianco' id='mg-ancora'>Ancora!</button>" : "") +
       "<button class='btn verde' id='mg-torna'>Torna al giardino</button></div>";
     area.appendChild(box);
-    if ($("mg-ancora")) $("mg-ancora").addEventListener("click", function () { avviaMinigioco(k); });
+    if ($("mg-ancora")) $("mg-ancora").addEventListener("click", function () { avviaMinigioco(k, { palestra: opzioniGioco.palestra }); });
+    if (opzioniGioco.viaggio) {
+      var dest = zonaId(opzioniGioco.viaggio), opzV = opzioniGioco;
+      if (ris.completato) {   // arrivati: si entra nella terra nuova
+        arrivoViaggio = dest.id;
+        $("mg-torna").textContent = "Siamo arrivati! Entra 🏁";
+      } else {                // si riprova, oppure si torna indietro
+        var rv = document.createElement("button"); rv.className = "btn verde"; rv.textContent = "Riprova!";
+        rv.addEventListener("click", function () { avviaMinigioco(k, opzV); });
+        $("mg-torna").before(rv);
+        $("mg-torna").className = "btn bianco"; $("mg-torna").textContent = "Torna indietro";
+      }
+    }
     if (k === "sfida" && !vittoria) {   // si può ritentare subito
       var ri = document.createElement("button"); ri.className = "btn bianco"; ri.textContent = "Riprova!";
       ri.addEventListener("click", function () { avviaMinigioco("sfida", opzioniGioco); });
@@ -986,11 +1014,13 @@
     $("mg-torna").addEventListener("click", tornaDalGioco);
   }
   var vittoria = null;   // il capitolo appena vinto: al ritorno si apre il forziere
+  var arrivoViaggio = null;   // la terra dove si è arrivati correndo
   function tornaDalGioco() {
     if (fermaMinigioco) { fermaMinigioco(); fermaMinigioco = null; }
     $("mg-area").innerHTML = "";
     $("app").classList.remove("largo");
-    if (!vittoria && tornoAllaMappa()) return;
+    if (arrivoViaggio) { var dove = arrivoViaggio; arrivoViaggio = null; tornaA = null; vaiZona(dove); return; }
+    if (!vittoria && tornoAllaMappa()) { if (opzioniGioco.palestra) apriPalestra(); return; }
     tornaA = null;
     apriMondo();
     if (vittoria) { var v = vittoria; vittoria = null; Missione.vittoria(v); return; }
@@ -1057,7 +1087,7 @@
   });
   Mappa.avvia({
     stato: function () { return stato; }, esc: esc, toast: toast, avviso: avviso, vibra: vibra, coriandoli: coriandoli, mostra: mostra,
-    chiudiPannello: chiudiPannello, vaiZona: vaiZona, apriGiochi: apriGiochi, apriScheda: apriScheda, tornaA: function (x) { tornaA = x; }
+    chiudiPannello: chiudiPannello, vaiZona: vaiZona, viaggia: viaggia, apriPalestra: apriPalestra, apriGiochi: giocaCrush, apriScheda: apriScheda, tornaA: function (x) { tornaA = x; }
   });
 
   // Per provare il gioco più in fretta dalla console del browser

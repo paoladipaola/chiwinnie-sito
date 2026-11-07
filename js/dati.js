@@ -995,12 +995,16 @@ var MINIGIOCHI = {
     nome: "Fuga dal Nebbione", img: "img/bosco/corsa2.png", livello: 2, energia: 20, arcade: true,
     descrizione: "Il Nebbione ti insegue! Corri più veloce che puoi in una lunga avventura che cambia ogni volta: salta le buche, schiaccia i nebbiolini grigi saltandoci sopra e prendi i superpoteri. Se il Nebbione ti raggiunge perdi un cuore. In fondo ti aspetta una lucina!"
   },
+  viaggio: {
+    nome: "In viaggio", img: "img/bosco/corsa1.png", livello: 1, energia: 0, arcade: true, nascosto: true,
+    descrizione: "Salta le buche, schiaccia i nebbiolini grigi saltandoci sopra e prendi i superpoteri: il Nebbione ti insegue. In fondo ti aspetta la terra nuova."
+  },
   sfida: {
     nome: "Il sentiero", img: "img/nebbione/nebbione.png", livello: 1, energia: 0, arcade: true, nascosto: true,
     descrizione: "Il sentiero verso la terra dopo! È l'avventura più lunga: corri, salta i nebbiolini e non farti prendere dal Nebbione. In fondo ti aspetta un forziere."
   },
   tris: {
-    nome: "ChiwiCrush", img: "img/petali.png", livello: 2, energia: 10,
+    nome: "ChiwiCrush", img: "img/tris/girandola.png", livello: 1, energia: 10,
     descrizione: "Scambia due simboli vicini per metterne tre uguali in fila, oppure quattro a quadrato: spariscono e ne cadono di nuovi. Con quattro in fila nasce una girandola: scambiala con un simbolo e spariscono tutti quelli uguali! Con una L, una T o un rettangolo nasce una bomba di fiori che scoppia tutto intorno, con cinque in fila la sfera arcobaleno che pulisce tutto. Più terre apri, più simboli del mondo dei Chiwinnie trovi: funghi, pigne, ninfee, cupcake, cristalli… Raccogli quello che chiede il Chiwinnie prima che finiscano le mosse."
   },
   conti: {
@@ -1017,13 +1021,13 @@ function quantiCostruiti(s) { return s.costruiti.length; }
 var SFIDE = [
   { testo: "Costruisci la casetta per il tuo Chiwinnie", stelle: 2, xp: 15, verifica: function (s) { return costruito(s, "casetta"); } },
   { testo: "Pianta l'orto di spinaci", stelle: 1, xp: 10, verifica: function (s) { return costruito(s, "orto"); } },
-  { testo: "Arriva al cestino nell'Avventura nel Bosco", stelle: 2, xp: 20, verifica: function (s) { return (s.record.boscoCompleto || 0) >= 1; } },
+  { testo: "Torna alla Radura correndo: arriva al cestino dell'Avventura nel Bosco", stelle: 2, xp: 20, ordine: 18.5, verifica: function (s) { return (s.record.boscoCompleto || 0) >= 1; } },
   { testo: "Raccogli 3 volte quello che produce il giardino", stelle: 1, xp: 10, progresso: function (s) { return [s.contatori.raccolti, 3]; }, verifica: function (s) { return s.contatori.raccolti >= 3; } },
   { testo: "Fai fiorire le aiuole", stelle: 1, xp: 10, verifica: function (s) { return costruito(s, "aiuole"); } },
   { testo: "Dai gli spinaci al tuo Chiwinnie 5 volte", stelle: 1, xp: 10, progresso: function (s) { return [s.contatori.pasti, 5]; }, verifica: function (s) { return s.contatori.pasti >= 5; } },
   { testo: "Completa il Memory dei fiori", stelle: 2, xp: 20, verifica: function (s) { return s.contatori.memoryCompleti >= 1; } },
   { testo: "Arreda la radura con 6 pezzi", stelle: 2, xp: 20, progresso: function (s) { return [quantiCostruiti(s), 6]; }, verifica: function (s) { return quantiCostruiti(s) >= 6; } },
-  { testo: "Trova tutte e 3 le stelle nascoste nel Bosco", stelle: 3, xp: 30, progresso: function (s) { return [s.record.boscoStelle || 0, 3]; }, verifica: function (s) { return (s.record.boscoStelle || 0) >= 3; } },
+  { testo: "Trova tutte e 3 le stelle nascoste nel Bosco", stelle: 3, xp: 30, ordine: 18.6, progresso: function (s) { return [s.record.boscoStelle || 0, 3]; }, verifica: function (s) { return (s.record.boscoStelle || 0) >= 3; } },
   { testo: "Costruisci il laghetto delle ninfee", stelle: 1, xp: 15, verifica: function (s) { return costruito(s, "laghetto"); } },
   { testo: "Appendi l'altalena al grande albero", stelle: 1, xp: 15, verifica: function (s) { return costruito(s, "altalena"); } },
   { testo: "Prendi 15 lucciole in una partita", stelle: 2, xp: 20, progresso: function (s) { return [+s.record.lucciole || 0, 15]; }, verifica: function (s) { return (+s.record.lucciole || 0) >= 15; } },

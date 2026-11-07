@@ -134,8 +134,8 @@
           "<button class='btn piccolo" + (basta ? " verde" : " bianco") + "' data-azione='libera' data-amico='" + a.id + "'>Libera · " + a.lucine + " ✨</button>") +
         "</div>";
     });
-    html += "</div>" + (tuttiLiberi(c) ? "" : "<p class='nota'>Le lucine magiche ✨ si guadagnano giocando ai minigiochi: una per ogni bella partita, due se è perfetta.</p>" +
-      "<div class='azioni-pannello'><button class='btn piccolo' data-azione='apri-giochi'>Gioca e prendi le lucine</button></div>") + "</div>";
+    html += "</div>" + (tuttiLiberi(c) ? "" : "<p class='nota'>Le lucine magiche ✨ si guadagnano giocando a ChiwiCrush e ai giochi della Palestra: una per ogni bella partita, due se è perfetta.</p>" +
+      "<div class='azioni-pannello'><button class='btn piccolo' data-azione='gioca' data-chiave='tris'>Gioca a ChiwiCrush</button></div>") + "</div>";
     // il sentiero verso la terra dopo
     html += v ? "<div class='sfida-finale vinta'>⭐ " + (c.finale ? "Battaglia vinta!" : "Sentiero fatto: " + C.esc(d ? nomeCapitolo(d) : "") + " è aperta.") + "</div>" :
       "<button class='sfida-finale" + (pronto(c) ? " pronta" : "") + "'" + (pronto(c) ? " data-azione='gioca' data-chiave='sfida' data-capitolo='" + c.zona + "'" : " disabled") + ">" + nebbione() +
@@ -147,7 +147,7 @@
     var s = dati(), a = AMICI.filter(function (x) { return x.id === id; })[0];
     if (!a || libero(a)) return;
     var c = capitoloDi(a.zona); if (!c || !aperto(c)) return;
-    if (s.missione.lucine < a.lucine) { C.avviso("Servono " + a.lucine + " lucine ✨: giocando ai minigiochi le guadagni!", 2800); return; }
+    if (s.missione.lucine < a.lucine) { C.avviso("Servono " + a.lucine + " lucine ✨: giocando a ChiwiCrush le guadagni!", 2800); return; }
     s.missione.lucine -= a.lucine;
     var el = document.querySelector(".amico-bolla[data-amico='" + id + "']");
     if (el) el.classList.add("scoppia");
