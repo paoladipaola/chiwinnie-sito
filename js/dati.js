@@ -1086,12 +1086,12 @@ var FRASI = {
 // Si comprano con petali o stelle; quelli "speciali" si vincono soltanto.
 var ACCESSORI = {
   fiocco:          { nome: "Fiocco rosa",        posto: "testa", img: "img/casa/accessori/fiocco.png",          f: { x: 70, y: 6, w: 26, r: 18 }, gratis: true },
-  papillon:        { nome: "Papillon lilla",     posto: "collo", img: "img/casa/accessori/papillon.png",        f: { x: 50, y: 37, w: 22 }, gratis: true },
+  papillon:        { nome: "Papillon lilla",     posto: "collo", img: "img/casa/accessori/papillon.png",        f: { x: 50, y: 41, w: 22 }, gratis: true },
   collana:         { nome: "Collana di margherite", posto: "collo", img: "img/casa/accessori/collana.png",      f: { x: 50, y: 41, w: 46 }, prezzo: { petali: 25 } },
   coroncina_fiori: { nome: "Coroncina di fiori", posto: "testa", img: "img/casa/accessori/coroncina_fiori.png", f: { x: 50, y: 6, w: 50, sy: 0.45 }, prezzo: { petali: 30 } },
   cappello_paglia: { nome: "Cappello di paglia", posto: "testa", img: "img/casa/accessori/cappello_paglia.png", f: { x: 50, y: 1, w: 66 }, prezzo: { petali: 40 } },
   occhiali:        { nome: "Occhiali tondi",     posto: "viso",  img: "img/casa/accessori/occhiali.png",        f: { x: 50, y: 20, w: 40 }, prezzo: { stelle: 5 } },
-  sciarpa:         { nome: "Sciarpa a righe",    posto: "collo", img: "img/casa/accessori/sciarpa.png",         f: { x: 50, y: 46, w: 64 }, prezzo: { stelle: 8 } },
+  sciarpa:         { nome: "Sciarpa a righe",    posto: "collo", img: "img/casa/accessori/sciarpa.png",         f: { x: 50, y: 50, w: 64 }, prezzo: { stelle: 8 } },
   corona:          { nome: "Corona d'oro",       posto: "testa", img: "img/casa/accessori/corona.png",          f: { x: 50, y: 2, w: 32 },
                      speciale: "Nel forziere della Radura", vinto: function (s) { return forziereAperto(s, "radura"); } },
   cappello_mago:   { nome: "Cappello da mago",   posto: "testa", img: "img/casa/accessori/cappello_mago.png",   f: { x: 50, y: -8, w: 46 },
@@ -1100,7 +1100,7 @@ var ACCESSORI = {
   basco:           { nome: "Basco da pittore",   posto: "testa", img: "img/casa/accessori/basco.png",           f: { x: 45, y: 5, w: 52, r: -12 }, prezzo: { petali: 45 } },
   cuffie:          { nome: "Cuffie musicali",    posto: "testa", img: "img/casa/accessori/cuffie.png",          f: { x: 50, y: 19, w: 60 }, prezzo: { stelle: 7 } },
   occhiali_cuore:  { nome: "Occhiali a cuore",   posto: "viso",  img: "img/casa/accessori/occhiali_cuore.png",  f: { x: 50, y: 20, w: 44 }, prezzo: { stelle: 6 } },
-  campanellino:    { nome: "Collare col campanellino", posto: "collo", img: "img/casa/accessori/campanellino.png", f: { x: 50, y: 39, w: 36 }, prezzo: { petali: 20 } },
+  campanellino:    { nome: "Collare col campanellino", posto: "collo", img: "img/casa/accessori/campanellino.png", f: { x: 50, y: 46, w: 48 }, prezzo: { petali: 20 } },
   grembiule:       { nome: "Grembiule a fiori",  posto: "corpo", img: "img/casa/accessori/grembiule.png",       f: { x: 50, y: 63, w: 50 }, prezzo: { petali: 30 } },
   tutu:            { nome: "Tutù rosa",          posto: "corpo", img: "img/casa/accessori/tutu.png",            f: { x: 50, y: 76, w: 86 }, prezzo: { petali: 35 } },
   mantello:        { nome: "Mantello da supereroe", posto: "schiena", img: "img/casa/accessori/mantello.png",   f: { x: 50, y: 52, w: 124 },
@@ -1222,6 +1222,7 @@ var TERRE_IN_ARRIVO = [];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
   if (!d || d.gioco === "colora" || d.gioco === "sfida") return 0;
+  if (d.arcade) return d.completato ? 3 : ((d.stelle || 0) >= 5 ? 1 : 0);   // ogni avventura finita: 3 lucine
   var bene = d.completato || (d.punti || 0) >= 10, benissimo = (d.stelle || 0) > 0 || (d.stelleLivello || 0) >= 3;
   return bene ? (benissimo ? 2 : 1) : 0;
 }

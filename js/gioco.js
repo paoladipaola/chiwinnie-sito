@@ -55,7 +55,7 @@
   // ---------- Stato ----------
   var stato = null;
   function carica() { try { return JSON.parse(localStorage.getItem(CHIAVE)); } catch (e) { return null; } }
-  function salva() { try { localStorage.setItem(CHIAVE, JSON.stringify(stato)); } catch (e) { /* senza memoria si gioca lo stesso */ } }
+  function salva() { if (!stato) return; try { localStorage.setItem(CHIAVE, JSON.stringify(stato)); } catch (e) { /* senza memoria si gioca lo stesso */ } }
 
   function hash(str) {
     var h = 2166136261;
@@ -759,7 +759,8 @@
       "<p>Energia: " + Math.round(stato.energia) + "/100" + (brontolone() ? " — è brontolone, ha fame di spinaci!" : "") + "</p></div>" +
       "<div class='scheda'>" + righe.map(function (r) { return "<b>" + r[0] + "</b><span>" + esc(r[1]) + "</span>"; }).join("") + "</div>" +
       "<div class='azioni-pannello'><button class='btn verde' data-azione='apri-nutri'>🥬🌸 Dagli da mangiare</button></div>" +
-      "<div class='azioni-pannello'><button class='btn piccolo bianco' data-azione='reset'>Area genitori: cancella tutto e ricomincia</button></div>"
+      "<div class='area-genitori'><b>Area genitori</b><p class='nota'>Per rivedere il gioco come un bambino che lo apre per la prima volta: cartone, scelta del Chiwinnie e viaggio dall'inizio.</p>" +
+      "<button class='btn bianco' data-azione='reset'>🔄 Ricomincia da capo</button></div>"
     );
   }
 
@@ -799,6 +800,7 @@
         "<button class='btn' data-azione='reset-si'>Sì, cancella</button></div></div>");
     }
     else if (a === "reset-si") {
+      stato = null;   // così nessun salvataggio automatico lo riscrive prima di ricaricare
       try { localStorage.removeItem(CHIAVE); } catch (err) {}
       location.reload();
     }
@@ -978,19 +980,19 @@
 
   // la casetta e il guardaroba (js/casa.js) usano queste funzioni del gioco
   Casa.avvia({
-    stato: function () { return stato; }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
+    stato: function () { return stato; }, gioca: function (k, o) { avviaMinigioco(k, o || {}); }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
     mostra: mostra, apriPannello: apriPannello, chiudiPannello: chiudiPannello, apriMondo: apriMondo, aggiornaEnergia: aggiornaEnergia,
     disegnaHud: function () { disegnaTutto(); }
   });
   Missione.avvia({
-    stato: function () { return stato; }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
+    stato: function () { return stato; }, gioca: function (k, o) { avviaMinigioco(k, o || {}); }, salva: salva, toast: toast, avviso: avviso, esc: esc, vibra: vibra, coriandoli: coriandoli,
     apriPannello: apriPannello, chiudiPannello: chiudiPannello, guadagnaXp: guadagnaXp, disegnaHud: function () { disegnaTutto(); },
     vaiZona: vaiZona, mostra: mostra, parla: parla
   });
 
   // Per provare il gioco più in fretta dalla console del browser
   window.chiwinnieDebug = {
-    stato: function () { return stato; },
+    stato: function () { return stato; }, gioca: function (k, o) { avviaMinigioco(k, o || {}); },
     materiali: function (n) { ORDINE_MATERIALI.forEach(function (m) { stato.materiali[m] = n; }); disegnaTutto(); },
     xp: function (n) { guadagnaXp(n); disegnaTutto(); },
     tutto: function () { Object.keys(zonaCorrente().pezzi).forEach(function (k) { if (!fatto(k)) { stato.costruiti.push(k); stato.prod[k] = Date.now(); } }); disegnaTutto(); }

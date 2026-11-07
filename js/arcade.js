@@ -81,7 +81,7 @@
       arrivo: "Sei arrivato al cancello di cristallo!", perfetto: "Città perfetta: tutte le stelle!"
     },
     cielo: {
-      cartella: "img/cielo/", terreno: { img: "terreno.png", h: 92, su: 14 }, colTerra: "#f6e1e4", nebbia: "245,215,225",
+      cartella: "img/cielo/", terreno: { img: "terreno.png", h: 92, su: 14, tappo: "nuvola.png", sospeso: true }, colTerra: "#f6e1e4", nebbia: "245,215,225",
       piatt: { arcobaleno: { img: "arcobaleno.png", top: 0.18 }, ponte: { img: "ponte.png", top: 0.4 }, nuvola: { img: "nuvola.png", top: 0.3 } },
       trampolino: { img: "molla.png", w: 92, h: 88, top: 70 }, ostacolo: { img: "temporale.png", w: 96, h: 78 },
       traguardo: { img: "porta.png", w: 120, h: 158 },
@@ -447,7 +447,7 @@
     window.addEventListener("resize", misura);
 
     var I = {
-      sfondo: carica(T.sfondo || T.cartella + "sfondo.jpg"), terreno: carica(T.cartella + T.terreno.img),
+      sfondo: carica(T.sfondo || T.cartella + "sfondo.jpg"), terreno: carica(T.cartella + T.terreno.img), tappo: T.terreno.tappo ? carica(T.cartella + T.terreno.tappo) : null,
       fungo: carica(T.cartella + T.trampolino.img), cestino: carica(T.cartella + T.traguardo.img),
       rovo: T.ostacolo ? carica(T.cartella + T.ostacolo.img) : null,
       pigna: T.rotolante ? carica(T.cartella + T.rotolante.img) : null,
@@ -758,7 +758,7 @@
       var th = T.terreno.h, tw = larghezzaDa(I.terreno, th);
       L.terreno.forEach(function (s) {
         if (s[1] < cam - 50 || s[0] > cam + vistaW + 50) return;
-        ctx.fillStyle = T.colTerra; ctx.fillRect(s[0] + 2, TERRA_Y - T.terreno.su + th * 0.6, s[1] - s[0] - 4, ALTEZZA);
+        if (!T.terreno.sospeso) { ctx.fillStyle = T.colTerra; ctx.fillRect(s[0] + 2, TERRA_Y - T.terreno.su + th * 0.6, s[1] - s[0] - 4, ALTEZZA); }
         // della striscia si usa solo la parte centrale, e un pezzo sì e uno no è ribaltato: così le giunture non si vedono
         var nw = I.terreno.naturalWidth, nh = I.terreno.naturalHeight, x0 = nw * 0.05, usa = nw * 0.9, twu = tw * 0.9;
         for (var x = s[0], n = 0; x < s[1]; x += twu - 2, n++) {
@@ -766,6 +766,12 @@
           if (!nw) break;
           if (n % 2) { ctx.save(); ctx.translate(x + w, 0); ctx.scale(-1, 1); ctx.drawImage(I.terreno, x0 + usa - usa * (w / twu), 0, usa * (w / twu), nh, 0, TERRA_Y - T.terreno.su, w, th); ctx.restore(); }
           else ctx.drawImage(I.terreno, x0, 0, usa * (w / twu), nh, x, TERRA_Y - T.terreno.su, w, th);
+        }
+        // passerelle di nuvole: un nuvolotto tondo chiude ogni capo, così non sono tagliate di netto
+        if (I.tappo && I.tappo.naturalWidth) {
+          var ch = th * 1.25, cw = ch * I.tappo.naturalWidth / I.tappo.naturalHeight, cy = TERRA_Y - T.terreno.su - th * 0.18;
+          ctx.drawImage(I.tappo, s[0] - cw * 0.12, cy, cw, ch);
+          ctx.save(); ctx.translate(s[1] + cw * 0.12, 0); ctx.scale(-1, 1); ctx.drawImage(I.tappo, 0, cy, cw, ch); ctx.restore();
         }
       });
       // piattaforme

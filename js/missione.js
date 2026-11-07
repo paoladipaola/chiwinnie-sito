@@ -280,7 +280,7 @@
     var s = dati();
     if (!giaVisto) { s.viaggio.visti.push(c.zona); C.salva(); }
     film([
-      { img: ZONE[iZona(c.zona)].cartella + "finale.jpg", grigio: true, nebbia: true, moto: "zoom", testo: "<b>Terra " + numero(c) + " · " + C.esc(nomeCapitolo(c)) + "</b><br>" + C.esc(c.arrivo), amici: amiciDi(c), ultima: "Liberiamoli!" }
+      { img: ZONE[iZona(c.zona)].cartella + "finale.jpg", nebbia: true, moto: "zoom", testo: "<b>Terra " + numero(c) + " · " + C.esc(nomeCapitolo(c)) + "</b><br>" + C.esc(c.arrivo), amici: amiciDi(c), ultima: "Liberiamoli!" }
     ], function () { apri(c.zona); });
   }
 
@@ -319,10 +319,9 @@
       (c ? "<span><small>" + C.esc(nomeCapitolo(c)) + "</small>" + C.esc(prossimoPasso(c)) + "</span><span class='lucine'>✨ " + (a ? Math.min(s.missione.lucine, a.lucine) + "/" + a.lucine : s.missione.lucine) + "</span>"
          : "<span>" + (fine ? "Giardino salvo! 🌈" : "Nuove terre in arrivo!") + "</span>") +
       "<span class='conta'>" + s.missione.liberati.length + "/" + AMICI.length + "</span>" + (evidente ? "<i class='pallino'></i>" : "");
-    // i nuvoloni si sono rubati i colori: tornano a ogni amico liberato
-    var cz = capitoloDi(s.zona), resta = cz ? amiciDi(cz).filter(function (x) { return !libero(x); }).length / amiciDi(cz).length : 0;
-    var n = $("nebbia-mondo"); if (n) n.style.opacity = resta;
-    var sc = $("scena"); if (sc) sc.style.filter = resta ? "saturate(" + (1 - resta * 0.55).toFixed(2) + ")" : "";
+    // le terre restano sempre a colori pieni (niente più effetto sbiadito)
+    var n = $("nebbia-mondo"); if (n) n.style.opacity = 0;
+    var sc = $("scena"); if (sc) sc.style.filter = "";
     disegnaAmici();
   }
 
