@@ -276,6 +276,87 @@ var ZONE = [
     }
   },
   {
+    id: "foresta", nome: "La foresta delle lucciole", musica: "notte", sfondo: "img/zona5/vuota.jpg", cartella: "img/zona5/",
+    descrizione: "Una foresta dove è sempre notte e la luce la fanno le lucciole.",
+    prati: [{ x1: 26, x2: 74, y1: 64, y2: 84 }],
+    pezzi: {
+      for_casetta: {
+        nome: "Casetta nel tronco", livello: 12, costo: { legnetti: 14, sassolini: 6 }, xp: 30,
+        pos: [2, 49.22, 22, 14.78], tocco: [[3.8, 50.4, 22.2, 63.3]],
+        descrizione: "Una casetta rotonda dentro un vecchio tronco, con la finestra che brilla."
+      },
+      for_barattoli: {
+        nome: "Barattoli di lucciole", livello: 12, costo: { legnetti: 6, petali: 6 }, xp: 20,
+        pos: [23, 53.08, 8, 9.92], tocco: [[23.6, 53.9, 30.4, 62.5]],
+        descrizione: "Barattoli pieni di lucciole appesi a un palo: fanno luce tutta la notte."
+      },
+      for_funghi: {
+        nome: "Cerchio di funghi blu", livello: 12, costo: { petali: 10 }, xp: 20,
+        pos: [38, 64.32, 24, 8.68], tocco: [[39.9, 65.0, 60.1, 72.6]],
+        descrizione: "Un cerchio magico di funghi che brillano di blu."
+      },
+      for_panchina: {
+        nome: "Panchina di muschio", livello: 13, costo: { sassolini: 10 }, xp: 18,
+        pos: [7, 66.83, 16, 8.17], tocco: [[8.3, 67.5, 21.7, 74.6]],
+        descrizione: "Una panchina di pietra coperta di muschio morbido e fiorellini."
+      },
+      for_fiore: {
+        nome: "Il grande fiore lucente", livello: 13, costo: { petali: 12, stelle: 2 }, xp: 24,
+        pos: [63, 55.37, 11, 8.63], tocco: [[63.9, 56.1, 73.1, 63.6]], bolla: [68.5, 57.4],
+        produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Un fiore gigante che si apre di notte e lascia cadere petali luminosi."
+      },
+      for_amaca: {
+        nome: "Amaca delle lucciole", livello: 13, costo: { legnetti: 10, petali: 6 }, xp: 22,
+        pos: [37, 52.35, 25, 7.65], tocco: [[39.0, 53.0, 60.0, 59.6]],
+        descrizione: "Un'amaca a righe tra due pali con le lucine: per dondolarsi sotto le stelle."
+      },
+      for_laghetto: {
+        nome: "Laghetto delle ninfee", livello: 14, costo: { sassolini: 10, petali: 6 }, xp: 24,
+        pos: [23, 76.54, 18, 6.46], tocco: [[24.4, 77.1, 39.6, 82.7]],
+        descrizione: "Un piccolo laghetto blu con le ninfee rosa."
+      },
+      for_legna: {
+        nome: "Legnetti e copertina", livello: 14, costo: { legnetti: 12 }, xp: 22,
+        pos: [82, 72.04, 13, 7.96], tocco: [[83.0, 72.7, 94.0, 79.6]], bolla: [88.5, 74.0],
+        produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Una catasta di legnetti con la copertina e la lanterna: qui si trovano sempre legnetti."
+      },
+      for_ceppo: {
+        nome: "Tavolino del tè", livello: 14, costo: { legnetti: 8, sassolini: 6, stelle: 2 }, xp: 26,
+        pos: [59, 72.56, 15, 7.44], tocco: [[60.2, 73.2, 72.8, 79.6]],
+        descrizione: "Un vecchio ceppo diventato tavolino, con le tazzine di ghianda e la teiera."
+      },
+      for_cartello: {
+        nome: "Cartello del bosco", livello: 15, costo: { legnetti: 8 }, xp: 16,
+        pos: [73, 66.27, 7, 8.73], tocco: [[73.6, 67.0, 79.4, 74.6]],
+        descrizione: "Un cartello con tre frecce: indica la strada per tutte le terre del Giardino."
+      },
+      for_sentiero: {
+        nome: "Sentiero delle lanterne", livello: 15, costo: { sassolini: 14, stelle: 2 }, xp: 28,
+        pos: [40, 79.42, 26, 8.58], tocco: [[42.1, 80.1, 63.9, 87.6]], bolla: [53.0, 81.4],
+        produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
+        descrizione: "Sassi piatti con le lanterne di carta, per non perdersi di notte."
+      },
+      for_cespuglio: {
+        nome: "Cespuglio di bacche", livello: 15, costo: { petali: 8, spinaci: 6 }, xp: 22,
+        pos: [74, 81.56, 15, 7.44], tocco: [[75.2, 82.2, 87.8, 88.6]], bolla: [81.5, 83.6],
+        produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
+        descrizione: "Un cespuglio di bacche blu e rosa: al Chiwinnie piacciono quasi come gli spinaci!"
+      },
+      for_altalena: {
+        nome: "Altalena di rampicanti", livello: 16, costo: { legnetti: 14, stelle: 3 }, xp: 30,
+        pos: [77, 51.63, 18, 14.37], tocco: [[78.4, 52.8, 93.6, 65.3]],
+        descrizione: "Un'altalena appesa a un arco di foglie e fiorellini luminosi."
+      },
+      for_ponte: {
+        nome: "Ponticello delle lanterne", livello: 16, costo: { legnetti: 16, sassolini: 8, stelle: 3 }, xp: 34,
+        pos: [2, 87.78, 25, 8.22], tocco: [[4.0, 88.4, 25.0, 95.6]],
+        descrizione: "Un ponticello di legno sul ruscello, con le lanterne sulle ringhiere."
+      }
+    }
+  },
+  {
     id: "cielo", nome: "Il Cielo del Celeste", musica: "nuvole", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
     descrizione: "Sopra le nuvole, dove vola il rarissimo Chiwinnie Celeste.",
     prati: [{ x1: 14, x2: 86, y1: 47, y2: 94 }],
@@ -465,7 +546,7 @@ var SFIDE = [
   { testo: "Costruisci il nido di piume del Celeste", stelle: 2, xp: 35, verifica: function (s) { return costruito(s, "cielo_nido"); } },
   { testo: "Arriva alla porta d'oro nell'Avventura nel Cielo", stelle: 2, xp: 35, verifica: function (s) { return (s.record.cieloCompleto || 0) >= 1; } },
   { testo: "Trova tutte e 3 le stelle del Cielo", stelle: 3, xp: 45, verifica: function (s) { return (s.record.cieloStelle || 0) >= 3; } },
-  { testo: "Completa il Cielo del Celeste", stelle: 10, xp: 100, verifica: function (s) { return Object.keys(ZONE[3].pezzi).every(function (k) { return costruito(s, k); }); } },
+  { testo: "Completa il Cielo del Celeste", stelle: 10, xp: 100, verifica: function (s) { return Object.keys(zonaId("cielo").pezzi).every(function (k) { return costruito(s, k); }); } },
   { testo: "Risolvi il Sudoku dei fiori", stelle: 2, xp: 15, ordine: 6.5, verifica: function (s) { return (s.contatori.sudokuCompleti || 0) >= 1; } },
   { testo: "Rimetti in ordine il Puzzle del Bosco", stelle: 2, xp: 15, ordine: 7.5, verifica: function (s) { return (s.contatori.puzzleCompleti || 0) >= 1; } },
   { testo: "Esci dal Labirinto delle siepi", stelle: 2, xp: 15, ordine: 8.5, verifica: function (s) { return (s.contatori.labirintiCompleti || 0) >= 1; } },
@@ -474,7 +555,9 @@ var SFIDE = [
   { testo: "Prendi tutti e 5 i petali nel Labirinto", stelle: 2, xp: 20, ordine: 17.5, progresso: function (s) { return [s.record.labirintoPetali || 0, 5]; }, verifica: function (s) { return (s.record.labirintoPetali || 0) >= 5; } },
   { testo: "Aggiusta 3 cose con l'Aggiustatutto", stelle: 2, xp: 20, ordine: 9.5, progresso: function (s) { return [s.contatori.aggiustati || 0, 3]; }, verifica: function (s) { return (s.contatori.aggiustati || 0) >= 3; } },
   { testo: "Aggiusta 3 cose al primo colpo", stelle: 3, xp: 30, ordine: 18.5, progresso: function (s) { return [s.contatori.aggiustatiPrimo || 0, 3]; }, verifica: function (s) { return (s.contatori.aggiustatiPrimo || 0) >= 3; } },
-  { testo: "Esci dal Labirinto nella nebbia", stelle: 3, xp: 30, ordine: 19.5, verifica: function (s) { return (s.contatori.labirintiDifficili || 0) >= 1; } }
+  { testo: "Esci dal Labirinto nella nebbia", stelle: 3, xp: 30, ordine: 19.5, verifica: function (s) { return (s.contatori.labirintiDifficili || 0) >= 1; } },
+  // le sfide nuove vanno sempre in fondo: il salvataggio ricorda le sfide per posizione
+  { testo: "Completa la foresta delle lucciole", stelle: 8, xp: 80, ordine: 29.5, verifica: function (s) { return Object.keys(zonaId("foresta").pezzi).every(function (k) { return costruito(s, k); }); } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,
@@ -550,6 +633,9 @@ var AMICI = [
   { id: "stellina",  nome: "Stellina", femmina: true,  colore: "rosa",   look: { testa: "coroncina_fiori" }, zona: "collina",  lucine: 4, regalo: { petali: 12, stelle: 1 } },
   { id: "brillo",    nome: "Brillo",    colore: "blu",    look: { testa: "cuffie" },          zona: "collina",  lucine: 4, regalo: { legnetti: 12 } },
   { id: "pervinca",  nome: "Pervinca", femmina: true,  colore: "viola",  look: { testa: "basco" },           zona: "collina",  lucine: 5, regalo: { sassolini: 10, stelle: 2 } },
+  { id: "lumino",    nome: "Lumino",    colore: "bianco", look: { collo: "campanellino" },    zona: "foresta",  lucine: 4, regalo: { legnetti: 12, petali: 8 } },
+  { id: "mora",      nome: "Mora", femmina: true,      colore: "viola",  look: { testa: "coroncina_fiori" }, zona: "foresta", lucine: 5, regalo: { petali: 14, stelle: 1 } },
+  { id: "brezza",    nome: "Brezza", femmina: true,    colore: "verde",  look: { viso: "occhiali_cuore" },  zona: "foresta",  lucine: 5, regalo: { sassolini: 10, stelle: 2 } },
   { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
   { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
   { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
@@ -596,12 +682,15 @@ var CAPITOLI = [
   { zona: "collina", tema: "collina", accessorio: "ali_fata", premio: { stelle: 12, petali: 30, legnetti: 25, sassolini: 20 },
     arrivo: "Sulla Collina i fiori sono chiusi e grigi. Qui sono prigionieri Stellina, Brillo e Pervinca.",
     fine: "Tutti i fiori della Collina si aprono insieme: Stellina, Brillo e Pervinca sono liberi!" },
+  { zona: "foresta", tema: "foresta", premio: { stelle: 12, petali: 30, legnetti: 30, sassolini: 20 },
+    arrivo: "Nella foresta delle lucciole le lucine si sono spente. Qui il Nebbione ha nascosto Lumino, Mora e Brezza.",
+    fine: "Le lucciole si riaccendono tutte insieme: Lumino, Mora e Brezza sono liberi!" },
   { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
     arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
     fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
 // le terre del Giardino magico che stiamo ancora dipingendo: si vedono nella mappa
-var TERRE_IN_ARRIVO = ["La foresta delle lucciole", "Le isole fluttuanti", "Le terre del nord", "Il deserto dei fiori di cactus",
+var TERRE_IN_ARRIVO = ["Le isole fluttuanti", "Le terre del nord", "Il deserto dei fiori di cactus",
   "I cappelli di fata", "Le colline di panna", "La città di pietre preziose"];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
@@ -611,12 +700,16 @@ function lucinePartita(d) {
 }
 // il paesaggio dell'avventura del sentiero: quello della terra dove si sta andando
 function temaSentiero(c) { var d = CAPITOLI[CAPITOLI.indexOf(c) + 1]; return c.finale || !d ? c.tema : d.tema; }
+function zonaId(id) { return ZONE.filter(function (z) { return z.id === id; })[0]; }
 function capitoloDi(zona) { return CAPITOLI.filter(function (c) { return c.zona === zona; })[0] || null; }
 function nomeCapitolo(c) { if (c.nome) return c.nome; var z = ZONE.filter(function (x) { return x.id === c.zona; })[0]; return z ? z.nome : ""; }
 function forziereAperto(s, zona) { return !!(s.viaggio && s.viaggio.battuti && s.viaggio.battuti.indexOf(zona) !== -1); }
 // una zona è aperta se il capitolo prima è stato vinto (o, per chi giocava già, se la zona prima era stata completata)
 function zonaApertaIn(s, i) {
   if (i <= 0) return true;
-  var prima = ZONE[i - 1].id, v = s.viaggio || {};
-  return forziereAperto(s, prima) || (v.vecchie || []).indexOf(prima) !== -1;
+  var prima = ZONE[i - 1].id, v = s.viaggio || {}, z = ZONE[i];
+  if (forziereAperto(s, prima) || (v.vecchie || []).indexOf(prima) !== -1) return true;
+  // quando si aggiunge una terra nuova nel mezzo, chi era già più avanti non perde le zone dove ha giocato
+  return !!z && ((z.pezzi && Object.keys(z.pezzi).some(function (k) { return (s.costruiti || []).indexOf(k) !== -1; })) ||
+    AMICI.some(function (a) { return a.zona === z.id && ((s.missione || {}).liberati || []).indexOf(a.id) !== -1; }));
 }

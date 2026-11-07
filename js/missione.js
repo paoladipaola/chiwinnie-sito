@@ -51,7 +51,7 @@
     return amiciDi(c).filter(function (a) { return !libero(a); }).sort(function (x, y) { return x.lucine - y.lucine; })[0] || null;
   }
   function puoLiberare() { var a = prossimoAmico(); return !!a && dati().missione.lucine >= a.lucine; }
-  function nomeSentiero(c) { var d = dopo(c); return c.finale ? "Battaglia finale" : d ? "Il sentiero per " + nomeCapitolo(d) : "Il sentiero"; }
+  function nomeSentiero(c) { var d = dopo(c); return c.finale ? "Battaglia finale" : d ? "Il sentiero per " + nomeCapitolo(d).replace(/^(La|Il|Le|I|Lo|Gli) /, function (x) { return x.toLowerCase(); }) : "Il sentiero"; }
   // il prossimo passo da fare, in una riga
   function prossimoPasso(c) {
     var a = prossimoAmico();

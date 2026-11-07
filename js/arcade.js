@@ -31,6 +31,13 @@
       rotolante: { img: "fieno.png" }, traguardo: { img: "girandola.png", w: 96, h: 162 },
       arrivo: "Sei arrivato alla girandola!", perfetto: "Collina perfetta: tutte le stelle!"
     },
+    foresta: {
+      cartella: "img/foresta/", terreno: { img: "terreno.png", h: 112, su: 34 }, colTerra: "#3b2f2c", nebbia: "120,115,170",
+      piatt: { tronco: { img: "tronco.png", top: 0.22 }, cappello: { img: "cappello.png", top: 0.12 } },
+      trampolino: { img: "fungo.png", w: 104, h: 126, top: 92 }, ostacolo: { img: "rovo.png", w: 84, h: 104 },
+      rotolante: { img: "../pigna.png" }, traguardo: { img: "barattolo.png", w: 110, h: 144 },
+      arrivo: "Sei arrivato al barattolo delle lucciole!", perfetto: "Foresta perfetta: tutte le stelle!"
+    },
     cielo: {
       cartella: "img/cielo/", terreno: { img: "terreno.png", h: 92, su: 14 }, colTerra: "#f6e1e4", nebbia: "245,215,225",
       piatt: { arcobaleno: { img: "arcobaleno.png", top: 0.18 }, ponte: { img: "ponte.png", top: 0.4 }, nuvola: { img: "nuvola.png", top: 0.3 } },
