@@ -66,6 +66,13 @@
       traguardo: { img: "porta.png", w: 130, h: 121 },
       arrivo: "Sei arrivato alla porta nella roccia!", perfetto: "Valle perfetta: tutte le stelle!"
     },
+    panna: {
+      cartella: "img/panna/", terreno: { img: "terreno.png", h: 100, su: 40 }, colTerra: "#e3b36a", nebbia: "250,225,235",
+      piatt: { biscotto: { img: "biscotto.png", top: 0.1 }, macgrande: { img: "macgrande.png", top: 0.08 } },
+      trampolino: { img: "marshmallow.png", w: 100, h: 99, top: 90 }, ostacolo: { img: "caramella.png", w: 70, h: 67 },
+      traguardo: { img: "cupcake.png", w: 100, h: 156 },
+      arrivo: "Sei arrivato al cupcake gigante!", perfetto: "Colline perfette: tutte le stelle!"
+    },
     cielo: {
       cartella: "img/cielo/", terreno: { img: "terreno.png", h: 92, su: 14 }, colTerra: "#f6e1e4", nebbia: "245,215,225",
       piatt: { arcobaleno: { img: "arcobaleno.png", top: 0.18 }, ponte: { img: "ponte.png", top: 0.4 }, nuvola: { img: "nuvola.png", top: 0.3 } },

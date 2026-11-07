@@ -681,6 +681,87 @@ var ZONE = [
     }
   },
   {
+    id: "panna", nome: "Le colline di panna", musica: "radura", sfondo: "img/zona10/vuota.jpg", cartella: "img/zona10/",
+    descrizione: "Colline di panna montata, lecca-lecca giganti e un fiume di cioccolato.",
+    prati: [{ x1: 28, x2: 80, y1: 74, y2: 90 }],
+    pezzi: {
+      pan_casetta: {
+        nome: "Casetta di pan di zenzero", livello: 20, costo: { legnetti: 16, petali: 10 }, xp: 34,
+        pos: [52, 64.3, 20, 10.7], tocco: [[53.6, 65.2, 70.4, 74.5]],
+        descrizione: "Una casetta di biscotto con la glassa sul tetto e i bottoni di zucchero."
+      },
+      pan_lecca: {
+        nome: "Albero dei lecca-lecca", livello: 20, costo: { petali: 12 }, xp: 22,
+        pos: [31, 65.3, 12, 9.2], tocco: [[32.0, 66.0, 42.0, 74.0]],
+        descrizione: "Un albero tutto di lecca-lecca colorati."
+      },
+      pan_fontana: {
+        nome: "Fontana cupcake", livello: 20, costo: { sassolini: 10, petali: 8 }, xp: 26,
+        pos: [42, 72.64, 10, 7.86], tocco: [[42.8, 73.3, 51.2, 80.1]],
+        descrizione: "Una fontana a forma di cupcake da cui scende latte alla fragola."
+      },
+      pan_staccionata: {
+        nome: "Staccionata di bastoncini", livello: 20, costo: { legnetti: 10 }, xp: 20,
+        pos: [62, 72.76, 15, 7.24], tocco: [[63.2, 73.3, 75.8, 79.6]], bolla: [69.5, 74.8],
+        produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Una staccionata di bastoncini di zucchero a righe bianche e rosse."
+      },
+      pan_fragola: {
+        nome: "Casetta fragola", livello: 21, costo: { petali: 14, sassolini: 6 }, xp: 28,
+        pos: [84, 73.95, 11, 7.55], tocco: [[84.9, 74.6, 94.1, 81.1]], bolla: [89.5, 76.0],
+        produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
+        descrizione: "Una fragola gigante con la porticina: e dentro ci sono anche gli spinaci!"
+      },
+      pan_panchina: {
+        nome: "Sedia di biscotto", livello: 21, costo: { legnetti: 8, petali: 6 }, xp: 20,
+        pos: [30, 78.83, 9, 6.67], tocco: [[30.7, 79.4, 38.3, 85.2]],
+        descrizione: "Una sedia fatta di due biscotti con le gocce di cioccolato."
+      },
+      pan_ciambella: {
+        nome: "Laghetto ciambella", livello: 21, costo: { sassolini: 12, petali: 10 }, xp: 30,
+        pos: [46, 81.56, 17, 5.94], tocco: [[47.4, 82.0, 61.6, 87.2]],
+        descrizione: "Un laghetto dentro una ciambella rosa con gli zuccherini, e una paperella di gelatina."
+      },
+      pan_gommose: {
+        nome: "Giardino delle gommose", livello: 21, costo: { petali: 10, sassolini: 6 }, xp: 24,
+        pos: [64, 87.14, 16, 6.36], tocco: [[65.3, 87.6, 78.7, 93.2]], bolla: [72.0, 89.1],
+        produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Fiori di gelatina e caramelle gommose che crescono sulla panna."
+      },
+      pan_waffle: {
+        nome: "Tavolino waffle", livello: 21, costo: { legnetti: 10, stelle: 2 }, xp: 26,
+        pos: [48, 86.13, 11, 6.87], tocco: [[48.9, 86.7, 58.1, 92.7]],
+        descrizione: "Un tavolino di waffle con fragole e panna, e due sgabelli cupcake."
+      },
+      pan_ponte: {
+        nome: "Ponte di cioccolato", livello: 22, costo: { legnetti: 14, sassolini: 8, stelle: 2 }, xp: 30,
+        pos: [6, 79.11, 19, 5.89], tocco: [[7.5, 79.6, 23.5, 84.7]],
+        descrizione: "Un ponte di cioccolato e wafer sul fiume di cioccolata."
+      },
+      pan_macaron: {
+        nome: "Sentiero di macaron", livello: 22, costo: { sassolini: 14, stelle: 2 }, xp: 28,
+        pos: [26, 85.87, 18, 10.13], tocco: [[27.4, 86.7, 42.6, 95.5]], bolla: [35.0, 87.9],
+        produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
+        descrizione: "Macaron colorati per attraversare il fiume di cioccolato."
+      },
+      pan_altalena: {
+        nome: "Altalena marshmallow", livello: 22, costo: { legnetti: 12, stelle: 3 }, xp: 30,
+        pos: [71, 78.49, 11, 9.51], tocco: [[71.9, 79.3, 81.1, 87.5]],
+        descrizione: "Un'altalena con il seggiolino di marshmallow e le corde di liquirizia."
+      },
+      pan_gelati: {
+        nome: "Chiosco dei gelati", livello: 22, costo: { legnetti: 12, petali: 12, stelle: 2 }, xp: 32,
+        pos: [84, 86.06, 13, 7.44], tocco: [[85.0, 86.7, 96.0, 93.1]],
+        descrizione: "Gelato alla fragola, al limone e ai mirtilli, con i coni croccanti."
+      },
+      pan_torta: {
+        nome: "Torre di torta", livello: 22, costo: { petali: 18, sassolini: 10, stelle: 4 }, xp: 40,
+        pos: [78, 64.2, 13, 10.8], tocco: [[79.0, 65.1, 90.0, 74.5]],
+        descrizione: "Una torta a tre piani con le fragole e la bandierina in cima."
+      }
+    }
+  },
+  {
     id: "cielo", nome: "Il Cielo del Celeste", musica: "nuvole", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
     descrizione: "Sopra le nuvole, dove vola il rarissimo Chiwinnie Celeste.",
     prati: [{ x1: 14, x2: 86, y1: 47, y2: 94 }],
@@ -885,7 +966,8 @@ var SFIDE = [
   { testo: "Completa le isole fluttuanti", stelle: 8, xp: 85, ordine: 29.7, verifica: function (s) { return Object.keys(zonaId("isole").pezzi).every(function (k) { return costruito(s, k); }); } },
   { testo: "Completa le terre del nord", stelle: 8, xp: 90, ordine: 29.8, verifica: function (s) { return Object.keys(zonaId("nord").pezzi).every(function (k) { return costruito(s, k); }); } },
   { testo: "Completa il deserto dei fiori di cactus", stelle: 8, xp: 95, ordine: 29.85, verifica: function (s) { return Object.keys(zonaId("deserto").pezzi).every(function (k) { return costruito(s, k); }); } },
-  { testo: "Completa i cappelli di fata", stelle: 8, xp: 100, ordine: 29.9, verifica: function (s) { return Object.keys(zonaId("fata").pezzi).every(function (k) { return costruito(s, k); }); } }
+  { testo: "Completa i cappelli di fata", stelle: 8, xp: 100, ordine: 29.9, verifica: function (s) { return Object.keys(zonaId("fata").pezzi).every(function (k) { return costruito(s, k); }); } },
+  { testo: "Completa le colline di panna", stelle: 8, xp: 105, ordine: 29.95, verifica: function (s) { return Object.keys(zonaId("panna").pezzi).every(function (k) { return costruito(s, k); }); } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,
@@ -976,6 +1058,9 @@ var AMICI = [
   { id: "nocciola",  nome: "Nocciola", femmina: true,  colore: "viola",  look: { testa: "basco" },           zona: "fata",     lucine: 6, regalo: { petali: 18, stelle: 2 } },
   { id: "pistacchio", nome: "Pistacchio", colore: "verde", look: { collo: "papillon" },         zona: "fata",     lucine: 7, regalo: { legnetti: 18, sassolini: 10 } },
   { id: "anice",     nome: "Anice", femmina: true,     colore: "bianco", look: { testa: "fiocco" },          zona: "fata",     lucine: 7, regalo: { spinaci: 14, stelle: 2 } },
+  { id: "meringa",   nome: "Meringa", femmina: true,   colore: "bianco", look: { testa: "coroncina_fiori" }, zona: "panna",  lucine: 7, regalo: { petali: 20, stelle: 2 } },
+  { id: "biscotto",  nome: "Biscotto",  colore: "blu",    look: { collo: "campanellino" },    zona: "panna",    lucine: 7, regalo: { legnetti: 20, spinaci: 10 } },
+  { id: "caramella", nome: "Caramella", femmina: true, colore: "arcobaleno", look: { testa: "fiocco" }, zona: "panna",    lucine: 8, regalo: { sassolini: 16, stelle: 3 } },
   { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
   { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
   { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
@@ -1037,12 +1122,15 @@ var CAPITOLI = [
   { zona: "fata", tema: "fata", premio: { stelle: 18, petali: 40, legnetti: 40, sassolini: 30 },
     arrivo: "Nella valle dei cappelli di fata le mongolfiere non volano più e la roccia è grigia. Qui il Nebbione ha nascosto Nocciola, Pistacchio e Anice.",
     fine: "Le mongolfiere tornano a volare all'alba: Nocciola, Pistacchio e Anice sono liberi!" },
+  { zona: "panna", tema: "panna", premio: { stelle: 20, petali: 45, legnetti: 40, sassolini: 35 },
+    arrivo: "Sulle colline di panna i dolci hanno perso il loro colore e il cioccolato non profuma più. Qui il Nebbione ha nascosto Meringa, Biscotto e Caramella.",
+    fine: "Torna il profumo di fragola e cioccolato: Meringa, Biscotto e Caramella sono liberi!" },
   { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
     arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
     fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
 // le terre del Giardino magico che stiamo ancora dipingendo: si vedono nella mappa
-var TERRE_IN_ARRIVO = ["Le colline di panna", "La città di pietre preziose"];
+var TERRE_IN_ARRIVO = ["La città di pietre preziose"];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
   if (!d || d.gioco === "colora" || d.gioco === "sfida") return 0;
