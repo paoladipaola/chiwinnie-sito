@@ -278,80 +278,80 @@ var ZONE = [
   {
     id: "foresta", nome: "La foresta delle lucciole", musica: "notte", sfondo: "img/zona5/vuota.jpg", cartella: "img/zona5/", senzaIcone: true,
     descrizione: "Una foresta dove è sempre notte e la luce la fanno le lucciole.",
-    prati: [{ x1: 26, x2: 74, y1: 64, y2: 84 }],
+    prati: [{ x1: 28, x2: 72, y1: 68, y2: 82 }],
     pezzi: {
       for_casetta: {
         nome: "Casetta nel tronco", livello: 12, costo: { legnetti: 14, sassolini: 6 }, xp: 30,
-        pos: [2, 49.22, 22, 14.78], tocco: [[3.8, 50.4, 22.2, 63.3]],
+        pos: [3, 45.88, 30, 20.12], tocco: [[5.4, 47.49, 30.6, 64.39]],
         descrizione: "Una casetta rotonda dentro un vecchio tronco, con la finestra che brilla."
       },
       for_barattoli: {
         nome: "Barattoli di lucciole", livello: 12, costo: { legnetti: 6, petali: 6 }, xp: 20,
-        pos: [23, 53.08, 8, 9.92], tocco: [[23.6, 53.9, 30.4, 62.5]],
+        pos: [27, 59.54, 10, 12.46], tocco: [[27.8, 60.54, 36.2, 71]],
         descrizione: "Barattoli pieni di lucciole appesi a un palo: fanno luce tutta la notte."
       },
       for_funghi: {
         nome: "Cerchio di funghi blu", livello: 12, costo: { petali: 10 }, xp: 20,
-        pos: [38, 64.32, 24, 8.68], tocco: [[39.9, 65.0, 60.1, 72.6]],
+        pos: [33, 70.64, 30, 10.86], tocco: [[35.4, 71.51, 60.6, 80.63]],
         descrizione: "Un cerchio magico di funghi che brillano di blu."
       },
       for_panchina: {
         nome: "Panchina di muschio", livello: 13, costo: { sassolini: 10 }, xp: 18,
-        pos: [7, 66.83, 16, 8.17], tocco: [[8.3, 67.5, 21.7, 74.6]],
+        pos: [6, 68.81, 20, 10.19], tocco: [[7.6, 69.62, 24.4, 78.18]],
         descrizione: "Una panchina di pietra coperta di muschio morbido e fiorellini."
       },
       for_fiore: {
         nome: "Il grande fiore lucente", livello: 13, costo: { petali: 12, stelle: 2 }, xp: 24,
-        pos: [63, 55.37, 11, 8.63], tocco: [[63.9, 56.1, 73.1, 63.6]], bolla: [68.5, 57.4],
+        pos: [71, 61.03, 14, 10.97], tocco: [[72.12, 61.91, 83.88, 71.12]], bolla: [78, 63.67],
         produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Un fiore gigante che si apre di notte e lascia cadere petali luminosi."
       },
       for_amaca: {
         nome: "Amaca delle lucciole", livello: 13, costo: { legnetti: 10, petali: 6 }, xp: 22,
-        pos: [37, 52.35, 25, 7.65], tocco: [[39.0, 53.0, 60.0, 59.6]],
+        pos: [37, 59.65, 32, 10.85], tocco: [[39.56, 60.52, 66.44, 69.63]],
         descrizione: "Un'amaca a righe tra due pali con le lucine: per dondolarsi sotto le stelle."
       },
       for_laghetto: {
         nome: "Laghetto delle ninfee", livello: 14, costo: { sassolini: 10, petali: 6 }, xp: 24,
-        pos: [23, 76.54, 18, 6.46], tocco: [[24.4, 77.1, 39.6, 82.7]],
+        pos: [24, 79.09, 22, 7.91], tocco: [[25.76, 79.72, 44.24, 86.37]],
         descrizione: "Un piccolo laghetto blu con le ninfee rosa."
       },
       for_legna: {
         nome: "Legnetti e copertina", livello: 14, costo: { legnetti: 12 }, xp: 22,
-        pos: [82, 72.04, 13, 7.96], tocco: [[83.0, 72.7, 94.0, 79.6]], bolla: [88.5, 74.0],
+        pos: [79, 76.79, 15, 9.21], tocco: [[80.2, 77.53, 92.8, 85.26]], bolla: [86.5, 79.06],
         produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Una catasta di legnetti con la copertina e la lanterna: qui si trovano sempre legnetti."
       },
       for_ceppo: {
         nome: "Tavolino del tè", livello: 14, costo: { legnetti: 8, sassolini: 6, stelle: 2 }, xp: 26,
-        pos: [59, 72.56, 15, 7.44], tocco: [[60.2, 73.2, 72.8, 79.6]],
+        pos: [66, 69.57, 19, 9.43], tocco: [[67.52, 70.33, 83.48, 78.25]],
         descrizione: "Un vecchio ceppo diventato tavolino, con le tazzine di ghianda e la teiera."
       },
       for_cartello: {
         nome: "Cartello del bosco", livello: 15, costo: { legnetti: 8 }, xp: 16,
-        pos: [73, 66.27, 7, 8.73], tocco: [[73.6, 67.0, 79.4, 74.6]],
+        pos: [86, 64.07, 8, 9.93], tocco: [[86.64, 64.87, 93.36, 73.21]],
         descrizione: "Un cartello con tre frecce: indica la strada per tutte le terre del Giardino."
       },
       for_sentiero: {
         nome: "Sentiero delle lanterne", livello: 15, costo: { sassolini: 14, stelle: 2 }, xp: 28,
-        pos: [40, 79.42, 26, 8.58], tocco: [[42.1, 80.1, 63.9, 87.6]], bolla: [53.0, 81.4],
+        pos: [48, 79.11, 30, 9.89], tocco: [[50.4, 79.9, 75.6, 88.21]], bolla: [63, 81.39],
         produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
         descrizione: "Sassi piatti con le lanterne di carta, per non perdersi di notte."
       },
       for_cespuglio: {
         nome: "Cespuglio di bacche", livello: 15, costo: { petali: 8, spinaci: 6 }, xp: 22,
-        pos: [74, 81.56, 15, 7.44], tocco: [[75.2, 82.2, 87.8, 88.6]], bolla: [81.5, 83.6],
+        pos: [4, 76.06, 16, 7.94], tocco: [[5.28, 76.7, 18.72, 83.36]], bolla: [12, 78.24],
         produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
         descrizione: "Un cespuglio di bacche blu e rosa: al Chiwinnie piacciono quasi come gli spinaci!"
       },
       for_altalena: {
         nome: "Altalena di rampicanti", livello: 16, costo: { legnetti: 14, stelle: 3 }, xp: 30,
-        pos: [77, 51.63, 18, 14.37], tocco: [[78.4, 52.8, 93.6, 65.3]],
+        pos: [70, 47.4, 22, 17.6], tocco: [[71.76, 48.81, 90.24, 63.59]],
         descrizione: "Un'altalena appesa a un arco di foglie e fiorellini luminosi."
       },
       for_ponte: {
         nome: "Ponticello delle lanterne", livello: 16, costo: { legnetti: 16, sassolini: 8, stelle: 3 }, xp: 34,
-        pos: [2, 87.78, 25, 8.22], tocco: [[4.0, 88.4, 25.0, 95.6]],
+        pos: [0, 83.45, 26, 8.55], tocco: [[2.08, 84.14, 23.92, 91.32]],
         descrizione: "Un ponticello di legno sul ruscello, con le lanterne sulle ringhiere."
       }
     }
@@ -988,8 +988,8 @@ var MINIGIOCHI = {
     descrizione: "Il sentiero verso la terra dopo! È l'avventura più lunga: corri, salta i nebbiolini e non farti prendere dal Nebbione. In fondo ti aspetta un forziere."
   },
   tris: {
-    nome: "Scambio magico", img: "img/petali.png", livello: 2, energia: 10,
-    descrizione: "Scambia due simboli vicini per metterne tre uguali in fila, oppure quattro a quadrato: spariscono e ne cadono di nuovi. Con quattro in fila nasce una girandola: scambiala con un simbolo e spariscono tutti quelli uguali! Con una L, una T o un rettangolo nasce una bomba di fiori che scoppia tutto intorno, con cinque in fila la sfera arcobaleno che pulisce tutto. Raccogli quello che chiede il Chiwinnie prima che finiscano le mosse."
+    nome: "ChiwiCrush", img: "img/petali.png", livello: 2, energia: 10,
+    descrizione: "Scambia due simboli vicini per metterne tre uguali in fila, oppure quattro a quadrato: spariscono e ne cadono di nuovi. Con quattro in fila nasce una girandola: scambiala con un simbolo e spariscono tutti quelli uguali! Con una L, una T o un rettangolo nasce una bomba di fiori che scoppia tutto intorno, con cinque in fila la sfera arcobaleno che pulisce tutto. Più terre apri, più simboli del mondo dei Chiwinnie trovi: funghi, pigne, ninfee, cupcake, cristalli… Raccogli quello che chiede il Chiwinnie prima che finiscano le mosse."
   },
   conti: {
     nome: "Indovinelli dei numeri", img: "img/stella.png", livello: 1, energia: 0, rompicapo: true,
@@ -1162,7 +1162,7 @@ var MISSIONI = [
   { id: "avventura", testo: "Arriva in fondo a un'avventura", testoN: "Arriva in fondo a {n} avventure", ev: "partita", conta: function (d) { return d.arcade && d.completato ? 1 : 0; }, n: [1, 1, 2, 2, 3] },
   { id: "stelle",    testo: "Trova {n} stelle nascoste nelle avventure", ev: "partita", conta: function (d) { return d.arcade ? d.stelleLivello || 0 : 0; }, n: [1, 2, 3, 4, 5] },
   { id: "rompicapi", testo: "Risolvi {n} rompicapi", ev: "partita", conta: function (d) { return d.rompicapo && d.completato ? 1 : 0; }, n: [1, 2, 2, 3, 4] },
-  { id: "tris",      testo: "Fai {n} file nello Scambio magico", ev: "partita", gioco: "tris", conta: function (d) { return d.gioco === "tris" ? d.file || 0 : 0; }, n: [15, 25, 35, 45, 60] },
+  { id: "tris",      testo: "Fai {n} file in ChiwiCrush", ev: "partita", gioco: "tris", conta: function (d) { return d.gioco === "tris" ? d.file || 0 : 0; }, n: [15, 25, 35, 45, 60] },
   { id: "conti",     testo: "Rispondi giusto a {n} indovinelli dei numeri", ev: "partita", gioco: "conti", conta: function (d) { return d.gioco === "conti" ? d.giuste || 0 : 0; }, n: [5, 8, 10, 15, 20] },
   { id: "fuga",      testo: "Scappa dal Nebbione fino in fondo", ev: "partita", gioco: "fuga", conta: function (d) { return d.gioco === "fuga" && d.completato ? 1 : 0; }, n: [1] },
   { id: "memory",    testo: "Completa {n} Memory dei fiori", ev: "partita", gioco: "memory", conta: function (d) { return d.gioco === "memory" && d.completato ? 1 : 0; }, n: [1, 1, 2] },

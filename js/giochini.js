@@ -1,4 +1,4 @@
-// Giochini: lo Scambio magico (tre in fila, quadrati e L) e gli Indovinelli dei numeri.
+// Giochini: ChiwiCrush (tre in fila, quadrati e L) e gli Indovinelli dei numeri.
 // Come gli altri minigiochi: ricevono (area, api) e restituiscono una funzione che li ferma.
 (function () {
   function mescola(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
@@ -6,7 +6,7 @@
   function scegli(a) { return a[Math.floor(Math.random() * a.length)]; }
   function vibra(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} }
 
-  // ================= Scambio magico (era il Tris di fiori) =================
+  // ================= ChiwiCrush (era il Tris di fiori) =================
   // Si scambiano due simboli vicini: tre o più uguali in fila spariscono e dall'alto ne cadono di nuovi.
   // Valgono le file di tre (in riga o in colonna), i quadrati 2×2, i rettangoli a due colonne e le L.
   // Quattro in fila fanno nascere una girandola: scambiata con un simbolo fa sparire tutti quelli uguali.
@@ -15,7 +15,18 @@
   // Gli speciali si attivano appena li scambi; due speciali scambiati fra loro scoppiano insieme.
   var TIPI = ["spinaci", "petali", "legnetti", "sassolini", "stella", "lucciola"];
   var NOMI = { spinaci: "spinaci", petali: "petali", legnetti: "legnetti", sassolini: "sassolini", stella: "stelline", lucciola: "lucciole" };
-  function imgTipo(t) { return t === "stella" ? "img/stella.png" : t === "lucciola" ? "img/lucciola.png" : MATERIALI[t].img; }
+  // altri simboli del mondo dei Chiwinnie: entrano nel gioco quando si apre la loro terra.
+  // "da" è il materiale che regalano a fine partita.
+  var ALTRI = {
+    fungo:       { img: "img/bosco/fungo.png",          da: "spinaci",   colore: "#e57a8a" },
+    pigna:       { img: "img/pigna.png",                da: "legnetti",  colore: "#9b6a3e" },
+    ninfea:      { img: "img/ruscello/ninfea.png",      da: "spinaci",   colore: "#7cb86a", zona: "ruscello" },
+    barattolo:   { img: "img/foresta/barattolo.png",    da: "sassolini", colore: "#f4d77a", zona: "foresta" },
+    fiorecactus: { img: "img/deserto/fiorecactus.png",  da: "petali",    colore: "#f29a7a", zona: "deserto" },
+    cupcake:     { img: "img/panna/cupcake.png",        da: "petali",    colore: "#f5b6d0", zona: "panna" },
+    cristalli:   { img: "img/gemme/cristalli.png",      da: "sassolini", colore: "#8a6fc0", zona: "gemme" }
+  };
+  function imgTipo(t) { return ALTRI[t] ? ALTRI[t].img : t === "stella" ? "img/stella.png" : t === "lucciola" ? "img/lucciola.png" : MATERIALI[t].img; }
   var LIVELLI_TRIS = {
     facile:    { tipi: 5, mosse: 25, obiettivi: 2, quanti: 14 },
     medio:     { tipi: 6, mosse: 22, obiettivi: 3, quanti: 15 },
@@ -34,9 +45,13 @@
     ], gioca, api);
 
     function gioca(box, liv) {
-      var L = LIVELLI_TRIS[liv], tipi = TIPI.slice(0, L.tipi);
+      // ogni partita mescola i simboli di sempre con quelli delle terre già aperte (circa metà e metà)
+      var aperte = api.zoneAperte || [];
+      var nuovi = Object.keys(ALTRI).filter(function (k) { return !ALTRI[k].zona || aperte.indexOf(ALTRI[k].zona) !== -1; });
+      var L = LIVELLI_TRIS[liv], quantiNuovi = Math.min(nuovi.length, Math.floor(L.tipi / 2));
+      var tipi = mescola(TIPI.slice()).slice(0, L.tipi - quantiNuovi).concat(mescola(nuovi).slice(0, quantiNuovi));
       var mosse = L.mosse, punti = 0, file = 0, occupato = false, finito = false, ultimoTocco = Date.now();
-      var presi = {}; TIPI.forEach(function (t) { presi[t] = 0; });
+      var presi = {}; TIPI.concat(Object.keys(ALTRI)).forEach(function (t) { presi[t] = 0; });
       var obiettivi = mescola(tipi.slice()).slice(0, L.obiettivi).map(function (t) { return { t: t, n: L.quanti }; });
       box.innerHTML = "<div class='tris-obiettivi'></div><div class='tris-tavola'></div><div class='tris-legenda'><span><img src='img/tris/girandola.png' alt=''>4 in fila</span><span><img src='img/tris/bomba.png' alt=''>L, T o 2×3</span><span><img src='img/tris/arcobaleno.png' alt=''>5 in fila</span></div><p class='spiega'>Trascina un simbolo verso quello vicino: valgono le file di 3 e anche i quadrati! Scambia uno speciale per farlo scoppiare.</p>";
       var tav = box.querySelector(".tris-tavola"), ob = box.querySelector(".tris-obiettivi");
@@ -98,6 +113,7 @@
         effetto("onda", "left:" + q.x + "%;top:" + q.y + "%;width:" + d + "%;height:" + d + "%;", 700);
       }
       var COLORI = { spinaci: "#6fae4e", petali: "#f3a6b6", legnetti: "#b07a4a", sassolini: "#9aa3ad", stella: "#ffd23f", lucciola: "#d7ff6a" };
+      Object.keys(ALTRI).forEach(function (k) { COLORI[k] = ALTRI[k].colore; });
       var scintilleOra = 0;
       function scintille(p, t) {
         if (scintilleOra > 36) return;
@@ -383,14 +399,17 @@
         var vinto = obiettivi.every(function (o) { return presi[o.t] >= o.n; });
         if (!vinto && mosse > 0) return;
         finito = true;
-        var b = { spinaci: Math.floor(presi.spinaci / 5), petali: Math.floor(presi.petali / 5) + Math.floor(presi.lucciola / 6),
-          legnetti: Math.floor(presi.legnetti / 5), sassolini: Math.floor(presi.sassolini / 5), stelle: 0 };
+        // i simboli nuovi contano per il materiale che regalano (il fungo come gli spinaci, la pigna come i legnetti…)
+        var conta = { spinaci: presi.spinaci, petali: presi.petali, legnetti: presi.legnetti, sassolini: presi.sassolini };
+        Object.keys(ALTRI).forEach(function (k) { conta[ALTRI[k].da] += presi[k]; });
+        var b = { spinaci: Math.floor(conta.spinaci / 5), petali: Math.floor(conta.petali / 5) + Math.floor(presi.lucciola / 6),
+          legnetti: Math.floor(conta.legnetti / 5), sassolini: Math.floor(conta.sassolini / 5), stelle: 0 };
         if (vinto) { b.petali += 3 + mosse; b.stelle = mosse >= 5 || liv === "difficile" ? 1 : 0; }
         if (vinto) tav.classList.add("vinto");
         dopo(vinto ? 900 : 500, function () {
           api.fine({
             punti: Math.round(punti / 3) + (vinto ? 10 : 0), completato: vinto, file: file, bottino: b,
-            titolo: vinto ? "Scambio riuscito!" : "Mosse finite!",
+            titolo: vinto ? "ChiwiCrush!" : "Mosse finite!",
             messaggio: vinto ? "Hai raccolto tutto quello che chiedeva il Chiwinnie con " + mosse + (mosse === 1 ? " mossa" : " mosse") + " di avanzo, e fatto " + file + " file!" + (b.stelle ? " Una stella in regalo!" : "")
               : "Hai fatto " + file + " file e quello che hai raccolto resta tuo. Riprova!"
           });
