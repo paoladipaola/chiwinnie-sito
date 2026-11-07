@@ -357,6 +357,87 @@ var ZONE = [
     }
   },
   {
+    id: "isole", nome: "Le isole fluttuanti", musica: "nuvole", sfondo: "img/zona6/vuota.jpg", cartella: "img/zona6/",
+    descrizione: "Isolette di prato che galleggiano nel cielo, con le cascate che cadono tra le nuvole.",
+    prati: [{ x1: 10, x2: 90, y1: 56, y2: 62 }],
+    pezzi: {
+      isl_casetta: {
+        nome: "Casetta sull'isola", livello: 15, costo: { legnetti: 14, sassolini: 8 }, xp: 30,
+        pos: [4, 46.39, 20, 12.61], tocco: [[5.6, 47.4, 22.4, 58.4]],
+        descrizione: "Una casetta bianca con il tetto rosso, sull'isola più grande."
+      },
+      isl_orto: {
+        nome: "Orto volante", livello: 15, costo: { legnetti: 8, spinaci: 6 }, xp: 20,
+        pos: [6, 56.71, 16, 7.29], tocco: [[7.3, 57.3, 20.7, 63.6]], bolla: [14.0, 58.7],
+        produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
+        descrizione: "Un orto di carote, lattughe e spinaci: cresce benissimo vicino al cielo."
+      },
+      isl_panchina: {
+        nome: "Panchina azzurra", livello: 15, costo: { legnetti: 8 }, xp: 16,
+        pos: [45, 55.07, 12, 5.43], tocco: [[46.0, 55.5, 56.0, 60.2]],
+        descrizione: "Una panchina col cuscino, per guardare le nuvole passare."
+      },
+      isl_albero: {
+        nome: "Albero dei frutti rosa", livello: 16, costo: { petali: 12, sassolini: 4 }, xp: 24,
+        pos: [26, 46.35, 17, 10.65], tocco: [[27.4, 47.2, 41.6, 56.5]],
+        descrizione: "Un albero pieno di frutti rosa e rotondi."
+      },
+      isl_laghetto: {
+        nome: "Laghetto con la cascatella", livello: 16, costo: { sassolini: 12, petali: 4 }, xp: 24,
+        pos: [34, 57.99, 17, 6.51], tocco: [[35.4, 58.5, 49.6, 64.2]], bolla: [42.5, 60.0],
+        produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
+        descrizione: "Un laghetto con una piccola cascata e due ninfee: sul fondo si trovano sassolini lisci."
+      },
+      isl_telescopio: {
+        nome: "Cannocchiale", livello: 16, costo: { sassolini: 8, stelle: 2 }, xp: 22,
+        pos: [22, 53.96, 7, 9.04], tocco: [[22.6, 54.7, 28.4, 62.5]],
+        descrizione: "Un cannocchiale d'ottone per guardare le altre isole."
+      },
+      isl_arnia: {
+        nome: "Arnia delle api", livello: 16, costo: { legnetti: 8, petali: 6 }, xp: 20,
+        pos: [68, 54.97, 7, 5.53], tocco: [[68.6, 55.4, 74.4, 60.2]],
+        descrizione: "Una casetta gialla per le api amiche delle isole."
+      },
+      isl_faro: {
+        nome: "Piccolo faro", livello: 17, costo: { sassolini: 14, stelle: 2 }, xp: 26,
+        pos: [60, 50.35, 10, 6.15], tocco: [[60.8, 50.8, 69.2, 56.2]],
+        descrizione: "Un faro a righe che fa luce alle isole quando passano le nuvole."
+      },
+      isl_mulino: {
+        nome: "Mulino a vento", livello: 17, costo: { legnetti: 16, sassolini: 6 }, xp: 30,
+        pos: [76, 46.01, 18, 11.99], tocco: [[77.4, 47.0, 92.6, 57.4]], bolla: [85.0, 48.0],
+        produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Un mulino bianco che gira con il vento del cielo."
+      },
+      isl_aquilone: {
+        nome: "Staccionata con l'aquilone", livello: 17, costo: { legnetti: 10, petali: 6 }, xp: 22,
+        pos: [84, 49.93, 12, 13.07], tocco: [[85.0, 51.0, 95.0, 62.3]],
+        descrizione: "Un aquilone colorato legato alla staccionata: vola sempre."
+      },
+      isl_giardino: {
+        nome: "Giardino sull'isoletta", livello: 17, costo: { petali: 16, stelle: 2 }, xp: 26,
+        pos: [59, 8.59, 26, 6.61], tocco: [[61.1, 9.1, 82.9, 14.9]], bolla: [72.0, 10.6],
+        produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Un'isoletta tutta fiorita che lascia cadere petali."
+      },
+      isl_ponte: {
+        nome: "Ponte di corda", livello: 18, costo: { legnetti: 14, stelle: 2 }, xp: 28,
+        pos: [38, 14.56, 20, 4.44], tocco: [[39.6, 14.9, 56.4, 18.8]],
+        descrizione: "Un ponte di corda tra due isolette lassù."
+      },
+      isl_altalena: {
+        nome: "Altalena della nuvola", livello: 18, costo: { legnetti: 10, stelle: 3 }, xp: 30,
+        pos: [6, 31.32, 14, 14.68], tocco: [[7.1, 32.5, 18.9, 45.3]],
+        descrizione: "Un'altalena appesa a una nuvola morbida."
+      },
+      isl_mongolfiera: {
+        nome: "Mongolfiera a righe", livello: 18, costo: { petali: 14, legnetti: 10, stelle: 3 }, xp: 34,
+        pos: [74, 24.83, 14, 19.17], tocco: [[75.1, 26.4, 86.9, 43.0]],
+        descrizione: "Una mongolfiera a righe per fare il giro delle isole."
+      }
+    }
+  },
+  {
     id: "cielo", nome: "Il Cielo del Celeste", musica: "nuvole", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
     descrizione: "Sopra le nuvole, dove vola il rarissimo Chiwinnie Celeste.",
     prati: [{ x1: 14, x2: 86, y1: 47, y2: 94 }],
@@ -557,7 +638,8 @@ var SFIDE = [
   { testo: "Aggiusta 3 cose al primo colpo", stelle: 3, xp: 30, ordine: 18.5, progresso: function (s) { return [s.contatori.aggiustatiPrimo || 0, 3]; }, verifica: function (s) { return (s.contatori.aggiustatiPrimo || 0) >= 3; } },
   { testo: "Esci dal Labirinto nella nebbia", stelle: 3, xp: 30, ordine: 19.5, verifica: function (s) { return (s.contatori.labirintiDifficili || 0) >= 1; } },
   // le sfide nuove vanno sempre in fondo: il salvataggio ricorda le sfide per posizione
-  { testo: "Completa la foresta delle lucciole", stelle: 8, xp: 80, ordine: 29.5, verifica: function (s) { return Object.keys(zonaId("foresta").pezzi).every(function (k) { return costruito(s, k); }); } }
+  { testo: "Completa la foresta delle lucciole", stelle: 8, xp: 80, ordine: 29.5, verifica: function (s) { return Object.keys(zonaId("foresta").pezzi).every(function (k) { return costruito(s, k); }); } },
+  { testo: "Completa le isole fluttuanti", stelle: 8, xp: 85, ordine: 29.7, verifica: function (s) { return Object.keys(zonaId("isole").pezzi).every(function (k) { return costruito(s, k); }); } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,
@@ -636,6 +718,9 @@ var AMICI = [
   { id: "lumino",    nome: "Lumino",    colore: "bianco", look: { collo: "campanellino" },    zona: "foresta",  lucine: 4, regalo: { legnetti: 12, petali: 8 } },
   { id: "mora",      nome: "Mora", femmina: true,      colore: "viola",  look: { testa: "coroncina_fiori" }, zona: "foresta", lucine: 5, regalo: { petali: 14, stelle: 1 } },
   { id: "brezza",    nome: "Brezza", femmina: true,    colore: "verde",  look: { viso: "occhiali_cuore" },  zona: "foresta",  lucine: 5, regalo: { sassolini: 10, stelle: 2 } },
+  { id: "piuma",     nome: "Piuma", femmina: true,     colore: "rosa",   look: { testa: "cappello_paglia" }, zona: "isole", lucine: 5, regalo: { petali: 14, stelle: 1 } },
+  { id: "zefiro",    nome: "Zefiro",    colore: "blu",    look: { collo: "sciarpa" },         zona: "isole",    lucine: 5, regalo: { legnetti: 14, sassolini: 8 } },
+  { id: "trottola",  nome: "Trottola", femmina: true,  colore: "arcobaleno", look: { viso: "occhiali" }, zona: "isole",  lucine: 5, regalo: { spinaci: 10, stelle: 2 } },
   { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
   { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
   { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
@@ -685,12 +770,15 @@ var CAPITOLI = [
   { zona: "foresta", tema: "foresta", premio: { stelle: 12, petali: 30, legnetti: 30, sassolini: 20 },
     arrivo: "Nella foresta delle lucciole le lucine si sono spente. Qui il Nebbione ha nascosto Lumino, Mora e Brezza.",
     fine: "Le lucciole si riaccendono tutte insieme: Lumino, Mora e Brezza sono liberi!" },
+  { zona: "isole", tema: "isole", premio: { stelle: 14, petali: 35, legnetti: 30, sassolini: 25 },
+    arrivo: "Le isole fluttuanti sono grigie e le cascate non brillano più. Qui il Nebbione ha nascosto Piuma, Zefiro e Trottola.",
+    fine: "Le cascate tornano a brillare tra le nuvole: Piuma, Zefiro e Trottola sono liberi!" },
   { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
     arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
     fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
 // le terre del Giardino magico che stiamo ancora dipingendo: si vedono nella mappa
-var TERRE_IN_ARRIVO = ["Le isole fluttuanti", "Le terre del nord", "Il deserto dei fiori di cactus",
+var TERRE_IN_ARRIVO = ["Le terre del nord", "Il deserto dei fiori di cactus",
   "I cappelli di fata", "Le colline di panna", "La città di pietre preziose"];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
