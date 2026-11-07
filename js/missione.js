@@ -111,8 +111,8 @@
         "<span class='mini'>" + amiciDi(k).map(function (a) { return "<i class='" + (libero(a) ? "si" : "") + "' style='background-image:url(" + immagineChiwi(a.colore, "felice") + ")'></i>"; }).join("") + "</span></button>";
     });
     html += "<div class='tappa finale" + (fine ? " vinta" : "") + "'><span class='numero'>" + (fine ? "🌈" : "🏰") + "</span><span class='nome'><b>Il Castello delle nuvole</b><small>" + (fine ? "Il Nebbione è diventato buono!" : "La battaglia finale") + "</small></span></div>";
-    html += "</div><h3 class='titoletto'>Le terre da scoprire</h3><p class='nota'>Il Giardino magico è grande: queste terre le stiamo ancora dipingendo.</p><div class='terre-arrivo'>" +
-      TERRE_IN_ARRIVO.map(function (t) { return "<span>🎨 " + C.esc(t) + "</span>"; }).join("") + "</div>" +
+    html += "</div>" + (TERRE_IN_ARRIVO.length ? "<h3 class='titoletto'>Le terre da scoprire</h3><p class='nota'>Il Giardino magico è grande: queste terre le stiamo ancora dipingendo.</p><div class='terre-arrivo'>" +
+      TERRE_IN_ARRIVO.map(function (t) { return "<span>🎨 " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
       "<div class='azioni-pannello'><button class='btn bianco' data-azione='rileggi-storia'>🎬 Rivedi il cartone</button></div>";
     C.apriPannello(html);
     vestiTutti($("pannello-corpo"));

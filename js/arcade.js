@@ -73,6 +73,13 @@
       traguardo: { img: "cupcake.png", w: 100, h: 156 },
       arrivo: "Sei arrivato al cupcake gigante!", perfetto: "Colline perfette: tutte le stelle!"
     },
+    gemme: {
+      cartella: "img/gemme/", terreno: { img: "terreno.png", h: 100, su: 26 }, colTerra: "#5a4a8a", nebbia: "225,215,245",
+      piatt: { lastra: { img: "lastra.png", top: 0.15 }, pilastro: { img: "pilastro.png", top: 0.1 } },
+      trampolino: { img: "gelatina.png", w: 100, h: 102, top: 92 }, ostacolo: { img: "cristalli.png", w: 64, h: 98 },
+      traguardo: { img: "cancello.png", w: 110, h: 153 },
+      arrivo: "Sei arrivato al cancello di cristallo!", perfetto: "Città perfetta: tutte le stelle!"
+    },
     cielo: {
       cartella: "img/cielo/", terreno: { img: "terreno.png", h: 92, su: 14 }, colTerra: "#f6e1e4", nebbia: "245,215,225",
       piatt: { arcobaleno: { img: "arcobaleno.png", top: 0.18 }, ponte: { img: "ponte.png", top: 0.4 }, nuvola: { img: "nuvola.png", top: 0.3 } },

@@ -762,6 +762,87 @@ var ZONE = [
     }
   },
   {
+    id: "gemme", nome: "La città di pietre preziose", musica: "nuvole", sfondo: "img/zona11/vuota.jpg", cartella: "img/zona11/", senzaIcone: true,
+    descrizione: "Una città scintillante fatta di gemme e cristalli, con l'arcobaleno nel cielo.",
+    prati: [{ x1: 26, x2: 70, y1: 66, y2: 90 }],
+    pezzi: {
+      gem_casa: {
+        nome: "Casetta di cristallo", livello: 21, costo: { sassolini: 18, petali: 10 }, xp: 36,
+        pos: [38, 53.34, 18, 11.16], tocco: [[39.4, 54.2, 54.6, 63.9]],
+        descrizione: "Una casetta di cristalli rosa e lilla con le finestre che brillano."
+      },
+      gem_lampione: {
+        nome: "Lampione di cristallo", livello: 21, costo: { sassolini: 8 }, xp: 18,
+        pos: [37, 59.98, 4, 11.52], tocco: [[37.3, 60.9, 40.7, 70.9]],
+        descrizione: "Un lampione trasparente con una gemma che fa luce."
+      },
+      gem_fontana: {
+        nome: "Fontana di zaffiro", livello: 21, costo: { sassolini: 14, stelle: 2 }, xp: 28,
+        pos: [45, 67.02, 13, 5.48], tocco: [[46.0, 67.5, 57.0, 72.2]],
+        descrizione: "Una fontana blu zaffiro piena di gemme che luccicano nell'acqua."
+      },
+      gem_albero: {
+        nome: "Albero di smeraldi", livello: 22, costo: { petali: 12, sassolini: 8 }, xp: 28,
+        pos: [25, 67.68, 12, 9.82], tocco: [[26.0, 68.5, 36.0, 77.0]], bolla: [31.0, 69.7],
+        produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
+        descrizione: "Un albero con le foglie di smeraldo. Ai suoi piedi crescono gli spinaci!"
+      },
+      gem_torre: {
+        nome: "Torre di ametista", livello: 22, costo: { sassolini: 16, stelle: 2 }, xp: 32,
+        pos: [22, 50.82, 8, 16.18], tocco: [[22.6, 52.1, 29.4, 66.2]],
+        descrizione: "Una torre viola di ametista con un balconcino."
+      },
+      gem_bancarella: {
+        nome: "Bancarella delle gemme", livello: 22, costo: { legnetti: 12, petali: 8 }, xp: 28,
+        pos: [63, 74.8, 13, 7.7], tocco: [[64.0, 75.4, 75.0, 82.1]], bolla: [69.5, 76.8],
+        produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Rubini, smeraldi e zaffiri in tante cassettine."
+      },
+      gem_giardino: {
+        nome: "Giardino di fiori di vetro", livello: 22, costo: { petali: 14 }, xp: 24,
+        pos: [49, 82.09, 15, 6.41], tocco: [[50.2, 82.6, 62.8, 88.2]], bolla: [56.5, 84.1],
+        produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Fiori di vetro colorato che brillano al sole."
+      },
+      gem_carrello: {
+        nome: "Carrello della miniera", livello: 23, costo: { legnetti: 12, sassolini: 10 }, xp: 28,
+        pos: [29, 84.76, 12, 5.74], tocco: [[30.0, 85.2, 40.0, 90.2]], bolla: [35.0, 86.8],
+        produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
+        descrizione: "Un carrello pieno di pietre preziose sulle rotaie."
+      },
+      gem_panchina: {
+        nome: "Panchina di diamante", livello: 23, costo: { sassolini: 14, stelle: 2 }, xp: 30,
+        pos: [38, 80.16, 12, 4.34], tocco: [[39.0, 80.5, 49.0, 84.3]],
+        descrizione: "Una panchina di diamante con un cuscino rosa morbido."
+      },
+      gem_ponte: {
+        nome: "Ponte di rubini", livello: 23, costo: { sassolini: 16, stelle: 3 }, xp: 32,
+        pos: [52, 73.42, 17, 4.08], tocco: [[53.4, 73.7, 67.6, 77.3]],
+        descrizione: "Un ponte ad arco fatto di rubini rossi."
+      },
+      gem_scrigno: {
+        nome: "Negozio portagioie", livello: 23, costo: { petali: 16, legnetti: 10, stelle: 2 }, xp: 32,
+        pos: [76, 68.49, 12, 8.01], tocco: [[77.0, 69.1, 87.0, 76.1]],
+        descrizione: "Un negozio a forma di scrigno pieno di collane e anelli."
+      },
+      gem_arco: {
+        nome: "Arco di topazio", livello: 24, costo: { sassolini: 14, petali: 10, stelle: 3 }, xp: 34,
+        pos: [65, 83.73, 10, 6.77], tocco: [[65.8, 84.3, 74.2, 90.2]],
+        descrizione: "Un arco di topazi dorati che luccicano."
+      },
+      gem_scala: {
+        nome: "Scala di acquamarina", livello: 24, costo: { sassolini: 12, stelle: 3 }, xp: 30,
+        pos: [77, 87.21, 8, 7.29], tocco: [[77.6, 87.8, 84.4, 94.1]],
+        descrizione: "Una scala di cristallo azzurro che sale verso il cielo."
+      },
+      gem_laghetto: {
+        nome: "Laghetto arcobaleno", livello: 24, costo: { sassolini: 16, petali: 16, stelle: 4 }, xp: 40,
+        pos: [33, 91.64, 18, 6.36], tocco: [[34.4, 92.1, 49.6, 97.7]],
+        descrizione: "Un laghetto con l'acqua di tutti i colori, circondato da gemme."
+      }
+    }
+  },
+  {
     id: "cielo", nome: "Il Cielo del Celeste", musica: "nuvole", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
     descrizione: "Sopra le nuvole, dove vola il rarissimo Chiwinnie Celeste.",
     prati: [{ x1: 14, x2: 86, y1: 47, y2: 94 }],
@@ -845,7 +926,7 @@ var ZONE = [
 ];
 
 // Esperienza necessaria per raggiungere ogni livello (indice = livello).
-var LIVELLI_XP = [0, 0, 30, 80, 150, 240, 350, 480, 630, 800, 1000, 1220, 1470, 1750, 2060, 2400, 2780, 3200, 3660, 4160, 4700, 5300, 6000];
+var LIVELLI_XP = [0, 0, 30, 80, 150, 240, 350, 480, 630, 800, 1000, 1220, 1470, 1750, 2060, 2400, 2780, 3200, 3660, 4160, 4700, 5300, 6000, 6800, 7700];
 // ogni quanto cade una stellina nel giardino
 var STELLA_OGNI = 3 * 60000;
 
@@ -967,7 +1048,8 @@ var SFIDE = [
   { testo: "Completa le terre del nord", stelle: 8, xp: 90, ordine: 29.8, verifica: function (s) { return Object.keys(zonaId("nord").pezzi).every(function (k) { return costruito(s, k); }); } },
   { testo: "Completa il deserto dei fiori di cactus", stelle: 8, xp: 95, ordine: 29.85, verifica: function (s) { return Object.keys(zonaId("deserto").pezzi).every(function (k) { return costruito(s, k); }); } },
   { testo: "Completa i cappelli di fata", stelle: 8, xp: 100, ordine: 29.9, verifica: function (s) { return Object.keys(zonaId("fata").pezzi).every(function (k) { return costruito(s, k); }); } },
-  { testo: "Completa le colline di panna", stelle: 8, xp: 105, ordine: 29.95, verifica: function (s) { return Object.keys(zonaId("panna").pezzi).every(function (k) { return costruito(s, k); }); } }
+  { testo: "Completa le colline di panna", stelle: 8, xp: 105, ordine: 29.95, verifica: function (s) { return Object.keys(zonaId("panna").pezzi).every(function (k) { return costruito(s, k); }); } },
+  { testo: "Completa la città di pietre preziose", stelle: 8, xp: 110, ordine: 29.97, verifica: function (s) { return Object.keys(zonaId("gemme").pezzi).every(function (k) { return costruito(s, k); }); } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,
@@ -1061,6 +1143,9 @@ var AMICI = [
   { id: "meringa",   nome: "Meringa", femmina: true,   colore: "bianco", look: { testa: "coroncina_fiori" }, zona: "panna",  lucine: 7, regalo: { petali: 20, stelle: 2 } },
   { id: "biscotto",  nome: "Biscotto",  colore: "blu",    look: { collo: "campanellino" },    zona: "panna",    lucine: 7, regalo: { legnetti: 20, spinaci: 10 } },
   { id: "caramella", nome: "Caramella", femmina: true, colore: "arcobaleno", look: { testa: "fiocco" }, zona: "panna",    lucine: 8, regalo: { sassolini: 16, stelle: 3 } },
+  { id: "gemma",     nome: "Gemma", femmina: true,     colore: "viola",  look: { testa: "fiocco" },          zona: "gemme",    lucine: 8, regalo: { petali: 22, stelle: 3 } },
+  { id: "rubino",    nome: "Rubino",    colore: "rosa",   look: { testa: "cappello_paglia" }, zona: "gemme",    lucine: 8, regalo: { sassolini: 20, legnetti: 12 } },
+  { id: "zaffiro",   nome: "Zaffiro",   colore: "blu",    look: { collo: "sciarpa" },         zona: "gemme",    lucine: 8, regalo: { spinaci: 16, stelle: 3 } },
   { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
   { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
   { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
@@ -1125,12 +1210,15 @@ var CAPITOLI = [
   { zona: "panna", tema: "panna", premio: { stelle: 20, petali: 45, legnetti: 40, sassolini: 35 },
     arrivo: "Sulle colline di panna i dolci hanno perso il loro colore e il cioccolato non profuma più. Qui il Nebbione ha nascosto Meringa, Biscotto e Caramella.",
     fine: "Torna il profumo di fragola e cioccolato: Meringa, Biscotto e Caramella sono liberi!" },
+  { zona: "gemme", tema: "gemme", premio: { stelle: 22, petali: 50, legnetti: 45, sassolini: 40 },
+    arrivo: "Nella città di pietre preziose le gemme hanno smesso di brillare. Qui il Nebbione ha nascosto Gemma, Rubino e Zaffiro.",
+    fine: "Tutte le gemme tornano a scintillare: Gemma, Rubino e Zaffiro sono liberi!" },
   { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
     arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
     fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
 // le terre del Giardino magico che stiamo ancora dipingendo: si vedono nella mappa
-var TERRE_IN_ARRIVO = ["La città di pietre preziose"];
+var TERRE_IN_ARRIVO = [];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
   if (!d || d.gioco === "colora" || d.gioco === "sfida") return 0;
