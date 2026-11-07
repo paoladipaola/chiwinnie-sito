@@ -26,7 +26,7 @@
       { id: "facile", nome: "Facile", nota: "5 simboli · 25 mosse" },
       { id: "medio", nome: "Medio", nota: "6 simboli · 22 mosse", bianco: true },
       { id: "difficile", nome: "Difficile", nota: "tanti da raccogliere · 20 mosse", bianco: true }
-    ], gioca);
+    ], gioca, api);
 
     function gioca(box, liv) {
       var L = LIVELLI_TRIS[liv], tipi = TIPI.slice(0, L.tipi);
@@ -320,7 +320,7 @@
       { id: "piccoli", nome: "Piccoli", nota: "contare e aggiungere, con le figure" },
       { id: "medi", nome: "Medi", nota: "fino a 20, sequenze e doppi", bianco: true },
       { id: "grandi", nome: "Grandi", nota: "tabelline, divisioni e problemi", bianco: true }
-    ], gioca);
+    ], gioca, api);
 
     function gioca(box, liv) {
       var TOT = 10, i = 0, giuste = 0, errori = 0, sbagliata = false, usate = [];

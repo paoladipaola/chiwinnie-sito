@@ -18,8 +18,11 @@
   };
 
   // sceltaLivello: piccola schermata con i bottoni Facile / Medio / Difficile
-  function sceltaLivello(area, classe, testo, voci, via) {
+  // se il livello è già stato scelto prima di "Gioca!" (api.difficolta), la schermata si salta
+  function sceltaLivello(area, classe, testo, voci, via, api) {
     var box = document.createElement("div");
+    var ordine = ["facile", "medio", "difficile"], gia = api && ordine.indexOf(api.difficolta);
+    if (api && gia >= 0) { box.className = "rompicapo " + classe; area.appendChild(box); via(box, voci[gia].id); return box; }
     box.className = "rompicapo scelta " + classe;
     box.innerHTML = "<div class='carta-livelli'><p class='spiega'>" + testo + "</p><div class='livelli'>" +
       voci.map(function (v) { return "<button class='btn" + (v.bianco ? " bianco" : "") + "' data-l='" + v.id + "'>" + v.nome + "<small>" + v.nota + "</small></button>"; }).join("") +
@@ -38,7 +41,7 @@
       { id: "facile", nome: "Facile", nota: "4×4 · tanti aiuti" },
       { id: "medio", nome: "Medio", nota: "4×4 · pochi aiuti", bianco: true },
       { id: "difficile", nome: "Difficile", nota: "6×6 · sei simboli", bianco: true }
-    ], gioca);
+    ], gioca, api);
 
     function gioca(box, liv) {
       var L = LIVELLI_SUDOKU[liv], N = L.N, BR = L.br, BC = L.bc;
@@ -154,6 +157,8 @@
       aperte.map(function (z) { return "<button data-z='" + z + "'><img src='" + QUADRI[z] + "' alt=''></button>"; }).join("") +
       "</div><div class='livelli'><button class='btn' data-l='facile'>Facile<small>9 tessere · poco mescolato</small></button>" +
       "<button class='btn bianco' data-l='medio'>Medio<small>9 tessere</small></button><button class='btn bianco' data-l='difficile'>Difficile<small>16 tessere</small></button></div>";
+    if (api.difficolta) box.querySelector(".spiega").textContent = "Scegli il quadro da rimettere a posto.";
+    if (api.difficolta) box.querySelector(".livelli").innerHTML = "<button class='btn' data-l='" + api.difficolta + "'>Inizia!<small>" + { facile: "9 tessere · poco mescolato", medio: "9 tessere", difficile: "16 tessere" }[api.difficolta] + "</small></button>";
     area.appendChild(box);
     var quadro = aperte[aperte.length - 1], fermato = false, timer = null;
     function evidenzia() { box.querySelectorAll(".quadri button").forEach(function (b) { b.classList.toggle("scelto", b.dataset.z === quadro); }); }
@@ -232,7 +237,7 @@
       { id: "facile", nome: "Facile", nota: "piccolo, tante strade" },
       { id: "medio", nome: "Medio", nota: "grande, una sola strada", bianco: true },
       { id: "difficile", nome: "Difficile", nota: "gigante, nella nebbia", bianco: true }
-    ], function (box, liv) { box.remove(); ferma = labirintoGioca(area, api, liv); });
+    ], function (box, liv) { box.remove(); ferma = labirintoGioca(area, api, liv); }, api);
     return function () { if (ferma) ferma(); };
   }
   function labirintoGioca(area, api, liv) {

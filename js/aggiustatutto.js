@@ -126,7 +126,7 @@
     var S = SCENE[G.id];
     var passi = G.passi.map(function (p) { return { domanda: p.domanda, scelte: mescola(p.scelte.slice()) }; });
     var scelte = [null, null, null], bloccati = [false, false, false], passo = 0, tentativi = 0, finito = false, occupato = false, timers = [];
-    var MAX = 3;
+    var MAX = api.difficolta === "facile" ? 5 : api.difficolta === "difficile" ? 2 : 3;   // quante prove a ogni livello
     function dopo(ms, f) { timers.push(setTimeout(f, ms)); }
 
     var box = document.createElement("div");

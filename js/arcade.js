@@ -461,7 +461,9 @@
     };
 
     var chiwi = { x: 140, y: TERRA_Y, vy: 0, aTerra: true, coyote: 0, tenuto: 0, invulnerabile: 0, schiaccia: 0, spinta: 1 };
-    var velocita = 300, cuori = fuga ? 4 : 3, punti = 0, stelleTrovate = 0, controllo = 140;
+    // facile: due cuori in più e il Nebbione più lento; difficile: un cuore in meno, si corre più veloci e il Nebbione incalza
+    var DIF = api.difficolta === "facile" ? { cuori: 2, v: 1, neb: 0.55 } : api.difficolta === "difficile" ? { cuori: -1, v: 1.08, neb: 1.5 } : { cuori: 0, v: 1, neb: 1 };
+    var velocita = 300, cuori = Math.max(2, (fuga ? 4 : 3) + DIF.cuori), punti = 0, stelleTrovate = 0, controllo = 140;
     var bottino = { spinaci: 0, legnetti: 0, sassolini: 0, petali: 0, stelle: 0 };
     var premuto = false, buffer = 0, finito = false, arrivato = 0, pausa = 0, raf, ultimo = performance.now(), tempo = 0;
     var scintille = [], scritte = [];
@@ -508,6 +510,7 @@
       if (pausa > 0) { pausa -= dt; return; }
       if (arrivato) { chiwi.x += velocita * 0.5 * dt; arrivato += dt; if (arrivato > 1.6) termina(true); return; }
       velocita = fuga ? Math.min(410, 290 + chiwi.x / 300) : Math.min(chiwi.x > (L.meta || 1e9) ? 360 : 345, 300 + chiwi.x / 400);
+      velocita *= DIF.v;
       var turbo = attivo("super") ? 1.7 : 1;
       chiwi.x += velocita * chiwi.spinta * turbo * dt;
       if (fuga) {
@@ -515,7 +518,7 @@
         // con la supervelocità si stacca di più (fino a DISTANZA_SUPER); dopo, il vantaggio in più si consuma piano
         var tetto = attivo("super") ? DISTANZA_SUPER : DISTANZA_MAX;
         var piu = velocita * (chiwi.spinta * (attivo("super") ? 2.6 : 1) - 1) * dt;
-        distanza = distanza + piu - (distanza > DISTANZA_MAX ? 45 : 14) * dt;
+        distanza = distanza + piu - (distanza > DISTANZA_MAX ? 45 : 14 * DIF.neb) * dt;
         if (piu > 0) distanza = Math.min(Math.max(tetto, distanza - piu), distanza);
         if (distanza < 40) {
           distanza = 420;

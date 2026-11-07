@@ -1222,9 +1222,14 @@ var TERRE_IN_ARRIVO = [];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
   if (!d || d.gioco === "colora" || d.gioco === "sfida") return 0;
-  if (d.arcade) return d.completato ? 3 : ((d.stelle || 0) >= 5 ? 1 : 0);   // ogni avventura finita: 3 lucine
-  var bene = d.completato || (d.punti || 0) >= 10, benissimo = (d.stelle || 0) > 0 || (d.stelleLivello || 0) >= 3;
-  return bene ? (benissimo ? 2 : 1) : 0;
+  var n;
+  if (d.arcade) n = d.completato ? 3 : ((d.stelle || 0) >= 5 ? 1 : 0);   // ogni avventura finita: 3 lucine
+  else {
+    var bene = d.completato || (d.punti || 0) >= 10, benissimo = (d.stelle || 0) > 0 || (d.stelleLivello || 0) >= 3;
+    n = bene ? (benissimo ? 2 : 1) : 0;
+  }
+  // a livello medio o difficile, se la partita è andata bene, le lucine sono di più
+  return n ? n + (d.bonusLucine || 0) : 0;
 }
 // il paesaggio dell'avventura del sentiero: quello della terra dove si sta andando
 function temaSentiero(c) { var d = CAPITOLI[CAPITOLI.indexOf(c) + 1]; return c.finale ? (c.temaFinale || c.tema) : !d ? c.tema : d.tema; }

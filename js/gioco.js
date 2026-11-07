@@ -707,7 +707,7 @@
 
   function apriGiochi() {
     aggiornaEnergia();
-    var html = "<h2>Giochi</h2><p>Ogni bella partita accende una <b>lucina magica ✨</b> (due se è perfetta): servono per liberare i Chiwinnie. Ogni gioco usa un po' dell'energia di " + esc(stato.nome) + ": se è stanco, dagli gli spinaci!</p><div class='griglia'>";
+    var html = "<h2>Giochi</h2><p>Ogni bella partita accende una <b>lucina magica ✨</b> (due se è perfetta): servono per liberare i Chiwinnie. Prima di giocare scegli <b>Facile, Medio o Difficile</b>: più è difficile, più lucine e premi! Ogni gioco usa un po' dell'energia di " + esc(stato.nome) + ": se è stanco, dagli gli spinaci!</p><div class='griglia'>";
     Object.keys(MINIGIOCHI).forEach(function (k) {
       if (MINIGIOCHI[k].nascosto) return;
       var g = MINIGIOCHI[k], iz = g.zona ? ZONE.map(function (x) { return x.id; }).indexOf(g.zona) : 0;
@@ -816,6 +816,24 @@
   var fermaMinigioco = null, giocoCorrente = null;
 
   var opzioniGioco = {};
+  // ---------- Livelli di difficoltà ----------
+  // Prima di ogni partita si sceglie Facile, Medio o Difficile: più è difficile, più ricchi sono i premi.
+  // La scelta resta ricordata per ogni gioco.
+  var DIFFICOLTA = {
+    facile:    { nome: "Facile",    icona: "🌱", materiali: 1,   lucine: 0, nota: "premi normali" },
+    medio:     { nome: "Medio",     icona: "🌼", materiali: 1.5, lucine: 1, nota: "premi ×1,5 · +1 ✨" },
+    difficile: { nome: "Difficile", icona: "🔥", materiali: 2,   lucine: 2, nota: "premi ×2 · +2 ✨ · +1 ⭐" }
+  };
+  var difficoltaPartita = null;
+  function conDifficolta(k) { return k !== "colora"; }
+  function difficoltaDi(k) { var d = (stato.difficolta || {})[k]; return DIFFICOLTA[d] ? d : "medio"; }
+  function htmlDifficolta(k) {
+    var sc = difficoltaDi(k);
+    return "<div class='scegli-diff'>" + Object.keys(DIFFICOLTA).map(function (id) {
+      var D = DIFFICOLTA[id];
+      return "<button class='diff diff-" + id + (id === sc ? " scelta" : "") + "' data-d='" + id + "'><span>" + D.icona + "</span><b>" + D.nome + "</b><small>" + D.nota + "</small></button>";
+    }).join("") + "</div>";
+  }
   function avviaMinigioco(k, opz) {
     var g = MINIGIOCHI[k];
     opzioniGioco = opz || {};
@@ -838,8 +856,17 @@
     var area = $("mg-area");
     area.innerHTML = "<div class='" + (k === "lucciole" ? "notte-bosco" : g.arcade ? "sfondo-arcade" : "") + "'" + (g.arcade ? " style=\"background-image:url(img/" + (cap ? temaSentiero(cap) : k === "fuga" ? "bosco" : k) + "/sfondo.jpg)\"" : "") + "></div>" +
       "<div class='mg-intro'><img class='icona' src='" + g.img + "' alt=''><h2>" + esc(cap ? Missione.nomeSentiero(cap.zona) : g.nome) + "</h2><p>" + esc(g.descrizione) + "</p>" +
+      (conDifficolta(k) ? htmlDifficolta(k) : "") +
       "<button class='btn verde' id='mg-via'>Gioca!</button></div>";
+    var scegliD = area.querySelector(".scegli-diff");
+    if (scegliD) scegliD.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-d]"); if (!b) return;
+      stato.difficolta = stato.difficolta || {}; stato.difficolta[k] = b.dataset.d;
+      scegliD.querySelectorAll("[data-d]").forEach(function (x) { x.classList.toggle("scelta", x === b); });
+      Suoni.sfx("gira");
+    });
     $("mg-via").addEventListener("click", function () {
+      difficoltaPartita = conDifficolta(k) ? difficoltaDi(k) : null;
       stato.energia -= g.energia;
       stato.contatori.partite++;
       salva();
@@ -853,7 +880,8 @@
         aggiustati: stato.aggiustati || [],
         zoneAperte: ZONE.filter(function (z, i) { return zonaAperta(i); }).map(function (z) { return z.id; }),
         turbo: !!(g.arcade && fioriAttivi()),   // con l'energia dei fiori l'avventura parte con la supervelocità
-        tema: cap ? temaSentiero(cap) : null, finale: !!(cap && cap.finale)
+        tema: cap ? temaSentiero(cap) : null, finale: !!(cap && cap.finale),
+        difficolta: difficoltaPartita
       });
     });
   }
@@ -865,6 +893,17 @@
     if (fioriAttivi()) {
       Object.keys(ris.bottino).forEach(function (m) { if (m !== "stelle" && ris.bottino[m] > 0) ris.bottino[m] = Math.ceil(ris.bottino[m] * 1.5); });
       ris.messaggio = (ris.messaggio || "") + " ✨ Energia dei fiori: +50% di materiali!";
+    }
+    var dif = difficoltaPartita && DIFFICOLTA[difficoltaPartita], livelliPropri = /^(sudoku|puzzle|labirinto|tris|conti)$/.test(k);
+    if (dif && dif.materiali > 1) {
+      // i rompicapi con i livelli propri premiano già di più quando sono difficili: lì il bonus è più piccolo
+      var molt = livelliPropri ? 1 + (dif.materiali - 1) / 2 : dif.materiali;
+      Object.keys(ris.bottino).forEach(function (m) { if (m !== "stelle" && ris.bottino[m] > 0) ris.bottino[m] = Math.ceil(ris.bottino[m] * molt); });
+      ris.punti = Math.round((ris.punti || 0) * molt);
+    }
+    if (dif && difficoltaPartita === "difficile" && ris.completato) {
+      ris.bottino.stelle = (ris.bottino.stelle || 0) + 1;
+      ris.messaggio = (ris.messaggio || "") + " 🔥 Livello difficile: una stella in più!";
     }
     if (ris.completato) setTimeout(function () { Suoni.dici("Wii-chu!"); }, 800);
     // ogni partita finita (tranne i disegni da colorare) regala almeno una stella; le avventure arrivate in fondo una in più
@@ -905,7 +944,8 @@
     if (ris.sfida && ris.completato && opzioniGioco.capitolo) vittoria = opzioniGioco.capitolo;
     var lucine = Missione.evento("partita", {
       gioco: k, mosse: ris.mosse || 0, stelle: ris.bottino.stelle || 0, arcade: !!g0.arcade, rompicapo: !!g0.rompicapo, completato: !!ris.completato, bottino: ris.bottino,
-      stelleLivello: ris.stelleLivello || 0, punti: ris.punti, file: ris.file || 0, giuste: ris.giuste || 0
+      stelleLivello: ris.stelleLivello || 0, punti: ris.punti, file: ris.file || 0, giuste: ris.giuste || 0,
+      bonusLucine: dif ? dif.lucine : 0
     });
     controllaSfide();
     Casa.controllaPremi();
@@ -917,7 +957,7 @@
     box.className = "mg-fine";
     box.innerHTML = "<h2>" + esc(ris.titolo || "Bravissimo!") + "</h2><p>" + esc(ris.messaggio || "") + "</p>" +
       "<div class='bottino'>" + (voci.length ? voci.map(function (m) { return "<span><img src='" + MATERIALI[m].img + "' alt=''>+" + ris.bottino[m] + "</span>"; }).join("") : "<span>Nessun materiale questa volta</span>") +
-      "<span>+" + xp + " esp.</span>" + (lucine ? "<span class='lucine-vinte'>✨ +" + lucine + (lucine === 1 ? " lucina magica" : " lucine magiche") + "</span>" : "") + "</div>" +
+      "<span>+" + xp + " esp.</span>" + (dif ? "<span class='diff-fatta'>" + dif.icona + " " + dif.nome + "</span>" : "") + (lucine ? "<span class='lucine-vinte'>✨ +" + lucine + (lucine === 1 ? " lucina magica" : " lucine magiche") + "</span>" : "") + "</div>" +
       (ris.immagine ? "<p><a class='btn bianco piccolo' href='" + ris.immagine + "' download='" + esc(ris.nomeFile || "disegno.png") + "'>⬇ Scarica il disegno</a></p>" : "") +
       "<div class='azioni-pannello'>" + (!vittoria && k !== "sfida" && (g.energia === 0 || (stato.energia >= g.energia && !brontolone())) ? "<button class='btn bianco' id='mg-ancora'>Ancora!</button>" : "") +
       "<button class='btn verde' id='mg-torna'>Torna al giardino</button></div>";

@@ -6,10 +6,13 @@ var Minigiochi = (function () {
 
   function carica(src) { var i = new Image(); i.src = src; return i; }
   function caso(a, b) { return a + Math.random() * (b - a); }
+  // facile / medio / difficile (medio = come prima)
+  function scegliD(api, f, m, d) { return api.difficolta === "facile" ? f : api.difficolta === "difficile" ? d : m; }
 
   // ---------- Raccolta nel bosco ----------
   function raccolta(area, api) {
     var DURATA = 30;
+    var D = scegliD(api, { v: 0.75, pigne: 0.4, ritmo: 1.2 }, { v: 1, pigne: 1, ritmo: 1 }, { v: 1.3, pigne: 1.7, ritmo: 0.85 });
     var canvas = document.createElement("canvas");
     area.appendChild(canvas);
     var ctx = canvas.getContext("2d");
@@ -33,10 +36,11 @@ var Minigiochi = (function () {
     function tipoCasuale(t) {
       // col passare del tempo le pigne diventano un po' più frequenti
       var extraPigne = t * 0.5;
-      var tot = tipi.reduce(function (s, x) { return s + x.p + (x.k === "pigna" ? extraPigne : 0); }, 0);
+      function peso(x) { return x.k === "pigna" ? (x.p + extraPigne) * D.pigne : x.p; }
+      var tot = tipi.reduce(function (s, x) { return s + peso(x); }, 0);
       var r = Math.random() * tot;
       for (var i = 0; i < tipi.length; i++) {
-        r -= tipi[i].p + (tipi[i].k === "pigna" ? extraPigne : 0);
+        r -= peso(tipi[i]);
         if (r <= 0) return tipi[i].k;
       }
       return "spinaci";
@@ -74,8 +78,8 @@ var Minigiochi = (function () {
       if (prossimo <= 0) {
         var k = tipoCasuale(t);
         var dim = k === "pigna" ? 44 : 50;
-        oggetti.push({ k: k, x: caso(dim, W - dim), y: -dim, v: H * caso(0.28, 0.36) * (1 + t / 40), dim: dim, rot: caso(-1, 1) });
-        prossimo = Math.max(0.32, 0.75 - t * 0.014);
+        oggetti.push({ k: k, x: caso(dim, W - dim), y: -dim, v: H * caso(0.28, 0.36) * (1 + t / 40) * D.v, dim: dim, rot: caso(-1, 1) });
+        prossimo = Math.max(0.32, 0.75 - t * 0.014) * D.ritmo;
       }
 
       var cy = H - 40 - chiwi.w * 1.08; // linea di presa (la pancia del Chiwinnie)
@@ -143,11 +147,15 @@ var Minigiochi = (function () {
 
   // ---------- Memory dei fiori ----------
   function memory(area, api) {
-    var DURATA = 60;
-    var figure = ["spinaci", "petali", "legnetti", "sassolini", "stella", "lucciola"];
+    // facile: 4 coppie e più tempo; medio: 6 coppie; difficile: 8 coppie
+    var DURATA = scegliD(api, 75, 60, 80);
+    var figure = ["spinaci", "petali", "legnetti", "sassolini", "stella", "lucciola", "pigna", "lanterna"].slice(0, scegliD(api, 4, 6, 8));
+    var colonne = scegliD(api, 2, 3, 4), bravo = scegliD(api, 10, 16, 24);
     var mazzo = figure.concat(figure).sort(function () { return Math.random() - 0.5; });
     var griglia = document.createElement("div");
     griglia.className = "memory";
+    griglia.style.gridTemplateColumns = "repeat(" + colonne + ", 1fr)";
+    griglia.style.gridTemplateRows = "repeat(" + (figure.length * 2 / colonne) + ", 1fr)";
     griglia.innerHTML = mazzo.map(function (f, i) {
       return "<div class='carta-mem' data-i='" + i + "'><div class='dentro'><div class='faccia retro'></div><div class='faccia fronte'><img src='img/" + f + ".png' alt=''></div></div></div>";
     }).join("");
@@ -191,10 +199,10 @@ var Minigiochi = (function () {
       var resta = Math.max(0, DURATA - (Date.now() - inizio) / 1000);
       var petali = trovate + (completato ? 3 : 0) + (completato && resta > 20 ? 2 : 0);
       api.fine({
-        punti: trovate * 3 + (completato ? 6 : 0), bottino: { petali: petali, stelle: completato && mosse < 16 ? 1 : 0 },
+        punti: trovate * 3 + (completato ? 6 : 0), bottino: { petali: petali, stelle: completato && mosse < bravo ? 1 : 0 },
         completato: completato, mosse: mosse,
         titolo: completato ? "Tutte le coppie!" : "Tempo scaduto!",
-        messaggio: completato ? "Ce l'hai fatta in " + mosse + " mosse." + (mosse < 16 ? " Memoria da campione: una stella in regalo!" : "") : "Hai trovato " + trovate + " coppie su " + figure.length + "."
+        messaggio: completato ? "Ce l'hai fatta in " + mosse + " mosse." + (mosse < bravo ? " Memoria da campione: una stella in regalo!" : "") : "Hai trovato " + trovate + " coppie su " + figure.length + "."
       });
     }
     return function () { finito = true; clearInterval(timer); };
@@ -203,6 +211,7 @@ var Minigiochi = (function () {
   // ---------- Lucciole ----------
   function lucciole(area, api) {
     var DURATA = 30;
+    var D = scegliD(api, { vita: 1.5, ritmo: 1.1 }, { vita: 1, ritmo: 1 }, { vita: 0.7, ritmo: 0.85 });
     var punti = 0, finito = false, inizio = Date.now(), timers = [];
     var timer = setInterval(aggiorna, 250);
     function aggiorna() {
@@ -218,7 +227,8 @@ var Minigiochi = (function () {
       el.innerHTML = "<img src='img/lucciola.png' alt=''>";
       el.style.left = caso(12, 88) + "%"; el.style.top = caso(18, 85) + "%";
       area.appendChild(el);
-      var vita = Math.max(750, 1500 - t * 25);
+      var vita = Math.max(750, 1500 - t * 25) * D.vita;
+      if (api.difficolta === "difficile") el.classList.add("piccola");
       el.addEventListener("pointerdown", function () {
         if (el.classList.contains("presa")) return;
         el.classList.add("presa"); punti++; aggiorna(); Suoni.sfx("lucciola");
@@ -227,7 +237,7 @@ var Minigiochi = (function () {
       });
       timers.push(setTimeout(function () { if (!el.classList.contains("presa")) { el.style.transition = "opacity .25s"; el.style.opacity = "0"; setTimeout(function () { el.remove(); }, 260); } }, vita));
       if (extra) return;   // la lucciola in più non ne fa nascere altre: prima si moltiplicavano all'infinito e il telefono si bloccava
-      timers.push(setTimeout(nuova, Math.max(320, 700 - t * 13) * caso(0.7, 1.2)));
+      timers.push(setTimeout(nuova, Math.max(320, 700 - t * 13) * caso(0.7, 1.2) * D.ritmo));
       // a volte ne arrivano due insieme
       if (t > 10 && Math.random() < 0.25) timers.push(setTimeout(nuova, 150, true));
     }
