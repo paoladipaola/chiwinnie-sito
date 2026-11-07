@@ -45,6 +45,13 @@
       traguardo: { img: "cancello.png", w: 110, h: 148 },
       arrivo: "Sei arrivato al cancello fiorito!", perfetto: "Isole perfette: tutte le stelle!"
     },
+    nord: {
+      cartella: "img/nord/", terreno: { img: "terreno.png", h: 100, su: 36 }, colTerra: "#3d2e28", nebbia: "220,225,245",
+      piatt: { ghiaccio: { img: "ghiaccio.png", top: 0.14 }, tronco: { img: "tronco.png", top: 0.2 } },
+      trampolino: { img: "palle.png", w: 110, h: 76, top: 70 }, ostacolo: { img: "ghiacciolo.png", w: 70, h: 103 },
+      rotolante: { img: "../pigna.png" }, traguardo: { img: "porta.png", w: 140, h: 104 },
+      arrivo: "Sei arrivato alla porta rossa!", perfetto: "Nord perfetto: tutte le stelle!"
+    },
     cielo: {
       cartella: "img/cielo/", terreno: { img: "terreno.png", h: 92, su: 14 }, colTerra: "#f6e1e4", nebbia: "245,215,225",
       piatt: { arcobaleno: { img: "arcobaleno.png", top: 0.18 }, ponte: { img: "ponte.png", top: 0.4 }, nuvola: { img: "nuvola.png", top: 0.3 } },

@@ -438,6 +438,87 @@ var ZONE = [
     }
   },
   {
+    id: "nord", nome: "Le terre del nord", musica: "casa", sfondo: "img/zona7/vuota.jpg", cartella: "img/zona7/",
+    descrizione: "Una terra di neve soffice, con l'aurora nel cielo e il lago ghiacciato.",
+    prati: [{ x1: 24, x2: 74, y1: 62, y2: 86 }],
+    pezzi: {
+      nor_casetta: {
+        nome: "Baita di legno", livello: 16, costo: { legnetti: 18, sassolini: 6 }, xp: 32,
+        pos: [28, 49.25, 24, 13.75], tocco: [[29.9, 50.4, 50.1, 62.3]],
+        descrizione: "Una baita calda con il camino acceso e la neve sul tetto."
+      },
+      nor_legna: {
+        nome: "Catasta di legna", livello: 16, costo: { legnetti: 6 }, xp: 16,
+        pos: [20, 63.09, 9, 4.91], tocco: [[20.7, 63.5, 28.3, 67.8]], bolla: [24.5, 65.1],
+        produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "La legna per il camino: qui se ne trova sempre un po'."
+      },
+      nor_pupazzo: {
+        nome: "Pupazzo di neve", livello: 16, costo: { petali: 8 }, xp: 18,
+        pos: [45, 62.75, 10, 7.75], tocco: [[45.8, 63.4, 54.2, 70.1]],
+        descrizione: "Un pupazzo di neve sorridente con la sciarpa rossa e il naso di carota."
+      },
+      nor_igloo: {
+        nome: "Igloo", livello: 17, costo: { sassolini: 14, petali: 6 }, xp: 28,
+        pos: [55, 56.52, 20, 5.48], tocco: [[56.6, 57.0, 73.4, 61.7]], bolla: [65.0, 58.5],
+        produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
+        descrizione: "Una casetta di blocchi di neve, calda dentro."
+      },
+      nor_cioccolata: {
+        nome: "Chiosco della cioccolata", livello: 17, costo: { legnetti: 10, petali: 8 }, xp: 26,
+        pos: [16, 74.23, 15, 9.77], tocco: [[17.2, 75.0, 29.8, 83.5]], bolla: [23.5, 76.2],
+        produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
+        descrizione: "Cioccolata calda con i marshmallow per tutti! E qualche spinacino per il Chiwinnie."
+      },
+      nor_renna: {
+        nome: "Cartello della renna", livello: 17, costo: { legnetti: 8 }, xp: 16,
+        pos: [60, 62.39, 6, 6.61], tocco: [[60.5, 62.9, 65.5, 68.7]],
+        descrizione: "Un cartello di legno a forma di renna sorridente."
+      },
+      nor_lanterna: {
+        nome: "Lanterna di neve", livello: 17, costo: { sassolini: 8, petali: 4 }, xp: 18,
+        pos: [71, 63.61, 6, 5.89], tocco: [[71.5, 64.1, 76.5, 69.2]],
+        descrizione: "Palle di neve una sull'altra con una candela dentro."
+      },
+      nor_falo: {
+        nome: "Falò con i tronchetti", livello: 18, costo: { legnetti: 12, sassolini: 8 }, xp: 28,
+        pos: [28, 69.28, 19, 6.72], tocco: [[29.5, 69.8, 45.5, 75.7]],
+        descrizione: "Un falò dentro un cerchio di sassi, con i tronchetti per sedersi al caldo."
+      },
+      nor_slitta: {
+        nome: "Slitta rossa", livello: 18, costo: { legnetti: 12, stelle: 2 }, xp: 26,
+        pos: [55, 72.18, 15, 3.82], tocco: [[56.2, 72.5, 68.8, 75.8]],
+        descrizione: "Una slitta rossa con la copertina a righe, pronta per scivolare."
+      },
+      nor_sci: {
+        nome: "Rastrelliera degli sci", livello: 18, costo: { legnetti: 10, stelle: 2 }, xp: 22,
+        pos: [6, 70.28, 7, 6.72], tocco: [[6.6, 70.8, 12.4, 76.7]],
+        descrizione: "Sci e bastoncini colorati per scendere dalle colline di neve."
+      },
+      nor_pino: {
+        nome: "Pino con le lucine", livello: 18, costo: { petali: 14, stelle: 2 }, xp: 26,
+        pos: [78, 48.74, 12, 14.26], tocco: [[79.0, 49.9, 89.0, 62.3]], bolla: [84.0, 50.7],
+        produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Un pino innevato con le lucine e la stella in cima."
+      },
+      nor_altalena: {
+        nome: "Altalena del ghiaccio", livello: 19, costo: { legnetti: 12, stelle: 3 }, xp: 30,
+        pos: [40, 73.94, 13, 9.56], tocco: [[41.0, 74.7, 52.0, 83.0]],
+        descrizione: "Un'altalena con il cuscino di lana e i ghiaccioli sulla trave."
+      },
+      nor_panchina: {
+        nome: "Panchina dei pattini", livello: 19, costo: { legnetti: 10, sassolini: 6, stelle: 2 }, xp: 26,
+        pos: [36, 84.87, 12, 5.63], tocco: [[37.0, 85.3, 47.0, 90.2]],
+        descrizione: "Una panchina sul lago ghiacciato, con i pattini appesi."
+      },
+      nor_ponte: {
+        nome: "Ponticello innevato", livello: 19, costo: { legnetti: 16, sassolini: 10, stelle: 3 }, xp: 34,
+        pos: [4, 88.89, 20, 6.61], tocco: [[5.6, 89.4, 22.4, 95.2]],
+        descrizione: "Un ponticello sul lago ghiacciato, con le lanterne sui pali."
+      }
+    }
+  },
+  {
     id: "cielo", nome: "Il Cielo del Celeste", musica: "nuvole", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
     descrizione: "Sopra le nuvole, dove vola il rarissimo Chiwinnie Celeste.",
     prati: [{ x1: 14, x2: 86, y1: 47, y2: 94 }],
@@ -639,7 +720,8 @@ var SFIDE = [
   { testo: "Esci dal Labirinto nella nebbia", stelle: 3, xp: 30, ordine: 19.5, verifica: function (s) { return (s.contatori.labirintiDifficili || 0) >= 1; } },
   // le sfide nuove vanno sempre in fondo: il salvataggio ricorda le sfide per posizione
   { testo: "Completa la foresta delle lucciole", stelle: 8, xp: 80, ordine: 29.5, verifica: function (s) { return Object.keys(zonaId("foresta").pezzi).every(function (k) { return costruito(s, k); }); } },
-  { testo: "Completa le isole fluttuanti", stelle: 8, xp: 85, ordine: 29.7, verifica: function (s) { return Object.keys(zonaId("isole").pezzi).every(function (k) { return costruito(s, k); }); } }
+  { testo: "Completa le isole fluttuanti", stelle: 8, xp: 85, ordine: 29.7, verifica: function (s) { return Object.keys(zonaId("isole").pezzi).every(function (k) { return costruito(s, k); }); } },
+  { testo: "Completa le terre del nord", stelle: 8, xp: 90, ordine: 29.8, verifica: function (s) { return Object.keys(zonaId("nord").pezzi).every(function (k) { return costruito(s, k); }); } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,
@@ -721,6 +803,9 @@ var AMICI = [
   { id: "piuma",     nome: "Piuma", femmina: true,     colore: "rosa",   look: { testa: "cappello_paglia" }, zona: "isole", lucine: 5, regalo: { petali: 14, stelle: 1 } },
   { id: "zefiro",    nome: "Zefiro",    colore: "blu",    look: { collo: "sciarpa" },         zona: "isole",    lucine: 5, regalo: { legnetti: 14, sassolini: 8 } },
   { id: "trottola",  nome: "Trottola", femmina: true,  colore: "arcobaleno", look: { viso: "occhiali" }, zona: "isole",  lucine: 5, regalo: { spinaci: 10, stelle: 2 } },
+  { id: "brina",     nome: "Brina", femmina: true,     colore: "bianco", look: { collo: "sciarpa" },         zona: "nord",     lucine: 5, regalo: { sassolini: 12, stelle: 1 } },
+  { id: "pinolo",    nome: "Pinolo",    colore: "verde",  look: { testa: "berretto_lana" },   zona: "nord",     lucine: 6, regalo: { legnetti: 16, petali: 8 } },
+  { id: "aurora",    nome: "Aurora", femmina: true,    colore: "viola",  look: { corpo: "tutu" },            zona: "nord",     lucine: 6, regalo: { petali: 16, stelle: 2 } },
   { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
   { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
   { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
@@ -773,12 +858,15 @@ var CAPITOLI = [
   { zona: "isole", tema: "isole", premio: { stelle: 14, petali: 35, legnetti: 30, sassolini: 25 },
     arrivo: "Le isole fluttuanti sono grigie e le cascate non brillano più. Qui il Nebbione ha nascosto Piuma, Zefiro e Trottola.",
     fine: "Le cascate tornano a brillare tra le nuvole: Piuma, Zefiro e Trottola sono liberi!" },
+  { zona: "nord", tema: "nord", premio: { stelle: 15, petali: 35, legnetti: 35, sassolini: 25 },
+    arrivo: "Nelle terre del nord l'aurora si è spenta e la neve è tutta grigia. Qui il Nebbione ha nascosto Brina, Pinolo e Aurora.",
+    fine: "L'aurora torna a danzare nel cielo: Brina, Pinolo e Aurora sono liberi!" },
   { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
     arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
     fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
 // le terre del Giardino magico che stiamo ancora dipingendo: si vedono nella mappa
-var TERRE_IN_ARRIVO = ["Le terre del nord", "Il deserto dei fiori di cactus",
+var TERRE_IN_ARRIVO = ["Il deserto dei fiori di cactus",
   "I cappelli di fata", "Le colline di panna", "La città di pietre preziose"];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
