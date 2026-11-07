@@ -988,8 +988,8 @@ var MINIGIOCHI = {
     descrizione: "Il sentiero verso la terra dopo! È l'avventura più lunga: corri, salta i nebbiolini e non farti prendere dal Nebbione. In fondo ti aspetta un forziere."
   },
   tris: {
-    nome: "Tris di fiori", img: "img/petali.png", livello: 2, energia: 10,
-    descrizione: "Scambia due simboli vicini per metterne tre uguali in fila: spariscono e ne cadono di nuovi. Con quattro in fila nasce una girandola che pulisce la riga, con una L o una T una bomba di fiori, con cinque in fila un arcobaleno che fa sparire tutti i simboli uguali. E se scambi due speciali fra loro… sorpresa! Raccogli quello che chiede il Chiwinnie prima che finiscano le mosse."
+    nome: "Scambio magico", img: "img/petali.png", livello: 2, energia: 10,
+    descrizione: "Scambia due simboli vicini per metterne tre uguali in fila, oppure quattro a quadrato: spariscono e ne cadono di nuovi. Con quattro in fila nasce una girandola: scambiala con un simbolo e spariscono tutti quelli uguali! Con una L, una T o un rettangolo nasce una bomba di fiori che scoppia tutto intorno, con cinque in fila la sfera arcobaleno che pulisce tutto. Raccogli quello che chiede il Chiwinnie prima che finiscano le mosse."
   },
   conti: {
     nome: "Indovinelli dei numeri", img: "img/stella.png", livello: 1, energia: 0, rompicapo: true,
@@ -1162,7 +1162,7 @@ var MISSIONI = [
   { id: "avventura", testo: "Arriva in fondo a un'avventura", testoN: "Arriva in fondo a {n} avventure", ev: "partita", conta: function (d) { return d.arcade && d.completato ? 1 : 0; }, n: [1, 1, 2, 2, 3] },
   { id: "stelle",    testo: "Trova {n} stelle nascoste nelle avventure", ev: "partita", conta: function (d) { return d.arcade ? d.stelleLivello || 0 : 0; }, n: [1, 2, 3, 4, 5] },
   { id: "rompicapi", testo: "Risolvi {n} rompicapi", ev: "partita", conta: function (d) { return d.rompicapo && d.completato ? 1 : 0; }, n: [1, 2, 2, 3, 4] },
-  { id: "tris",      testo: "Fai {n} file nel Tris di fiori", ev: "partita", gioco: "tris", conta: function (d) { return d.gioco === "tris" ? d.file || 0 : 0; }, n: [15, 25, 35, 45, 60] },
+  { id: "tris",      testo: "Fai {n} file nello Scambio magico", ev: "partita", gioco: "tris", conta: function (d) { return d.gioco === "tris" ? d.file || 0 : 0; }, n: [15, 25, 35, 45, 60] },
   { id: "conti",     testo: "Rispondi giusto a {n} indovinelli dei numeri", ev: "partita", gioco: "conti", conta: function (d) { return d.gioco === "conti" ? d.giuste || 0 : 0; }, n: [5, 8, 10, 15, 20] },
   { id: "fuga",      testo: "Scappa dal Nebbione fino in fondo", ev: "partita", gioco: "fuga", conta: function (d) { return d.gioco === "fuga" && d.completato ? 1 : 0; }, n: [1] },
   { id: "memory",    testo: "Completa {n} Memory dei fiori", ev: "partita", gioco: "memory", conta: function (d) { return d.gioco === "memory" && d.completato ? 1 : 0; }, n: [1, 1, 2] },

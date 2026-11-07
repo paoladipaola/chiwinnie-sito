@@ -1,4 +1,4 @@
-// Giochini: il Tris di fiori (tre in fila) e gli Indovinelli dei numeri.
+// Giochini: lo Scambio magico (tre in fila, quadrati e L) e gli Indovinelli dei numeri.
 // Come gli altri minigiochi: ricevono (area, api) e restituiscono una funzione che li ferma.
 (function () {
   function mescola(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
@@ -6,11 +6,13 @@
   function scegli(a) { return a[Math.floor(Math.random() * a.length)]; }
   function vibra(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} }
 
-  // ================= Tris di fiori =================
+  // ================= Scambio magico (era il Tris di fiori) =================
   // Si scambiano due simboli vicini: tre o più uguali in fila spariscono e dall'alto ne cadono di nuovi.
-  // Come nei giochi di caramelle: quattro in fila fanno nascere una girandola (pulisce la riga o la colonna),
-  // una L o una T una bomba di fiori (scoppia tutto intorno), cinque in fila un arcobaleno (scambiato con un
-  // simbolo fa sparire tutti quelli uguali). Due speciali scambiati fra loro si combinano.
+  // Valgono le file di tre (in riga o in colonna), i quadrati 2×2, i rettangoli a due colonne e le L.
+  // Quattro in fila fanno nascere una girandola: scambiata con un simbolo fa sparire tutti quelli uguali.
+  // Una L, una T o un rettangolo 2×3 fanno una bomba di fiori: scoppia per tre caselle da ogni lato.
+  // Cinque in fila fanno la sfera arcobaleno: scambiata con qualunque cosa pulisce tutto il tabellone.
+  // Gli speciali si attivano appena li scambi; due speciali scambiati fra loro scoppiano insieme.
   var TIPI = ["spinaci", "petali", "legnetti", "sassolini", "stella", "lucciola"];
   var NOMI = { spinaci: "spinaci", petali: "petali", legnetti: "legnetti", sassolini: "sassolini", stella: "stelline", lucciola: "lucciole" };
   function imgTipo(t) { return t === "stella" ? "img/stella.png" : t === "lucciola" ? "img/lucciola.png" : MATERIALI[t].img; }
@@ -36,7 +38,7 @@
       var mosse = L.mosse, punti = 0, file = 0, occupato = false, finito = false, ultimoTocco = Date.now();
       var presi = {}; TIPI.forEach(function (t) { presi[t] = 0; });
       var obiettivi = mescola(tipi.slice()).slice(0, L.obiettivi).map(function (t) { return { t: t, n: L.quanti }; });
-      box.innerHTML = "<div class='tris-obiettivi'></div><div class='tris-tavola'></div><div class='tris-legenda'><span><img src='img/tris/girandola.png' alt=''>4 in fila</span><span><img src='img/tris/bomba.png' alt=''>a L o T</span><span><img src='img/tris/arcobaleno.png' alt=''>5 in fila</span></div><p class='spiega'>Trascina un simbolo verso quello vicino. Prova a scambiare due speciali!</p>";
+      box.innerHTML = "<div class='tris-obiettivi'></div><div class='tris-tavola'></div><div class='tris-legenda'><span><img src='img/tris/girandola.png' alt=''>4 in fila</span><span><img src='img/tris/bomba.png' alt=''>L, T o 2×3</span><span><img src='img/tris/arcobaleno.png' alt=''>5 in fila</span></div><p class='spiega'>Trascina un simbolo verso quello vicino: valgono le file di 3 e anche i quadrati! Scambia uno speciale per farlo scoppiare.</p>";
       var tav = box.querySelector(".tris-tavola"), ob = box.querySelector(".tris-obiettivi");
       var g = [];   // g[r][c] = { t, el, sp }
 
@@ -50,7 +52,7 @@
       function posa(c, r, el) { el.style.left = (c * 100 / N) + "%"; el.style.top = (r * 100 / N) + "%"; }
       function disegnaTessera(x) {
         var el = x.el;
-        el.className = "tris-t" + (x.sp ? " sp-" + x.sp + (x.dir ? " " + x.dir : "") : "");
+        el.className = "tris-t" + (x.sp ? " sp-" + x.sp : "");
         if (x.sp === "arcobaleno") el.innerHTML = "<img src='" + SPECIALI.arcobaleno + "' alt=''>";
         else if (x.sp === "bomba") el.innerHTML = "<img src='" + SPECIALI.bomba + "' alt=''><img class='segno' src='" + imgTipo(x.t) + "' alt=''>";
         else if (x.sp === "girandola") el.innerHTML = "<img class='dietro' src='" + SPECIALI.girandola + "' alt=''><img src='" + imgTipo(x.t) + "' alt=''>";
@@ -71,7 +73,8 @@
         g[r] = [];
         for (var c = 0; c < N; c++) {
           var t;
-          do { t = scegli(tipi); } while ((c >= 2 && g[r][c - 1].t === t && g[r][c - 2].t === t) || (r >= 2 && g[r - 1][c].t === t && g[r - 2][c].t === t));
+          do { t = scegli(tipi); } while ((c >= 2 && g[r][c - 1].t === t && g[r][c - 2].t === t) || (r >= 2 && g[r - 1][c].t === t && g[r - 2][c].t === t) ||
+            (r >= 1 && c >= 1 && g[r - 1][c].t === t && g[r][c - 1].t === t && g[r - 1][c - 1].t === t));
           g[r][c] = nuovaTessera(t, c, r);
         }
       }
@@ -128,7 +131,13 @@
           if (t2 && k2 - r2 >= 2) { var cs2 = []; for (var y = r2; y <= k2; y++) cs2.push([y, c2]); runs.push({ celle: cs2, dir: "colonna" }); }
           r2 = k2 + 1;
         }
-        // le file che si toccano diventano un gruppo solo (così si riconoscono la L e la T)
+        // i quadrati 2×2 (due quadrati vicini fanno un rettangolo a due colonne)
+        for (var r3 = 0; r3 + 1 < N; r3++) for (var c3 = 0; c3 + 1 < N; c3++) {
+          var t3 = tipoDi(g[r3][c3]);
+          if (t3 && tipoDi(g[r3][c3 + 1]) === t3 && tipoDi(g[r3 + 1][c3]) === t3 && tipoDi(g[r3 + 1][c3 + 1]) === t3)
+            runs.push({ celle: [[r3, c3], [r3, c3 + 1], [r3 + 1, c3], [r3 + 1, c3 + 1]], dir: "quadrato" });
+        }
+        // le file e i quadrati che si toccano diventano un gruppo solo (così si riconoscono la L, la T e i rettangoli)
         var capo = runs.map(function (x, i) { return i; }), dove = {};
         function trova(i) { while (capo[i] !== i) i = capo[i] = capo[capo[i]]; return i; }
         runs.forEach(function (run, i) {
@@ -143,19 +152,21 @@
           var gr = gruppi[k]; gr.celle = Object.keys(gr.celle).map(function (q) { return gr.celle[q]; }); return gr;
         });
       }
-      // che speciale nasce da un gruppo: 5 in fila arcobaleno, L o T bomba, 4 in fila girandola
+      // che speciale nasce da un gruppo: 5 in fila sfera, L / T / rettangolo 2×3 bomba, 4 in fila girandola
       function specialeDi(gr) {
-        var lungo = Math.max.apply(null, gr.runs.map(function (x) { return x.celle.length; }));
-        var righe = gr.runs.some(function (x) { return x.dir === "riga"; }), colonne = gr.runs.some(function (x) { return x.dir === "colonna"; });
+        var file = gr.runs.filter(function (x) { return x.dir !== "quadrato"; });
+        var lungo = file.length ? Math.max.apply(null, file.map(function (x) { return x.celle.length; })) : 0;
+        var righe = file.some(function (x) { return x.dir === "riga"; }), colonne = file.some(function (x) { return x.dir === "colonna"; });
+        var quadrati = gr.runs.length - file.length;
         if (lungo >= 5) return { sp: "arcobaleno" };
-        if (righe && colonne) return { sp: "bomba" };
-        if (lungo === 4) return { sp: "girandola", dir: gr.runs[0].dir };
+        if ((righe && colonne) || (quadrati && gr.celle.length >= 6)) return { sp: "bomba" };
+        if (lungo === 4 || (quadrati && gr.celle.length === 5)) return { sp: "girandola" };
         return null;
       }
       function scambia(a, b) { var t = g[a[0]][a[1]]; g[a[0]][a[1]] = g[b[0]][b[1]]; g[b[0]][b[1]] = t; }
       function scambioSpeciale(a, b) {
         var x = g[a[0]][a[1]], y = g[b[0]][b[1]];
-        return x && y && (x.sp === "arcobaleno" || y.sp === "arcobaleno" || (x.sp && y.sp));
+        return x && y && (x.sp || y.sp);
       }
       function mossaPossibile() {
         for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
@@ -189,27 +200,31 @@
       function togli(celle, nascite, poi) {
         var via = {}, coda = [], protette = {}, speciali = 0;
         nascite.forEach(function (n) { protette[n.p[0] + "," + n.p[1]] = true; });
-        function aggiungi(p) {
+        var verso = {};   // le tessere risucchiate dalla girandola volano verso di lei
+        function aggiungi(p, da) {
           if (p[0] < 0 || p[1] < 0 || p[0] >= N || p[1] >= N) return;
           var k = p[0] + "," + p[1], x = g[p[0]][p[1]];
           if (!x || via[k] || protette[k]) return;
-          via[k] = p;
-          if (x.sp && !x.forza) coda.push(p);
+          via[k] = p; if (da) verso[k] = da;
+          if (x.sp) coda.push(p);
         }
         celle.forEach(aggiungi);
         while (coda.length) {
           var p = coda.shift(), x = g[p[0]][p[1]];
           speciali++; vibra(25);
           if (x.sp === "girandola") {
-            raggio(p, x.dir); Suoni.sfx("magia");
-            for (var i = 0; i < N; i++) aggiungi(x.dir === "riga" ? [p[0], i] : [i, p[1]]);
+            // la girandola risucchia tutti i simboli di un tipo: quello con cui l'hai scambiata, oppure il suo
+            var col = x.bersaglio && x.bersaglio !== "arcobaleno" ? x.bersaglio : x.t;
+            x.el.classList.add("risucchia"); Suoni.sfx("magia"); effetto("lampo", "", 600);
+            for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) if (tipoDi(g[r][c]) === col) aggiungi([r, c], p);
           } else if (x.sp === "bomba") {
-            onda(p, 1); Suoni.sfx("pigna");
-            for (var dr = -1; dr <= 1; dr++) for (var dc = -1; dc <= 1; dc++) aggiungi([p[0] + dr, p[1] + dc]);
+            // la bomba scoppia per tre caselle da ogni lato, in tondo
+            onda(p, 3); Suoni.sfx("pigna");
+            for (var dr = -3; dr <= 3; dr++) for (var dc = -3; dc <= 3; dc++) if (dr * dr + dc * dc <= 9) aggiungi([p[0] + dr, p[1] + dc]);
           } else if (x.sp === "arcobaleno") {
-            var col = x.colore || piuComune(); Suoni.sfx("stella");
-            effetto("lampo", "", 600);
-            for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) if (tipoDi(g[r][c]) === col) aggiungi([r, c]);
+            // la sfera arcobaleno pulisce tutto il tabellone
+            Suoni.sfx("stella"); effetto("lampo grande", "", 800); scritta("Arcobaleno!");
+            for (var r2 = 0; r2 < N; r2++) for (var c2 = 0; c2 < N; c2++) aggiungi([r2, c2]);
           }
         }
         var forte = speciali || celle.length > 8, ritardo = forte ? 330 : 0;
@@ -221,6 +236,7 @@
             if (x.sp !== "arcobaleno") presi[x.t]++;
             punti += x.sp ? 3 : 1;
             scintille(p, x.t);
+            if (verso[k]) { posa(verso[k][1], verso[k][0], x.el); x.el.classList.add("risucchiata"); }
             x.el.classList.add("via");
             (function (el) { dopo(240, function () { el.remove(); }); })(x.el);
             g[p[0]][p[1]] = null;
@@ -228,7 +244,7 @@
           nascite.forEach(function (n) {
             var x = g[n.p[0]][n.p[1]];
             presi[x.t]++; punti += 4;
-            x.sp = n.sp; x.dir = n.dir || null;
+            x.sp = n.sp;
             if (n.sp === "arcobaleno") x.t = "arcobaleno";
             disegnaTessera(x); x.el.classList.add("nasce");
             scritta(n.sp === "arcobaleno" ? "Arcobaleno!" : n.sp === "bomba" ? "Bomba di fiori!" : "Girandola!", n.p);
@@ -266,55 +282,18 @@
           var incrocio = s.sp === "bomba" ? gr.runs[0].celle.filter(function (p) { return libera(p) && gr.runs.slice(1).some(function (x) { return x.celle.some(function (q) { return q[0] === p[0] && q[1] === p[1]; }); }); })[0] : null;
           var lunga = gr.runs.slice().sort(function (a, b) { return b.celle.length - a.celle.length; })[0].celle;
           var qui = mossa || incrocio || lunga.filter(libera)[Math.floor(lunga.filter(libera).length / 2)];
-          if (qui) nascite.push({ p: qui, sp: s.sp, dir: s.dir });
+          if (qui) nascite.push({ p: qui, sp: s.sp });
         });
         togli(celle, nascite, function () { risolvi(null, poi); });
       }
 
-      // ---- scambiare due speciali (o un arcobaleno con qualcosa): combinazioni ----
+      // ---- scambiare uno speciale: si attiva subito (la girandola prende il tipo del simbolo vicino) ----
       function combina(a, b, poi) {
-        var x = g[a[0]][a[1]], y = g[b[0]][b[1]], celle = [a, b];
+        var x = g[a[0]][a[1]], y = g[b[0]][b[1]], celle = [];
         catena = 0;
-        if (x.sp !== "arcobaleno" && y.sp === "arcobaleno") { var t = x; x = y; y = t; var q = a; a = b; b = q; }
-        if (x.sp === "arcobaleno" && y.sp === "arcobaleno") {
-          // due arcobaleni: si pulisce tutto!
-          scritta("Super arcobaleno!"); effetto("lampo grande", "", 800);
-          x.forza = y.forza = true;
-          for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) celle.push([r, c]);
-          return togli(celle, [], poi);
-        }
-        if (x.sp === "arcobaleno") {
-          var col = y.t;
-          x.forza = true; effetto("lampo", "", 600);
-          if (!y.sp) {
-            // arcobaleno + simbolo: spariscono tutti quelli di quel tipo
-            for (var r2 = 0; r2 < N; r2++) for (var c2 = 0; c2 < N; c2++) if (tipoDi(g[r2][c2]) === col) celle.push([r2, c2]);
-            return togli(celle, [], poi);
-          }
-          // arcobaleno + speciale: tutti quelli di quel tipo diventano quello speciale, poi scoppiano
-          scritta(y.sp === "bomba" ? "Pioggia di bombe!" : "Mille girandole!");
-          for (var r3 = 0; r3 < N; r3++) for (var c3 = 0; c3 < N; c3++) {
-            var z = g[r3][c3];
-            if (tipoDi(z) === col) { z.sp = y.sp; z.dir = y.sp === "girandola" ? (Math.random() < 0.5 ? "riga" : "colonna") : null; disegnaTessera(z); z.el.classList.add("nasce"); celle.push([r3, c3]); }
-          }
-          Suoni.sfx("stella");
-          return dopo(450, function () { togli(celle, [], poi); });
-        }
-        // due speciali insieme
-        x.forza = y.forza = true;
-        var giri = x.sp === "girandola" && y.sp === "girandola" ? 0 : x.sp === "bomba" && y.sp === "bomba" ? 2 : 1;
-        if (x.sp === "bomba" && y.sp === "bomba") {
-          scritta("Bombona!"); onda(b, 2); Suoni.sfx("pigna");
-          for (var dr = -2; dr <= 2; dr++) for (var dc = -2; dc <= 2; dc++) celle.push([b[0] + dr, b[1] + dc]);
-        } else {
-          // girandola + girandola: una croce; girandola + bomba: una croce larga tre
-          scritta(giri ? "Girandola gigante!" : "Croce di girandole!"); Suoni.sfx("magia");
-          for (var d = -giri; d <= giri; d++) {
-            var rr = b[0] + d, cc = b[1] + d;
-            if (rr >= 0 && rr < N) { raggio([rr, b[1]], "riga"); for (var i = 0; i < N; i++) celle.push([rr, i]); }
-            if (cc >= 0 && cc < N) { raggio([b[0], cc], "colonna"); for (var j = 0; j < N; j++) celle.push([j, cc]); }
-          }
-        }
+        if (x.sp) { x.bersaglio = tipoDi(y); celle.push(a); }
+        if (y.sp) { y.bersaglio = tipoDi(x); celle.push(b); }
+        if (x.sp && y.sp) { scritta("Doppia magia!"); punti += 10; }
         vibra(60);
         togli(celle, [], poi);
       }
@@ -322,7 +301,7 @@
       // per le prove dalla console: chiwinnieTris.metti(r, c, "bomba") e chiwinnieTris.prova([r,c],[r,c+1])
       window.chiwinnieTris = {
         griglia: function () { return g.map(function (riga) { return riga.map(function (x) { return x ? (x.sp ? x.sp[0].toUpperCase() : "") + x.t.slice(0, 2) : "--"; }).join(" "); }).join("\n"); },
-        metti: function (r, c, sp, dir, t) { var x = g[r][c]; if (t) x.t = t; x.sp = sp || null; x.dir = dir || (sp === "girandola" ? "riga" : null); if (sp === "arcobaleno") x.t = "arcobaleno"; disegnaTessera(x); },
+        metti: function (r, c, sp, t) { var x = g[r][c]; if (t) x.t = t; x.sp = sp || null; if (sp === "arcobaleno") x.t = "arcobaleno"; disegnaTessera(x); },
         prova: function (a, b) { prova(a, b); }, presi: presi
       };
 
@@ -411,7 +390,7 @@
         dopo(vinto ? 900 : 500, function () {
           api.fine({
             punti: Math.round(punti / 3) + (vinto ? 10 : 0), completato: vinto, file: file, bottino: b,
-            titolo: vinto ? "Tris riuscito!" : "Mosse finite!",
+            titolo: vinto ? "Scambio riuscito!" : "Mosse finite!",
             messaggio: vinto ? "Hai raccolto tutto quello che chiedeva il Chiwinnie con " + mosse + (mosse === 1 ? " mossa" : " mosse") + " di avanzo, e fatto " + file + " file!" + (b.stelle ? " Una stella in regalo!" : "")
               : "Hai fatto " + file + " file e quello che hai raccolto resta tuo. Riprova!"
           });

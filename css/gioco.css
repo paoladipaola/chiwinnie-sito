@@ -842,3 +842,6 @@ input[type=text] {
   text-shadow: 0 2px 0 #8a6fc0, 0 0 10px rgba(138, 111, 192, .8), 2px 0 0 #8a6fc0, -2px 0 0 #8a6fc0, 0 -2px 0 #8a6fc0; animation: scritta-tris 1.1s ease-out forwards; }
 @keyframes scritta-tris { 0% { transform: translate(-50%, -50%) scale(.3); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; } 70% { transform: translate(-50%, -80%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -120%) scale(1); opacity: 0; } }
 .mappa-posto .nome small { display: block; text-align: center; font-weight: 600; font-size: 12px; color: #9b8a7a; line-height: 1.1; }
+.tris-t.risucchia img.dietro { animation-duration: .35s; }
+.tris-t.risucchia img { transform: scale(1.2); transition: transform .2s; }
+.tris-t.risucchiata { transition: left .24s ease-in, top .24s ease-in; z-index: 4; }
