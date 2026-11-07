@@ -312,7 +312,7 @@
         el.className = "pezzo" + (k === nuovo ? " nascita" : "");
         el.dataset.k = k; el.alt = "";
         // nelle terre "amalgamate" gli arredi hanno la luce del quadro (img/<zona>/scena/) e un'ombra morbida a terra
-        el.src = z.cartella + (z.amalgama ? "scena/" : "") + k + ".png";
+        el.src = z.cartella + (z.scenaSeparata ? "scena/" : "") + k + ".png";
         el.style.left = p.pos[0] + "%"; el.style.top = p.pos[1] + "%";
         el.style.width = p.pos[2] + "%"; el.style.height = p.pos[3] + "%";
         el.style.zIndex = i + 1;

@@ -276,7 +276,7 @@ var ZONE = [
     }
   },
   {
-    id: "foresta", nome: "La foresta delle lucciole", musica: "notte", sfondo: "img/zona5/vuota.jpg", cartella: "img/zona5/", senzaIcone: true, amalgama: "notte",
+    id: "foresta", nome: "La foresta delle lucciole", musica: "notte", sfondo: "img/zona5/vuota.jpg", cartella: "img/zona5/", senzaIcone: true, amalgama: "notte", scenaSeparata: true,
     descrizione: "Una foresta dove è sempre notte e la luce la fanno le lucciole.",
     prati: [{ x1: 28, x2: 72, y1: 68, y2: 82 }],
     pezzi: {
@@ -357,7 +357,7 @@ var ZONE = [
     }
   },
   {
-    id: "isole", nome: "Le isole fluttuanti", musica: "nuvole", sfondo: "img/zona6/vuota.jpg", cartella: "img/zona6/", senzaIcone: true,
+    id: "isole", nome: "Le isole fluttuanti", musica: "nuvole", sfondo: "img/zona6/vuota.jpg", cartella: "img/zona6/", amalgama: "isole", senzaIcone: true,
     descrizione: "Isolette di prato che galleggiano nel cielo, con le cascate che cadono tra le nuvole.",
     prati: [{ x1: 10, x2: 90, y1: 56, y2: 62 }],
     pezzi: {
@@ -415,30 +415,30 @@ var ZONE = [
         descrizione: "Un aquilone colorato legato alla staccionata: vola sempre."
       },
       isl_giardino: {
-        nome: "Giardino sull'isoletta", livello: 17, costo: { petali: 16, stelle: 2 }, xp: 26,
+        nome: "Giardino sull'isoletta", senzaOmbra: true, livello: 17, costo: { petali: 16, stelle: 2 }, xp: 26,
         pos: [59, 8.59, 26, 6.61], tocco: [[61.1, 9.1, 82.9, 14.9]], bolla: [72.0, 10.6],
         produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
         descrizione: "Un'isoletta tutta fiorita che lascia cadere petali."
       },
       isl_ponte: {
-        nome: "Ponte di corda", livello: 18, costo: { legnetti: 14, stelle: 2 }, xp: 28,
+        nome: "Ponte di corda", senzaOmbra: true, livello: 18, costo: { legnetti: 14, stelle: 2 }, xp: 28,
         pos: [38, 14.56, 20, 4.44], tocco: [[39.6, 14.9, 56.4, 18.8]],
         descrizione: "Un ponte di corda tra due isolette lassù."
       },
       isl_altalena: {
-        nome: "Altalena della nuvola", livello: 18, costo: { legnetti: 10, stelle: 3 }, xp: 30,
+        nome: "Altalena della nuvola", senzaOmbra: true, livello: 18, costo: { legnetti: 10, stelle: 3 }, xp: 30,
         pos: [6, 31.32, 14, 14.68], tocco: [[7.1, 32.5, 18.9, 45.3]],
         descrizione: "Un'altalena appesa a una nuvola morbida."
       },
       isl_mongolfiera: {
-        nome: "Mongolfiera a righe", livello: 18, costo: { petali: 14, legnetti: 10, stelle: 3 }, xp: 34,
+        nome: "Mongolfiera a righe", senzaOmbra: true, livello: 18, costo: { petali: 14, legnetti: 10, stelle: 3 }, xp: 34,
         pos: [74, 24.83, 14, 19.17], tocco: [[75.1, 26.4, 86.9, 43.0]],
         descrizione: "Una mongolfiera a righe per fare il giro delle isole."
       }
     }
   },
   {
-    id: "nord", nome: "Le terre del nord", musica: "casa", sfondo: "img/zona7/vuota.jpg", cartella: "img/zona7/", senzaIcone: true,
+    id: "nord", nome: "Le terre del nord", musica: "casa", sfondo: "img/zona7/vuota.jpg", cartella: "img/zona7/", amalgama: "nord", senzaIcone: true,
     descrizione: "Una terra di neve soffice, con l'aurora nel cielo e il lago ghiacciato.",
     prati: [{ x1: 26, x2: 68, y1: 70, y2: 86 }],
     pezzi: {
@@ -519,7 +519,7 @@ var ZONE = [
     }
   },
   {
-    id: "deserto", nome: "Il deserto dei fiori di cactus", musica: "prato", sfondo: "img/zona8/vuota.jpg", cartella: "img/zona8/", senzaIcone: true,
+    id: "deserto", nome: "Il deserto dei fiori di cactus", musica: "prato", sfondo: "img/zona8/vuota.jpg", cartella: "img/zona8/", amalgama: "deserto", senzaIcone: true,
     descrizione: "Un deserto caldo e gentile, dove i cactus sono pieni di fiori.",
     prati: [{ x1: 30, x2: 70, y1: 72, y2: 86 }],
     pezzi: {
@@ -600,7 +600,7 @@ var ZONE = [
     }
   },
   {
-    id: "fata", nome: "I cappelli di fata", musica: "prato", sfondo: "img/zona9/vuota.jpg", cartella: "img/zona9/", senzaIcone: true,
+    id: "fata", nome: "I cappelli di fata", musica: "prato", sfondo: "img/zona9/vuota.jpg", cartella: "img/zona9/", amalgama: "fata", senzaIcone: true,
     descrizione: "Una valle di camini di roccia a forma di cappello, con le mongolfiere che volano all'alba.",
     prati: [{ x1: 26, x2: 70, y1: 72, y2: 86 }],
     pezzi: {
@@ -674,14 +674,14 @@ var ZONE = [
         descrizione: "Un albero pieno di lanternine colorate che brillano."
       },
       fat_mongolfiere: {
-        nome: "Mongolfiere dell'alba", livello: 22, costo: { petali: 16, legnetti: 12, stelle: 4 }, xp: 38,
+        nome: "Mongolfiere dell'alba", senzaOmbra: true, livello: 22, costo: { petali: 16, legnetti: 12, stelle: 4 }, xp: 38,
         pos: [26, 26.9, 28, 15.1], tocco: [[28.24, 28.11, 51.76, 40.79]],
         descrizione: "Tre mongolfiere a righe che volano sopra la valle all'alba."
       }
     }
   },
   {
-    id: "panna", nome: "Le colline di panna", musica: "radura", sfondo: "img/zona10/vuota.jpg", cartella: "img/zona10/", senzaIcone: true,
+    id: "panna", nome: "Le colline di panna", musica: "radura", sfondo: "img/zona10/vuota.jpg", cartella: "img/zona10/", amalgama: "panna", senzaIcone: true,
     descrizione: "Colline di panna montata, lecca-lecca giganti e un fiume di cioccolato.",
     prati: [{ x1: 40, x2: 72, y1: 76, y2: 84 }],
     pezzi: {
@@ -762,7 +762,7 @@ var ZONE = [
     }
   },
   {
-    id: "gemme", nome: "La città di pietre preziose", musica: "nuvole", sfondo: "img/zona11/vuota.jpg", cartella: "img/zona11/", senzaIcone: true,
+    id: "gemme", nome: "La città di pietre preziose", musica: "nuvole", sfondo: "img/zona11/vuota.jpg", cartella: "img/zona11/", amalgama: "gemme", senzaIcone: true,
     descrizione: "Una città scintillante fatta di gemme e cristalli, con l'arcobaleno nel cielo.",
     prati: [{ x1: 28, x2: 70, y1: 72, y2: 86 }],
     pezzi: {
