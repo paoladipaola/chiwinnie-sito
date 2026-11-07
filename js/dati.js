@@ -600,6 +600,87 @@ var ZONE = [
     }
   },
   {
+    id: "fata", nome: "I cappelli di fata", musica: "prato", sfondo: "img/zona9/vuota.jpg", cartella: "img/zona9/",
+    descrizione: "Una valle di camini di roccia a forma di cappello, con le mongolfiere che volano all'alba.",
+    prati: [{ x1: 28, x2: 72, y1: 66, y2: 92 }],
+    pezzi: {
+      fat_casa: {
+        nome: "Casetta nel cappello di fata", livello: 19, costo: { sassolini: 16, legnetti: 10 }, xp: 34,
+        pos: [62, 57.43, 22, 14.57], tocco: [[63.8, 58.6, 82.2, 71.3]],
+        descrizione: "Una casetta scavata in un camino di roccia a forma di cappello, con le finestrelle fiorite."
+      },
+      fat_scala: {
+        nome: "Scalinata di pietra", livello: 19, costo: { sassolini: 10 }, xp: 18,
+        pos: [14, 63.34, 11, 9.66], tocco: [[14.9, 64.1, 24.1, 72.5]],
+        descrizione: "Una scalinata di pietra chiara con i vasetti di fiori sugli scalini."
+      },
+      fat_lavanda: {
+        nome: "Cespugli di lavanda", livello: 19, costo: { petali: 10 }, xp: 20,
+        pos: [46, 63.92, 15, 7.08], tocco: [[47.2, 64.5, 59.8, 70.6]], bolla: [53.5, 65.9],
+        produce: { materiale: "petali", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Lavanda profumata, con le farfalle che ci girano intorno."
+      },
+      fat_tappeti: {
+        nome: "Bancarella dei tappeti", livello: 20, costo: { legnetti: 10, petali: 10 }, xp: 26,
+        pos: [30, 63.45, 14, 7.55], tocco: [[31.1, 64.1, 42.9, 70.6]],
+        descrizione: "Tappeti colorati appesi e arrotolati, tutti diversi."
+      },
+      fat_pozzo: {
+        nome: "Pozzo antico", livello: 20, costo: { sassolini: 12 }, xp: 22,
+        pos: [34, 80.88, 11, 5.12], tocco: [[34.9, 81.3, 44.1, 85.7]], bolla: [39.5, 82.9],
+        produce: { materiale: "sassolini", ogni: 4 * MINUTO, max: 4 },
+        descrizione: "Un vecchio pozzo di pietra con la manovella e il secchiello."
+      },
+      fat_ponte: {
+        nome: "Ponticello di pietra", livello: 20, costo: { sassolini: 14, stelle: 2 }, xp: 26,
+        pos: [24, 76.54, 20, 3.46], tocco: [[25.6, 76.8, 42.4, 79.8]],
+        descrizione: "Un ponte ad arco di pietre chiare con le piantine sopra."
+      },
+      fat_te: {
+        nome: "Tavolino del tè", livello: 20, costo: { legnetti: 8, petali: 10 }, xp: 26,
+        pos: [47, 72.94, 17, 6.56], tocco: [[48.4, 73.5, 62.6, 79.2]],
+        descrizione: "Un tavolino basso con la teiera, i bicchierini e i cuscini ricamati."
+      },
+      fat_vigna: {
+        nome: "Filare di uva", livello: 21, costo: { legnetti: 12, spinaci: 6 }, xp: 26,
+        pos: [66, 74.04, 19, 4.96], tocco: [[67.5, 74.4, 83.5, 78.8]], bolla: [75.5, 76.0],
+        produce: { materiale: "spinaci", ogni: 2 * MINUTO, max: 6 },
+        descrizione: "Grappoli d'uva viola sui pali di legno. E sotto, qualche spinacino!"
+      },
+      fat_ceramiche: {
+        nome: "Angolo delle ceramiche", livello: 21, costo: { sassolini: 10, petali: 8 }, xp: 26,
+        pos: [74, 79.18, 13, 6.82], tocco: [[75.0, 79.7, 86.0, 85.7]],
+        descrizione: "Vasi, ciotole e piatti dipinti a mano."
+      },
+      fat_fontana: {
+        nome: "Fontanella nella roccia", livello: 21, costo: { sassolini: 12, stelle: 2 }, xp: 28,
+        pos: [24, 86.97, 13, 7.03], tocco: [[25.0, 87.5, 36.0, 93.6]],
+        descrizione: "Una fontanella scavata nella pietra, con l'edera intorno."
+      },
+      fat_terrazza: {
+        nome: "Terrazza dei gerani", livello: 21, costo: { sassolini: 12, petali: 12, stelle: 2 }, xp: 30,
+        pos: [46, 86.59, 20, 6.41], tocco: [[47.6, 87.1, 64.4, 92.7]],
+        descrizione: "Una terrazza di pietra piena di vasi di gerani rossi e rosa."
+      },
+      fat_altalena: {
+        nome: "Altalena dell'albicocco", livello: 22, costo: { legnetti: 14, stelle: 3 }, xp: 30,
+        pos: [80, 83.06, 17, 11.94], tocco: [[81.4, 84.0, 95.6, 94.4]], bolla: [88.5, 85.1],
+        produce: { materiale: "legnetti", ogni: 3 * MINUTO, max: 5 },
+        descrizione: "Un grande albicocco con l'altalena: dai rami cadono legnetti."
+      },
+      fat_lanterne: {
+        nome: "Albero delle lanterne", livello: 22, costo: { petali: 14, stelle: 3 }, xp: 32,
+        pos: [3, 74.65, 17, 12.35], tocco: [[4.4, 75.6, 18.6, 86.4]],
+        descrizione: "Un albero pieno di lanternine colorate che brillano."
+      },
+      fat_mongolfiere: {
+        nome: "Mongolfiere dell'alba", livello: 22, costo: { petali: 16, legnetti: 12, stelle: 4 }, xp: 38,
+        pos: [30, 30.11, 22, 11.89], tocco: [[31.8, 31.1, 50.2, 41.4]],
+        descrizione: "Tre mongolfiere a righe che volano sopra la valle all'alba."
+      }
+    }
+  },
+  {
     id: "cielo", nome: "Il Cielo del Celeste", musica: "nuvole", sfondo: "img/zona4/vuota.jpg", cartella: "img/zona4/",
     descrizione: "Sopra le nuvole, dove vola il rarissimo Chiwinnie Celeste.",
     prati: [{ x1: 14, x2: 86, y1: 47, y2: 94 }],
@@ -803,7 +884,8 @@ var SFIDE = [
   { testo: "Completa la foresta delle lucciole", stelle: 8, xp: 80, ordine: 29.5, verifica: function (s) { return Object.keys(zonaId("foresta").pezzi).every(function (k) { return costruito(s, k); }); } },
   { testo: "Completa le isole fluttuanti", stelle: 8, xp: 85, ordine: 29.7, verifica: function (s) { return Object.keys(zonaId("isole").pezzi).every(function (k) { return costruito(s, k); }); } },
   { testo: "Completa le terre del nord", stelle: 8, xp: 90, ordine: 29.8, verifica: function (s) { return Object.keys(zonaId("nord").pezzi).every(function (k) { return costruito(s, k); }); } },
-  { testo: "Completa il deserto dei fiori di cactus", stelle: 8, xp: 95, ordine: 29.85, verifica: function (s) { return Object.keys(zonaId("deserto").pezzi).every(function (k) { return costruito(s, k); }); } }
+  { testo: "Completa il deserto dei fiori di cactus", stelle: 8, xp: 95, ordine: 29.85, verifica: function (s) { return Object.keys(zonaId("deserto").pezzi).every(function (k) { return costruito(s, k); }); } },
+  { testo: "Completa i cappelli di fata", stelle: 8, xp: 100, ordine: 29.9, verifica: function (s) { return Object.keys(zonaId("fata").pezzi).every(function (k) { return costruito(s, k); }); } }
 ];
 
 // Identità della specie (dal concept book): fiore e carattere assegnati insieme dal chip,
@@ -891,6 +973,9 @@ var AMICI = [
   { id: "dattero",   nome: "Dattero",   colore: "verde",  look: { testa: "cappello_paglia" }, zona: "deserto",  lucine: 6, regalo: { spinaci: 12, petali: 10 } },
   { id: "zaffera",   nome: "Zaffera", femmina: true,   colore: "rosa",   look: { viso: "occhiali_cuore" },  zona: "deserto",  lucine: 6, regalo: { petali: 18, stelle: 2 } },
   { id: "cactino",   nome: "Cactino",   colore: "blu",    look: { testa: "cuffie" },          zona: "deserto",  lucine: 6, regalo: { sassolini: 14, stelle: 2 } },
+  { id: "nocciola",  nome: "Nocciola", femmina: true,  colore: "viola",  look: { testa: "basco" },           zona: "fata",     lucine: 6, regalo: { petali: 18, stelle: 2 } },
+  { id: "pistacchio", nome: "Pistacchio", colore: "verde", look: { collo: "papillon" },         zona: "fata",     lucine: 7, regalo: { legnetti: 18, sassolini: 10 } },
+  { id: "anice",     nome: "Anice", femmina: true,     colore: "bianco", look: { testa: "fiocco" },          zona: "fata",     lucine: 7, regalo: { spinaci: 14, stelle: 2 } },
   { id: "bubu",      nome: "Bubù",      colore: "bianco", look: { collo: "sciarpa" },         zona: "cielo",    lucine: 5, regalo: { petali: 15, stelle: 2 } },
   { id: "zenzero",   nome: "Zenzero",   colore: "verde",  look: { collo: "campanellino" },    zona: "cielo",    lucine: 5, regalo: { legnetti: 15, sassolini: 10 } },
   { id: "tobia",     nome: "Tobia",     colore: "arcobaleno", look: { testa: "corona" },          zona: "cielo",    lucine: 6, regalo: { stelle: 5 } }
@@ -949,12 +1034,15 @@ var CAPITOLI = [
   { zona: "deserto", tema: "deserto", premio: { stelle: 16, petali: 40, legnetti: 35, sassolini: 30 },
     arrivo: "Nel deserto i fiori dei cactus si sono chiusi e la sabbia è grigia. Qui il Nebbione ha nascosto Dattero, Zaffera e Cactino.",
     fine: "Tutti i cactus fioriscono insieme: Dattero, Zaffera e Cactino sono liberi!" },
+  { zona: "fata", tema: "fata", premio: { stelle: 18, petali: 40, legnetti: 40, sassolini: 30 },
+    arrivo: "Nella valle dei cappelli di fata le mongolfiere non volano più e la roccia è grigia. Qui il Nebbione ha nascosto Nocciola, Pistacchio e Anice.",
+    fine: "Le mongolfiere tornano a volare all'alba: Nocciola, Pistacchio e Anice sono liberi!" },
   { zona: "cielo", tema: "cielo", accessorio: "mantello", finale: true, premio: { stelle: 30, petali: 50, legnetti: 50, sassolini: 40 },
     arrivo: "Lassù nel Cielo, vicino al Castello delle nuvole, il Nebbione tiene le ultime bolle: Bubù, Zenzero e Tobia.",
     fine: "Tutti i Chiwinnie sono liberi! Ora si va al Castello delle nuvole: è il momento della battaglia finale." }
 ];
 // le terre del Giardino magico che stiamo ancora dipingendo: si vedono nella mappa
-var TERRE_IN_ARRIVO = ["I cappelli di fata", "Le colline di panna", "La città di pietre preziose"];
+var TERRE_IN_ARRIVO = ["Le colline di panna", "La città di pietre preziose"];
 // le lucine magiche guadagnate con una partita: una se va bene, due se va benissimo
 function lucinePartita(d) {
   if (!d || d.gioco === "colora" || d.gioco === "sfida") return 0;
